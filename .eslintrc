@@ -1,0 +1,20 @@
+parser: '@babel/eslint-parser'
+extends: standard
+plugins:
+  - babel
+rules:
+  prefer-const: off
+  no-unused-expressions: off
+  babel/no-unused-expressions: warn
+  promise/param-names: off
+  semi: [error, always]
+  multiline-ternary: off
+  generator-star-spacing:
+    - error
+    - before: false
+      after: false
+  space-before-function-paren:
+    - error
+    - anonymous: never
+      asyncArrow: always
+      named: never
