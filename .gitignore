@@ -1,0 +1,7 @@
+.nyc_output
+yarn-error.log
+node_modules
+coverage
+dist
+oclif.manifest.json
+.DS_Store
