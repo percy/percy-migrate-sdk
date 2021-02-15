@@ -46,7 +46,7 @@
     "@babel/core": "^7.11.6",
     "@babel/eslint-parser": "^7.11.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-env": "^7.12.16",
     "@babel/register": "^7.11.5",
     "@oclif/dev-cli": "^1.22.2",
     "babel-plugin-istanbul": "^6.0.0",
