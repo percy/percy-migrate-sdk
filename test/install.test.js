@@ -73,7 +73,7 @@ describe('@percy/migrate - CLI install', () => {
     packageJSON.devDependencies = { '@percy/cli': '^1.0.0' };
     await Migrate('--only-cli');
 
-    expect(prompts[0]).toBeUndefined();
+    expect(prompts[0].name).not.toEqual('installCLI');
     expect(run.npm.calls).toBeUndefined();
 
     expect(logger.stderr).toEqual([]);
