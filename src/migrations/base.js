@@ -15,6 +15,7 @@ class SDKMigration {
 
   constructor(name, version) {
     if (name) this.installed = { name, version };
+    this.transforms = [];
   }
 
   get name() {

@@ -1,6 +1,7 @@
 import Command, { flags } from '@oclif/command';
 import logger from '@percy/logger';
 import inquirer from 'inquirer';
+import globby from 'globby';
 import inspectDeps from './inspect';
 import migrations from './migrations';
 import { npm } from './utils';
@@ -86,7 +87,7 @@ class Migrate extends Command {
     // perform sdk migration
     if (sdk) {
       await this.confirmUpgrade(sdk);
-      // await this.confirmTransforms(sdk);
+      await this.confirmTransforms(sdk);
       this.log.info('Migration complete!');
     } else {
       this.log.info('See further migration instructions here: ' + (
@@ -176,6 +177,32 @@ class Migrate extends Command {
 
     if (upgradeSDK) {
       await sdk.upgrade();
+    }
+  }
+
+  // Confirms running available SDK transforms
+  async confirmTransforms(sdk) {
+    for (let t of sdk.transforms) {
+      let { doTransform } = await inquirer.prompt([{
+        type: 'confirm',
+        name: 'doTransform',
+        message: t.message,
+        default: true
+      }]);
+
+      if (!doTransform) {
+        continue;
+      }
+
+      let { filePaths } = await inquirer.prompt([{
+        type: 'input',
+        name: 'filePaths',
+        message: 'Which files?',
+        default: t.default,
+        filter: glob => globby(glob)
+      }]);
+
+      await t.transform.call(sdk, filePaths);
     }
   }
 
