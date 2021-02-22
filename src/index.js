@@ -111,10 +111,9 @@ class Migrate extends Command {
   // Confirms possibly running config file migration
   async confirmConfig() {
     try {
-      let result = PercyConfig.explorer.search();
-      if (!result?.config) return;
+      let { filepath } = PercyConfig.search();
+      if (!filepath) return;
     } catch (error) {
-      this.log.error('Failed to load or parse config file');
       this.log.error(error);
       return;
     }

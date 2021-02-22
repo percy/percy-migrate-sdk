@@ -60,7 +60,7 @@ describe('@percy/migrate - Config migration', () => {
   });
 
   it('Does not prompt when no config file was found', async () => {
-    mockConfigSearch(() => false);
+    mockConfigSearch(() => ({}));
     await Migrate('--only-cli');
 
     expect(prompts[1]).toBeUndefined();
@@ -79,7 +79,6 @@ describe('@percy/migrate - Config migration', () => {
     expect(migrated).toBe(false);
 
     expect(logger.stderr).toEqual([
-      '[percy] Failed to load or parse config file\n',
       '[percy] Error: config parse failure\n'
     ]);
     expect(logger.stdout).toEqual([

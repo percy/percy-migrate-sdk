@@ -18,8 +18,7 @@ export function mockPackageJSON(pkg) {
 }
 
 export function mockConfigSearch(search) {
-  mockRequire('cosmiconfig', { cosmiconfigSync: () => ({ search }) });
-  mockRequire.reRequire('@percy/config/dist/load');
+  mockRequire('@percy/config', { search });
   mockRequire.reRequire('@percy/config');
 }
 
@@ -80,7 +79,9 @@ export function mockPrompts(answers) {
 // common hooks
 beforeEach(() => {
   logger.mock();
-  mockConfigSearch(() => ({ config: {} }));
+  mockConfigSearch(() => ({
+    filepath: '.percy.yml'
+  }));
   mockCommands({
     npm: () => ({ status: 0 }),
     yarn: () => ({ status: 0 })
