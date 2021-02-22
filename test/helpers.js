@@ -57,12 +57,15 @@ export function mockPrompts(answers) {
 
   inquirer.prompt = async questions => {
     prompts.push(...questions);
+    let result = {};
 
-    return questions.reduce((result, q) => {
-      let a = answers[q.name];
-      if (typeof a === 'function') a = a(q);
-      return { ...result, [q.name]: a };
-    }, {});
+    for (let q of questions) {
+      result[q.name] = typeof answers[q.name] === 'function'
+        ? await answers[q.name](q)
+        : answers[q.name];
+    }
+
+    return result;
   };
 
   return prompts;
