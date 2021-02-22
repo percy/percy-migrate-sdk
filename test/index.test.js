@@ -36,22 +36,4 @@ describe('@percy/migrate', () => {
     expect(logger.stdout).toEqual([]);
     expect(logger.stderr).toEqual([]);
   });
-
-  it('handles process termination', async () => {
-    let wait = ms => new Promise(r => setTimeout(r, ms));
-    let test = 0;
-
-    class TestProcessTerm extends Migrate {
-      run = () => wait(100).then(() => test--)
-      finally() { test++; }
-    }
-
-    // not awaited on so we can terminate it afterwards
-    TestProcessTerm.run([]);
-    // wait a little for the process handler to be attached
-    await wait(50);
-
-    process.emit('SIGTERM');
-    expect(test).toBe(1);
-  });
 });

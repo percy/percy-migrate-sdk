@@ -62,12 +62,6 @@ class Migrate extends Command {
 
     // sets the log level from verbose, quiet, and silent flags
     logger.loglevel('info', flags);
-
-    // ensure cleanup is always performed
-    let cleanup = () => this.finally();
-    process.on('SIGHUP', cleanup);
-    process.on('SIGINT', cleanup);
-    process.on('SIGTERM', cleanup);
   }
 
   // Run migration steps
@@ -117,10 +111,9 @@ class Migrate extends Command {
   // Confirms possibly running config file migration
   async confirmConfig() {
     try {
-      let result = PercyConfig.explorer.search();
-      if (!result?.config) return;
+      let { filepath } = PercyConfig.search();
+      if (!filepath) return;
     } catch (error) {
-      this.log.error('Failed to load or parse config file');
       this.log.error(error);
       return;
     }
