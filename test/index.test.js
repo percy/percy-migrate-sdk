@@ -11,15 +11,6 @@ describe('@percy/migrate', () => {
     process.removeAllListeners();
   });
 
-  it('works', async () => {
-    await Migrate.run([]);
-
-    expect(logger.stderr).toEqual([]);
-    expect(logger.stdout).toEqual([
-      '[percy] Coming soon\n'
-    ]);
-  });
-
   it('logs errors to the logger and exits', async () => {
     class TestErrorHandling extends Migrate {
       run() { this.error('test error'); }

@@ -1,0 +1,192 @@
+import expect from 'expect';
+import {
+  Migrate,
+  logger,
+  mockPackageJSON,
+  mockPrompts,
+  mockMigrations
+} from './helpers';
+
+describe('@percy/migrate - SDK inspection', () => {
+  let packageJSON, prompts;
+
+  beforeEach(() => {
+    mockMigrations([{
+      name: '@percy/sdk-test',
+      version: '^2.0.0'
+    }, {
+      name: '@percy/sdk-test-2',
+      aliases: ['@percy/sdk-old'],
+      version: '^2.0.0'
+    }]);
+
+    packageJSON = mockPackageJSON({
+      devDependencies: {
+        '@percy/agent': '^0.1.0',
+        '@percy/sdk-test': '^1.0.0',
+        'other-package': '^1.0.0'
+      }
+    });
+
+    prompts = mockPrompts({
+      isGuess: true
+    });
+  });
+
+  it('inspects package.json to guess the installed SDK', async () => {
+    await Migrate();
+
+    expect(prompts[0]).toEqual({
+      type: 'confirm',
+      name: 'isGuess',
+      message: 'Are you currently using @percy/sdk-test?',
+      default: true
+    });
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('includes aliases when guessing the installed SDK', async () => {
+    delete packageJSON.devDependencies['@percy/sdk-test'];
+    packageJSON.devDependencies['@percy/sdk-old'] = '1.0.0';
+
+    await Migrate();
+
+    expect(prompts[0]).toEqual({
+      type: 'confirm',
+      name: 'isGuess',
+      message: 'Are you currently using @percy/sdk-test-2 (@percy/sdk-old)?',
+      default: true
+    });
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('warns when missing a package.json file', async () => {
+    // since there is a package.json file in this repo, this is tested by throwing a fake error
+    // lazily from a mocked package.json property
+    Object.defineProperty(packageJSON, 'devDependencies', {
+      get() { throw Object.assign(new Error(), { code: 'MODULE_NOT_FOUND' }); }
+    });
+
+    await Migrate();
+
+    expect(logger.stderr).toEqual([
+      '[percy] Could not find package.json in current directory\n'
+    ]);
+
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
+    ]);
+  });
+
+  it('logs any error encounted while parsing a package.json file', async () => {
+    Object.defineProperty(packageJSON, 'devDependencies', {
+      get() { throw new Error('some error'); }
+    });
+
+    await Migrate();
+
+    expect(logger.stderr).toEqual([
+      '[percy] Encountered an error inspecting package.json\n',
+      '[percy] Error: some error\n'
+    ]);
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
+    ]);
+  });
+
+  it('allows choosing from supported SDKs', async () => {
+    prompts = mockPrompts({
+      isGuess: false,
+      fromChoice: q => q.choices[0].value
+    });
+
+    await Migrate();
+
+    expect(prompts[1]).toEqual({
+      type: 'list',
+      name: 'fromChoice',
+      message: 'Which SDK are you using?',
+      default: 0,
+      choices: [
+        expect.objectContaining({ name: '@percy/sdk-test' }),
+        expect.objectContaining({ name: '@percy/sdk-test-2 (@percy/sdk-old)' }),
+        expect.objectContaining({ name: '...not listed?' })
+      ]
+    });
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('warns when the selected SDK is not installed', async () => {
+    prompts = mockPrompts({
+      isGuess: false,
+      fromChoice: q => q.choices[1].value
+    });
+
+    await Migrate();
+
+    expect(logger.stderr).toEqual([
+      '[percy] The specified SDK was not found in your dependencies\n'
+    ]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('allows specifying an SDK directly', async () => {
+    await Migrate('@percy/sdk-test');
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('allows specifying an SDK alias directly', async () => {
+    mockPackageJSON({
+      devDependencies: {
+        '@percy/sdk-old': '^1.0.0'
+      }
+    });
+
+    await Migrate('@percy/sdk-old');
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('warns when the specified SDK is not supported', async () => {
+    await Migrate('@percy/sdk-test-3');
+
+    expect(logger.stderr).toEqual([
+      '[percy] The specified SDK is not supported\n'
+    ]);
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
+    ]);
+  });
+
+  it('warns when the specified SDK is not installed', async () => {
+    await Migrate('@percy/sdk-test-2');
+
+    expect(logger.stderr).toEqual([
+      '[percy] The specified SDK was not found in your dependencies\n'
+    ]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+});
