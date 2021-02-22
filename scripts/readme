@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+const { join } = require('path');
+const { readFileSync, writeFileSync } = require('fs');
+const { execSync } = require('child_process');
+
+const CWD = process.cwd();
+const README = join(CWD, 'README.md');
+
+const BIN = join(CWD, 'bin/run');
+const USAGE = '$ npx @percy/migrate --help\n' +
+  execSync(`${BIN} --help`).toString().replace(/^\s*|\s*$/g, '');
+
+writeFileSync(README, readFileSync(README, 'utf-8')
+  .replace(/(<!-- usage -->).*?(<!-- usagestop -->)/s, [
+    '$1', '``` sh-session', USAGE, '```', '$2'
+  ].join('\n'))
+);

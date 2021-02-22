@@ -20,7 +20,7 @@
     "clean": "rm -rf packages/**/{dist,.nyc_output,coverage,oclif.manifest.json}",
     "lint": "eslint --ignore-path .gitignore .",
     "postbuild": "oclif-dev manifest",
-    "readme": "oclif-dev readme",
+    "readme": "./scripts/readme",
     "test": "cross-env NODE_ENV=test mocha",
     "test:coverage": "nyc yarn test"
   },
