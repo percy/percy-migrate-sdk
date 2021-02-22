@@ -62,12 +62,6 @@ class Migrate extends Command {
 
     // sets the log level from verbose, quiet, and silent flags
     logger.loglevel('info', flags);
-
-    // ensure cleanup is always performed
-    let cleanup = () => this.finally();
-    process.on('SIGHUP', cleanup);
-    process.on('SIGINT', cleanup);
-    process.on('SIGTERM', cleanup);
   }
 
   // Run migration steps
