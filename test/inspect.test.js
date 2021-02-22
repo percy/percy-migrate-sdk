@@ -34,7 +34,7 @@ describe('@percy/migrate - SDK inspection', () => {
   });
 
   it('inspects package.json to guess the installed SDK', async () => {
-    await Migrate();
+    await Migrate('--skip-cli');
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
@@ -53,7 +53,7 @@ describe('@percy/migrate - SDK inspection', () => {
     delete packageJSON.devDependencies['@percy/sdk-test'];
     packageJSON.devDependencies['@percy/sdk-old'] = '1.0.0';
 
-    await Migrate();
+    await Migrate('--skip-cli');
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
@@ -75,7 +75,7 @@ describe('@percy/migrate - SDK inspection', () => {
       get() { throw Object.assign(new Error(), { code: 'MODULE_NOT_FOUND' }); }
     });
 
-    await Migrate();
+    await Migrate('--skip-cli');
 
     expect(logger.stderr).toEqual([
       '[percy] Could not find package.json in current directory\n'
@@ -91,7 +91,7 @@ describe('@percy/migrate - SDK inspection', () => {
       get() { throw new Error('some error'); }
     });
 
-    await Migrate();
+    await Migrate('--skip-cli');
 
     expect(logger.stderr).toEqual([
       '[percy] Encountered an error inspecting package.json\n',
@@ -108,7 +108,7 @@ describe('@percy/migrate - SDK inspection', () => {
       fromChoice: q => q.choices[0].value
     });
 
-    await Migrate();
+    await Migrate('--skip-cli');
 
     expect(prompts[1]).toEqual({
       type: 'list',
@@ -134,7 +134,7 @@ describe('@percy/migrate - SDK inspection', () => {
       fromChoice: q => q.choices[1].value
     });
 
-    await Migrate();
+    await Migrate('--skip-cli');
 
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK was not found in your dependencies\n'
@@ -145,7 +145,7 @@ describe('@percy/migrate - SDK inspection', () => {
   });
 
   it('allows specifying an SDK directly', async () => {
-    await Migrate('@percy/sdk-test');
+    await Migrate('@percy/sdk-test', '--skip-cli');
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
@@ -160,7 +160,7 @@ describe('@percy/migrate - SDK inspection', () => {
       }
     });
 
-    await Migrate('@percy/sdk-old');
+    await Migrate('@percy/sdk-old', '--skip-cli');
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
@@ -169,7 +169,7 @@ describe('@percy/migrate - SDK inspection', () => {
   });
 
   it('warns when the specified SDK is not supported', async () => {
-    await Migrate('@percy/sdk-test-3');
+    await Migrate('@percy/sdk-test-3', '--skip-cli');
 
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK is not supported\n'
@@ -180,7 +180,7 @@ describe('@percy/migrate - SDK inspection', () => {
   });
 
   it('warns when the specified SDK is not installed', async () => {
-    await Migrate('@percy/sdk-test-2');
+    await Migrate('@percy/sdk-test-2', '--skip-cli');
 
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK was not found in your dependencies\n'

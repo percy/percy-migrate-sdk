@@ -3,6 +3,7 @@ import logger from '@percy/logger';
 import inquirer from 'inquirer';
 import inspectDeps from './inspect';
 import migrations from './migrations';
+import { npm } from './utils';
 
 class Migrate extends Command {
   static description = 'Upgrade and migrate your Percy SDK to the latest version';
@@ -16,6 +17,14 @@ class Migrate extends Command {
     // version && help
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
+
+    // cli installation
+    'only-cli': flags.boolean({
+      description: 'only run @percy/cli installation'
+    }),
+    'skip-cli': flags.boolean({
+      description: 'skip @percy/cli installation'
+    }),
 
     // logging
     verbose: flags.boolean({
@@ -36,7 +45,8 @@ class Migrate extends Command {
 
   static examples = [
     '$ npx @percy/migrate',
-    '$ npx @percy/migrate @percy/puppeteer'
+    '$ npx @percy/migrate @percy/puppeteer',
+    '$ npx @percy/migrate --only-cli'
   ];
 
   // The logger is attached to the default log method to retain internal OCLIF usage
@@ -64,13 +74,14 @@ class Migrate extends Command {
     let info = inspectDeps();
 
     // get the desired sdk migration
-    let sdk = await this.confirmSDK(this.args.sdk_name, info.installed);
+    let sdk = !this.flags['only-cli'] &&
+      await this.confirmSDK(this.args.sdk_name, info.installed);
 
     // install @percy/cli and migrate config
-    // if (!this.flags['skip-cli']) {
-    //   await this.confirmCLI(!!info.agent);
-    //   await this.confirmConfig();
-    // }
+    if (!this.flags['skip-cli']) {
+      await this.confirmCLI(info);
+      // await this.confirmConfig();
+    }
 
     // perform sdk migration
     if (sdk) {
@@ -80,6 +91,24 @@ class Migrate extends Command {
     } else {
       this.log.info('See further migration instructions here: ' + (
         'https://docs.percy.io/docs/migrating-to-percy-cli'));
+    }
+  }
+
+  // Confirms installing @percy/cli and possibly removing @percy/agent
+  async confirmCLI({ agent, cli }) {
+    if (cli) return;
+
+    let { installCLI } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'installCLI',
+      message: 'Install @percy/cli' +
+        (agent ? ' (and remove @percy/agent)?' : '?'),
+      default: true
+    }]);
+
+    if (installCLI) {
+      if (agent) await npm.uninstall('@percy/agent');
+      await npm.install('@percy/cli');
     }
   }
 
@@ -144,7 +173,7 @@ class Migrate extends Command {
       if (err.oclif && err.code === 'EEXIT') throw err;
       // log all other errors and exit
       this.log.error(err);
-      this.exit(1);
+      this.exit(err.status || 1);
     }
   }
 }
