@@ -1,4 +1,4 @@
-// import semver from 'semver';
+import semver from 'semver';
 
 class SDKMigration {
   static matches(name) {
@@ -17,9 +17,9 @@ class SDKMigration {
     if (name) this.installed = { name, version };
   }
 
-  // get name() {
-  //   return this.constructor.name;
-  // }
+  get name() {
+    return this.constructor.name;
+  }
 
   // get aliases() {
   //   return this.constructor.aliases;
@@ -29,17 +29,17 @@ class SDKMigration {
     return this.constructor.aliased;
   }
 
-  // get version() {
-  //   return this.constructor.version;
-  // }
+  get version() {
+    return this.constructor.version;
+  }
 
-  // get needsUpgrade() {
-  //   return !(
-  //     this.installed &&
-  //     this.installed.name === this.name &&
-  //     semver.subset(this.installed.version, this.version)
-  //   );
-  // }
+  get needsUpgrade() {
+    return !(
+      this.installed &&
+      this.installed.name === this.name &&
+      semver.subset(this.installed.version, this.version)
+    );
+  }
 }
 
 module.exports = SDKMigration;

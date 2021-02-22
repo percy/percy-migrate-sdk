@@ -85,7 +85,7 @@ class Migrate extends Command {
 
     // perform sdk migration
     if (sdk) {
-      // await this.confirmUpgrade(sdk);
+      await this.confirmUpgrade(sdk);
       // await this.confirmTransforms(sdk);
       this.log.info('Migration complete!');
     } else {
@@ -161,6 +161,22 @@ class Migrate extends Command {
     }]);
 
     return fromChoice?.();
+  }
+
+  // Confirms if the SDK needs an upgrade and performs the upgrade
+  async confirmUpgrade(sdk) {
+    if (!sdk.needsUpgrade) return;
+
+    let { upgradeSDK } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'upgradeSDK',
+      message: `Upgrade SDK to ${sdk.name}@${sdk.version}?`,
+      default: true
+    }]);
+
+    if (upgradeSDK) {
+      await sdk.upgrade();
+    }
   }
 
   // Log errors using the Percy logger
