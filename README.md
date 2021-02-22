@@ -15,6 +15,8 @@ each step can be performed manually without this tool to acheive the same outcom
 4. Updates your SDK to the latest version.
 5. Maybe prompts to run code mods on specific files.
 
+[See the migration docs for more info](https://docs.percy.io/docs/migrating-to-percy-cli)
+
 ## Usage
 <!-- usage -->
 ``` sh-session
