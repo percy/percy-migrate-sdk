@@ -1,10 +1,11 @@
 import Command, { flags } from '@oclif/command';
+import PercyConfig from '@percy/config';
 import logger from '@percy/logger';
 import inquirer from 'inquirer';
 import globby from 'globby';
 import inspectDeps from './inspect';
 import migrations from './migrations';
-import { npm } from './utils';
+import { run, npm } from './utils';
 
 class Migrate extends Command {
   static description = 'Upgrade and migrate your Percy SDK to the latest version';
@@ -81,7 +82,7 @@ class Migrate extends Command {
     // install @percy/cli and migrate config
     if (!this.flags['skip-cli']) {
       await this.confirmCLI(info);
-      // await this.confirmConfig();
+      await this.confirmConfig();
     }
 
     // perform sdk migration
@@ -110,6 +111,30 @@ class Migrate extends Command {
     if (installCLI) {
       if (agent) await npm.uninstall('@percy/agent');
       await npm.install('@percy/cli');
+    }
+  }
+
+  // Confirms possibly running config file migration
+  async confirmConfig() {
+    try {
+      let result = PercyConfig.explorer.search();
+      if (!result?.config) return;
+    } catch (error) {
+      this.log.error('Failed to load or parse config file');
+      this.log.error(error);
+      return;
+    }
+
+    let { doConfig } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'doConfig',
+      message: 'Migrate Percy config file?',
+      default: true
+    }]);
+
+    if (doConfig) {
+      let percybin = `${process.cwd()}/node_modules/@percy/cli/bin/run`;
+      await run(percybin, ['config:migrate']);
     }
   }
 

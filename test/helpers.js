@@ -17,6 +17,12 @@ export function mockPackageJSON(pkg) {
   return pkg;
 }
 
+export function mockConfigSearch(search) {
+  mockRequire('cosmiconfig', { cosmiconfigSync: () => ({ search }) });
+  mockRequire.reRequire('@percy/config/dist/load');
+  mockRequire.reRequire('@percy/config');
+}
+
 export function mockMigrations(migrations) {
   migrations = migrations.map(def => (
     class extends SDKMigration {
@@ -74,6 +80,7 @@ export function mockPrompts(answers) {
 // common hooks
 beforeEach(() => {
   logger.mock();
+  mockConfigSearch(() => ({ config: {} }));
   mockCommands({
     npm: () => ({ status: 0 }),
     yarn: () => ({ status: 0 })

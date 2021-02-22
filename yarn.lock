@@ -1085,16 +1085,6 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-1.0.4.tgz#b740f68609dfae8aa71c3a6cab15d816407ba493"
   integrity sha512-60CHpq+eqnTxLZQ4PGHYNwUX572hgpMHGPtTWMjdTMsAvlm69lZV/4ly6O3sAYkomo4NggGcomrDpBe34rxUqw==
 
-"@percy/cli-config@^1.0.0-beta.35":
-  version "1.0.0-beta.35"
-  resolved "https://registry.yarnpkg.com/@percy/cli-config/-/cli-config-1.0.0-beta.35.tgz#3546e045824288f181174141e7ba4f61b4308d64"
-  integrity sha512-VQ6v9hlKFsQ36WXUWpHHE7hQ2fNf14hDNomfVIVOcT93zIi/iRds8CtB6lX2LVtBmdG2vDuoR3f4se3N4Qv5KQ==
-  dependencies:
-    "@oclif/command" "^1.8.0"
-    "@oclif/config" "^1.17.0"
-    "@percy/config" "^1.0.0-beta.35"
-    "@percy/logger" "^1.0.0-beta.35"
-
 "@percy/config@^1.0.0-beta.35":
   version "1.0.0-beta.35"
   resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.35.tgz#28920b24366c1d18b61849dc3ce38c1ad1bb9d1c"
