@@ -9,6 +9,7 @@ function inspectPackageJSON(info) {
     let deps = { ...pkg.dependencies, ...pkg.devDependencies };
 
     for (let [name, version] of Object.entries(deps)) {
+      if (name === '@percy/cli') info.cli = version;
       if (name === '@percy/agent') info.agent = version;
       let SDK = migrations.find(SDK => SDK.matches(name));
       if (SDK) info.installed.push(new SDK(name, version));

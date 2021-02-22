@@ -1,10 +1,13 @@
 import logger from '@percy/logger/test/helper';
 import mockRequire from 'mock-require';
 import inquirer from 'inquirer';
+import spawn from 'cross-spawn';
+import which from 'which';
 
 import SDKMigration from '../src/migrations/base';
 
 export function Migrate(...args) {
+  mockRequire.reRequire('../src/utils');
   mockRequire.reRequire('../src/inspect');
   return mockRequire.reRequire('../src').run(args);
 }
@@ -30,6 +33,25 @@ export function mockMigrations(migrations) {
   return migrations;
 }
 
+export function mockCommands(cmds) {
+  mockRequire('which', {
+    sync: cmd => {
+      if (!cmds[cmd]) return which.sync(cmd);
+      return cmd;
+    }
+  });
+
+  mockRequire('cross-spawn', {
+    sync: (cmd, args, options) => {
+      if (!cmds[cmd]) return spawn.sync(cmd, args, options);
+      (cmds[cmd].calls ||= []).push({ args, options });
+      return cmds[cmd](args, options);
+    }
+  });
+
+  return cmds;
+}
+
 export function mockPrompts(answers) {
   let prompts = [];
 
@@ -49,6 +71,10 @@ export function mockPrompts(answers) {
 // common hooks
 beforeEach(() => {
   logger.mock();
+  mockCommands({
+    npm: () => ({ status: 0 }),
+    yarn: () => ({ status: 0 })
+  });
 });
 
 afterEach(() => {
