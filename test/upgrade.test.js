@@ -27,6 +27,7 @@ describe('@percy/migrate - SDK upgrade', () => {
     });
 
     prompts = mockPrompts({
+      isSDK: true,
       upgradeSDK: true
     });
   });
@@ -35,7 +36,7 @@ describe('@percy/migrate - SDK upgrade', () => {
     await Migrate('@percy/sdk-test', '--skip-cli');
 
     expect(upgraded).toBe(true);
-    expect(prompts[0]).toEqual({
+    expect(prompts[1]).toEqual({
       type: 'confirm',
       name: 'upgradeSDK',
       message: 'Upgrade SDK to @percy/sdk-test@^2.0.0?',
@@ -52,7 +53,7 @@ describe('@percy/migrate - SDK upgrade', () => {
     await Migrate('@percy/sdk-old', '--skip-cli');
 
     expect(upgraded).toBe(true);
-    expect(prompts[0]).toEqual({
+    expect(prompts[1]).toEqual({
       type: 'confirm',
       name: 'upgradeSDK',
       message: 'Upgrade SDK to @percy/sdk-test@^2.0.0?',
@@ -67,13 +68,14 @@ describe('@percy/migrate - SDK upgrade', () => {
 
   it('does not upgrade when not confirmed', async () => {
     prompts = mockPrompts({
+      isSDK: true,
       upgrade: false
     });
 
     await Migrate('@percy/sdk-test', '--skip-cli');
 
     expect(upgraded).toBe(false);
-    expect(prompts[0]).toEqual({
+    expect(prompts[1]).toEqual({
       type: 'confirm',
       name: 'upgradeSDK',
       message: 'Upgrade SDK to @percy/sdk-test@^2.0.0?',
@@ -96,7 +98,7 @@ describe('@percy/migrate - SDK upgrade', () => {
     await Migrate('@percy/sdk-test', '--skip-cli');
 
     expect(upgraded).toBe(false);
-    expect(prompts).toEqual([]);
+    expect(prompts[1]).toBeUndefined();
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
@@ -108,7 +110,7 @@ describe('@percy/migrate - SDK upgrade', () => {
     await Migrate('@percy/sdk-test-2', '--skip-cli');
 
     expect(upgraded).toBe(false);
-    expect(prompts).toEqual([]);
+    expect(prompts[1]).toBeUndefined();
 
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK is not supported\n'

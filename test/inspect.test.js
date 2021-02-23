@@ -29,7 +29,7 @@ describe('@percy/migrate - SDK inspection', () => {
     });
 
     prompts = mockPrompts({
-      isGuess: true
+      isSDK: true
     });
   });
 
@@ -38,7 +38,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
-      name: 'isGuess',
+      name: 'isSDK',
       message: 'Are you currently using @percy/sdk-test?',
       default: true
     });
@@ -57,7 +57,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
-      name: 'isGuess',
+      name: 'isSDK',
       message: 'Are you currently using @percy/sdk-test-2 (@percy/sdk-old)?',
       default: true
     });
@@ -104,7 +104,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
   it('allows choosing from supported SDKs', async () => {
     prompts = mockPrompts({
-      isGuess: false,
+      isSDK: false,
       fromChoice: q => q.choices[0].value
     });
 
@@ -130,7 +130,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
   it('warns when the selected SDK is not installed', async () => {
     prompts = mockPrompts({
-      isGuess: false,
+      isSDK: false,
       fromChoice: q => q.choices[1].value
     });
 

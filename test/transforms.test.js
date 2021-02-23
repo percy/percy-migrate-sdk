@@ -34,6 +34,7 @@ describe('@percy/migrate - SDK transforms', () => {
     });
 
     prompts = mockPrompts({
+      isSDK: true,
       doTransform: false
     });
   });
@@ -41,14 +42,14 @@ describe('@percy/migrate - SDK transforms', () => {
   it('confirms any SDK transforms', async () => {
     await Migrate('@percy/sdk-test', '--skip-cli');
 
-    expect(prompts[1]).toEqual({
+    expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doTransform',
       message: 'Run this transform?',
       default: true
     });
 
-    expect(prompts[2]).toEqual({
+    expect(prompts[3]).toEqual({
       type: 'confirm',
       name: 'doTransform',
       message: 'How about this one?',
@@ -63,13 +64,14 @@ describe('@percy/migrate - SDK transforms', () => {
 
   it('asks for filepaths to transform when confirmed', async () => {
     prompts = mockPrompts({
+      isSDK: true,
       doTransform: true,
       filePaths: q => q.filter(q.default)
     });
 
     await Migrate('@percy/sdk-test', '--skip-cli');
 
-    expect(prompts[2]).toEqual({
+    expect(prompts[3]).toEqual({
       type: 'input',
       name: 'filePaths',
       message: 'Which files?',
@@ -77,7 +79,7 @@ describe('@percy/migrate - SDK transforms', () => {
       filter: expect.any(Function)
     });
 
-    expect(prompts[4]).toEqual({
+    expect(prompts[5]).toEqual({
       type: 'input',
       name: 'filePaths',
       message: 'Which files?',
