@@ -11,8 +11,8 @@ function inspectPackageJSON(info) {
     for (let [name, version] of Object.entries(deps)) {
       if (name === '@percy/cli') info.cli = version;
       if (name === '@percy/agent') info.agent = version;
-      let SDK = migrations.find(SDK => SDK.matches(name));
-      if (SDK) info.installed.push(new SDK(name, version));
+      let SDK = migrations.find(SDK => SDK.matches(name, 'js'));
+      if (SDK) info.installed.push(new SDK({ name, version }));
     }
   } catch (error) {
     let log = logger('migrate:inspect');
