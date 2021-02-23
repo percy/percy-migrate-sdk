@@ -80,7 +80,7 @@ class Migrate extends Command {
     }
 
     // perform sdk migration
-    if (sdk) {
+    if (sdk?.upgrade) {
       await this.confirmUpgrade(sdk);
       await this.confirmTransforms(sdk);
       this.log.info('Migration complete!');

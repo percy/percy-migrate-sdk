@@ -189,4 +189,19 @@ describe('@percy/migrate - SDK inspection', () => {
       '[percy] Migration complete!\n'
     ]);
   });
+
+  it('prints further instructions when the SDK cannot be upgraded', async () => {
+    mockMigrations([{
+      name: '@percy/sdk-test',
+      version: '^2.0.0',
+      upgrade: false
+    }]);
+
+    await Migrate('@percy/sdk-test', '--skip-cli');
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
+    ]);
+  });
 });
