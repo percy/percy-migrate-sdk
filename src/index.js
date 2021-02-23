@@ -71,7 +71,7 @@ class Migrate extends Command {
 
     // get the desired sdk migration
     let sdk = !this.flags['only-cli'] &&
-      await this.confirmSDK(this.args.sdk_name, info.installed);
+      await this.confirmSDK(info, this.args.sdk_name);
 
     // install @percy/cli and migrate config
     if (!this.flags['skip-cli']) {
@@ -80,7 +80,7 @@ class Migrate extends Command {
     }
 
     // perform sdk migration
-    if (sdk) {
+    if (sdk?.upgrade) {
       await this.confirmUpgrade(sdk);
       await this.confirmTransforms(sdk);
       this.log.info('Migration complete!');
@@ -133,34 +133,39 @@ class Migrate extends Command {
 
   // Confirms if the first SDK in the list is the current SDK, otherwise will present a list of
   // supported SDKs to choose from, erroring when the chosen SDK is not in the list
-  async confirmSDK(name, installed) {
+  async confirmSDK({ installed, inspected }, name) {
+    let sdk;
+
     let fromInstalled = SDK => {
       let sdk = installed.find(sdk => sdk instanceof SDK) || new SDK();
-      if (!sdk.installed) this.log.warn('The specified SDK was not found in your dependencies');
+
+      if (!sdk.installed && inspected.includes(sdk.language)) {
+        this.log.warn('The specified SDK was not found in your dependencies');
+      }
+
       return sdk;
     };
 
-    // don't guess or prompt when a name is provided
+    // don't guess when a name is provided
     if (name) {
       let SDK = migrations.find(SDK => SDK.matches(name));
-      if (SDK) return fromInstalled(SDK);
-      this.log.warn('The specified SDK is not supported');
-      return;
+      if (!SDK) this.log.warn('The specified SDK is not supported');
+      else sdk = fromInstalled(SDK);
+    } else {
+      [sdk] = installed;
     }
 
-    // ask to confirm first guess
-    let [guess] = installed;
-
-    if (guess) {
-      let { isGuess } = await inquirer.prompt([{
+    // confirm the specified or guessed sdk
+    if (sdk) {
+      let { isSDK } = await inquirer.prompt([{
         type: 'confirm',
-        name: 'isGuess',
-        message: `Are you currently using ${guess.aliased}?`,
+        name: 'isSDK',
+        message: `Are you currently using ${sdk.aliased}?`,
         default: true
       }]);
 
-      if (isGuess) {
-        return guess;
+      if (isSDK) {
+        return sdk;
       }
     }
 
@@ -169,7 +174,7 @@ class Migrate extends Command {
       type: 'list',
       name: 'fromChoice',
       message: 'Which SDK are you using?',
-      default: guess ? migrations.indexOf(guess.constructor) : 0,
+      default: sdk ? migrations.indexOf(sdk.constructor) : 0,
       choices: migrations.map(SDK => ({
         name: SDK.aliased,
         value: () => fromInstalled(SDK)

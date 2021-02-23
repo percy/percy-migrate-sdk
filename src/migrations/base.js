@@ -1,11 +1,16 @@
 import semver from 'semver';
 
 class SDKMigration {
-  static matches(name) {
-    return this.name === name ||
-      this.aliases?.includes(name);
+  // default SDK language
+  static language = 'js';
+
+  // returns true for the same language and matching name/alias
+  static matches(name, lang) {
+    return (!lang || this.language === lang) &&
+      (this.name === name || this.aliases?.includes(name));
   }
 
+  // returns a formated string matching "{name} ({aliases})"
   static get aliased() {
     return `${this.name}${(
       !this.aliases?.length ? ''
@@ -13,9 +18,14 @@ class SDKMigration {
     )}`;
   }
 
-  constructor(name, version) {
-    if (name) this.installed = { name, version };
+  // initialized with the installed SDK info
+  constructor(installed) {
+    this.installed = installed;
     this.transforms = [];
+  }
+
+  get language() {
+    return this.constructor.language;
   }
 
   get name() {
@@ -34,6 +44,8 @@ class SDKMigration {
     return this.constructor.version;
   }
 
+  // returns true if the SDK is not installed or if the installed SDK has
+  // a different name or version subset
   get needsUpgrade() {
     return !(
       this.installed &&

@@ -27,9 +27,10 @@ export function mockMigrations(migrations) {
     class extends SDKMigration {
       static name = def.name;
       static version = def.version;
-      static aliases = def.aliases || [];
-      upgrade = def.upgrade || (() => {});
-      transforms = def.transforms || [];
+      static language = def.language ?? 'js';
+      static aliases = def.aliases ?? [];
+      upgrade = def.upgrade ?? (() => {});
+      transforms = def.transforms ?? [];
     }
   ));
 

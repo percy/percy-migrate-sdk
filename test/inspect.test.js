@@ -29,7 +29,7 @@ describe('@percy/migrate - SDK inspection', () => {
     });
 
     prompts = mockPrompts({
-      isGuess: true
+      isSDK: true
     });
   });
 
@@ -38,7 +38,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
-      name: 'isGuess',
+      name: 'isSDK',
       message: 'Are you currently using @percy/sdk-test?',
       default: true
     });
@@ -57,7 +57,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
-      name: 'isGuess',
+      name: 'isSDK',
       message: 'Are you currently using @percy/sdk-test-2 (@percy/sdk-old)?',
       default: true
     });
@@ -104,7 +104,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
   it('allows choosing from supported SDKs', async () => {
     prompts = mockPrompts({
-      isGuess: false,
+      isSDK: false,
       fromChoice: q => q.choices[0].value
     });
 
@@ -130,7 +130,7 @@ describe('@percy/migrate - SDK inspection', () => {
 
   it('warns when the selected SDK is not installed', async () => {
     prompts = mockPrompts({
-      isGuess: false,
+      isSDK: false,
       fromChoice: q => q.choices[1].value
     });
 
@@ -187,6 +187,36 @@ describe('@percy/migrate - SDK inspection', () => {
     ]);
     expect(logger.stdout).toEqual([
       '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('does not warn on uninstalled if the language was not inspected', async () => {
+    mockMigrations([{
+      language: 'coldfusion',
+      name: 'some-ancient-sdk',
+      version: '^1.0.0'
+    }]);
+
+    await Migrate('some-ancient-sdk', '--skip-cli');
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('prints further instructions when the SDK cannot be upgraded', async () => {
+    mockMigrations([{
+      name: '@percy/sdk-test',
+      version: '^2.0.0',
+      upgrade: false
+    }]);
+
+    await Migrate('@percy/sdk-test', '--skip-cli');
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
     ]);
   });
 });
