@@ -24,6 +24,10 @@ class SDKMigration {
     this.transforms = [];
   }
 
+  get language() {
+    return this.constructor.language;
+  }
+
   get name() {
     return this.constructor.name;
   }

@@ -14,6 +14,8 @@ function inspectPackageJSON(info) {
       let SDK = migrations.find(SDK => SDK.matches(name, 'js'));
       if (SDK) info.installed.push(new SDK({ name, version }));
     }
+
+    info.inspected.push('js');
   } catch (error) {
     let log = logger('migrate:inspect');
 
@@ -31,10 +33,11 @@ function inspectPackageJSON(info) {
 export default function inspectDeps() {
   let info = {
     agent: null,
-    installed: []
+    installed: [],
+    inspected: []
   };
 
-  // Node projects
+  // JS projects
   inspectPackageJSON(info);
 
   // @todo: other project languages?

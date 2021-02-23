@@ -190,6 +190,21 @@ describe('@percy/migrate - SDK inspection', () => {
     ]);
   });
 
+  it('does not warn on uninstalled if the language was not inspected', async () => {
+    mockMigrations([{
+      language: 'coldfusion',
+      name: 'some-ancient-sdk',
+      version: '^1.0.0'
+    }]);
+
+    await Migrate('some-ancient-sdk', '--skip-cli');
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
   it('prints further instructions when the SDK cannot be upgraded', async () => {
     mockMigrations([{
       name: '@percy/sdk-test',

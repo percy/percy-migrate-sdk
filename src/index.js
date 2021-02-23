@@ -71,7 +71,7 @@ class Migrate extends Command {
 
     // get the desired sdk migration
     let sdk = !this.flags['only-cli'] &&
-      await this.confirmSDK(this.args.sdk_name, info.installed);
+      await this.confirmSDK(info, this.args.sdk_name);
 
     // install @percy/cli and migrate config
     if (!this.flags['skip-cli']) {
@@ -133,12 +133,16 @@ class Migrate extends Command {
 
   // Confirms if the first SDK in the list is the current SDK, otherwise will present a list of
   // supported SDKs to choose from, erroring when the chosen SDK is not in the list
-  async confirmSDK(name, installed) {
+  async confirmSDK({ installed, inspected }, name) {
     let sdk;
 
     let fromInstalled = SDK => {
       let sdk = installed.find(sdk => sdk instanceof SDK) || new SDK();
-      if (!sdk.installed) this.log.warn('The specified SDK was not found in your dependencies');
+
+      if (!sdk.installed && inspected.includes(sdk.language)) {
+        this.log.warn('The specified SDK was not found in your dependencies');
+      }
+
       return sdk;
     };
 
