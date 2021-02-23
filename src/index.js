@@ -87,7 +87,11 @@ class Migrate extends Command {
       await this.confirmTransforms(sdk);
       this.log.info('Migration complete!');
     } else {
-      if (sdk) this.log.warn('Make sure your SDK is upgraded to the latest version!');
+      if (sdk) {
+        this.log.warn(
+          `Make sure your SDK is upgraded to the latest version (${sdk.name} ${sdk.version})!`
+        );
+      }
       this.log.info('See further migration instructions here: ' + (
         'https://docs.percy.io/docs/migrating-to-percy-cli'));
     }
