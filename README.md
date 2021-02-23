@@ -7,7 +7,7 @@
 ## What does it do?
 
 This automates the following steps necessary to migrate your SDK to the latest version. In fact,
-each step can be performed manually without this tool to acheive the same outcome.
+each step can be performed manually without this tool to achieve the same outcome.
 
 1. Attempts to detect your SDK by examining your project's dependencies.
 2. Installs `@percy/cli` to your project (and uninstalls `@percy/agent` if present).
