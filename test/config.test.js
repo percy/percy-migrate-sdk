@@ -8,7 +8,7 @@ import {
   mockConfigSearch
 } from './helpers';
 
-describe('@percy/migrate - Config migration', () => {
+describe('Config migration', () => {
   let migrated, prompts;
 
   beforeEach(() => {

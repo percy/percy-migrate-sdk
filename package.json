@@ -28,7 +28,8 @@
     "access": "public"
   },
   "mocha": {
-    "require": "@babel/register"
+    "require": "@babel/register",
+    "recursive": true
   },
   "oclif": {
     "bin": "npx @percy/migrate"

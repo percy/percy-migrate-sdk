@@ -1,4 +1,5 @@
 import expect from 'expect';
+import globby from 'globby';
 import {
   Migrate,
   logger,
@@ -7,7 +8,7 @@ import {
   mockMigrations
 } from './helpers';
 
-describe('@percy/migrate - SDK transforms', () => {
+describe('SDK transforms', () => {
   let transformed, prompts;
 
   beforeEach(() => {
@@ -67,6 +68,7 @@ describe('@percy/migrate - SDK transforms', () => {
       isSDK: true,
       doTransform: true,
       filePaths: q => q.filter(q.default)
+        .then(f => f.sort())
     });
 
     await Migrate('@percy/sdk-test', '--skip-cli');
@@ -88,9 +90,8 @@ describe('@percy/migrate - SDK transforms', () => {
     });
 
     expect(transformed).toEqual(
-      require('fs').readdirSync(__dirname)
-        .filter(p => p.endsWith('.test.js'))
-        .map(p => `test/${p}`)
+      await globby('test/**/*.test.js')
+        .then(f => f.sort())
     );
 
     expect(logger.stderr).toEqual([]);

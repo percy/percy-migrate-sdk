@@ -1,14 +1,14 @@
 import expect from 'expect';
-import mockRequire from 'mock-require';
 import {
   Migrate,
   logger,
+  mockRequire,
   mockPackageJSON,
   mockCommands,
   mockPrompts
 } from './helpers';
 
-describe('@percy/migrate - CLI install', () => {
+describe('CLI installation', () => {
   let packageJSON, prompts, run;
 
   beforeEach(() => {

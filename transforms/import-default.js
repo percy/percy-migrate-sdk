@@ -1,6 +1,15 @@
+/**
+ * Transforms named imports and required variable assignments to default imports and assigments.
+ *
+ * --percy-sdk=NAME        (required) desired SDK package name
+ * --percy-installed=NAME  installed SDK package name (default: --percy-sdk)
+ * --print-options=JSON    output print options (default: {"quote":"single","lineTerminator":"\n"})
+*/
 export default function({ source }, { j }, options) {
-  let installed = options['percy-installed'];
   let sdk = options['percy-sdk'];
+  if (!sdk) throw new Error('--percy-sdk is required');
+
+  let installed = options['percy-installed'] || sdk;
   let root = j(source);
 
   // - import { percySnapshot [as <local>] } from <installed>
@@ -34,5 +43,9 @@ export default function({ source }, { j }, options) {
       node.id = j.identifier(local);
     });
 
-  return root.toSource();
+  return root.toSource({
+    quote: 'single',
+    lineTerminator: '\n',
+    ...options['print-options']
+  });
 }
