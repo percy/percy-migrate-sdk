@@ -7,7 +7,7 @@ import {
   mockMigrations
 } from './helpers';
 
-describe('@percy/migrate - SDK inspection', () => {
+describe('SDK inspection', () => {
   let packageJSON, prompts;
 
   beforeEach(() => {

@@ -8,7 +8,7 @@ import {
   mockPrompts
 } from './helpers';
 
-describe('@percy/migrate - CLI install', () => {
+describe('CLI installation', () => {
   let packageJSON, prompts, run;
 
   beforeEach(() => {

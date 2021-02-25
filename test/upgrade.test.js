@@ -7,7 +7,7 @@ import {
   mockMigrations
 } from './helpers';
 
-describe('@percy/migrate - SDK upgrade', () => {
+describe('SDK upgrade', () => {
   let upgraded, prompts;
 
   beforeEach(() => {

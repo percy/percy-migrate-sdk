@@ -8,7 +8,7 @@ import {
   mockMigrations
 } from './helpers';
 
-describe('@percy/migrate - SDK transforms', () => {
+describe('SDK transforms', () => {
   let transformed, prompts;
 
   beforeEach(() => {

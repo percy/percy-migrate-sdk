@@ -6,7 +6,7 @@ import {
   setupMigrationTest
 } from '../helpers';
 
-describe('@percy/migrate - @percy/puppeteer', () => {
+describe('Migrations - @percy/puppeteer', () => {
   let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
   let prompts, run;
 
