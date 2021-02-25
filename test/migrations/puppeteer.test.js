@@ -8,14 +8,12 @@ import {
 
 describe('Migrations - @percy/puppeteer', () => {
   let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
-  let prompts, run;
+  let packageJSON, prompts, run;
 
   beforeEach(() => {
-    [prompts, run] = setupMigrationTest('puppeteer', {
-      mockCommands: {
-        [jscodeshiftbin]: () => ({ status: 0 })
-      }
-    });
+    ({ packageJSON, prompts, run } = setupMigrationTest('puppeteer', {
+      mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
+    }));
   });
 
   it('upgrades the sdk', async () => {

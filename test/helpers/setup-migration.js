@@ -5,7 +5,7 @@ import mockCommands from './mock-commands';
 
 // Setup a migration test by mocking package.json, sdk prompts, and upgrade commands
 export default function setupMigrationTest(filename, mocks) {
-  mockPackageJSON({
+  let packageJSON = mockPackageJSON({
     devDependencies: {
       [require(`../../src/migrations/${filename}`).name]: '0.0.0'
     }
@@ -33,5 +33,5 @@ export default function setupMigrationTest(filename, mocks) {
   mockRequire.reRequire(`../../src/migrations/${filename}`);
   mockRequire.reRequire('../../src/migrations');
 
-  return [prompts, run];
+  return { packageJSON, prompts, run };
 }
