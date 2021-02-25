@@ -16,7 +16,7 @@ class PuppeteerMigration extends SDKMigration {
     async transform(paths) {
       await run(require.resolve('jscodeshift/bin/jscodeshift'), [
         `--transform=${path.resolve(__dirname, '../../transforms/import-default.js')}`,
-        `--percy-installed=${this.installed.name}`,
+        this.installed && `--percy-installed=${this.installed.name}`,
         `--percy-sdk=${this.name}`,
         ...paths
       ]);
