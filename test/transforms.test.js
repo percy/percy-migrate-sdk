@@ -1,4 +1,5 @@
 import expect from 'expect';
+import globby from 'globby';
 import {
   Migrate,
   logger,
@@ -88,9 +89,7 @@ describe('@percy/migrate - SDK transforms', () => {
     });
 
     expect(transformed).toEqual(
-      require('fs').readdirSync(__dirname)
-        .filter(p => p.endsWith('.test.js'))
-        .map(p => `test/${p}`)
+      await globby('test/**/*.test.js')
     );
 
     expect(logger.stderr).toEqual([]);
