@@ -68,6 +68,7 @@ describe('SDK transforms', () => {
       isSDK: true,
       doTransform: true,
       filePaths: q => q.filter(q.default)
+        .then(f => f.sort())
     });
 
     await Migrate('@percy/sdk-test', '--skip-cli');
@@ -90,6 +91,7 @@ describe('SDK transforms', () => {
 
     expect(transformed).toEqual(
       await globby('test/**/*.test.js')
+        .then(f => f.sort())
     );
 
     expect(logger.stderr).toEqual([]);

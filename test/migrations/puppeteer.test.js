@@ -51,7 +51,7 @@ describe('Migrations - @percy/puppeteer', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/puppeteer',
       '--percy-sdk=@percy/puppeteer',
-      ...(await globby('test/**/*.test.js'))
+      ...(await globby('test/**/*.test.js').then(f => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual([]);
