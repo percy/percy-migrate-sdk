@@ -57,4 +57,30 @@ describe('Migrations - @percy/puppeteer', () => {
       '[percy] Migration complete!\n'
     ]);
   });
+
+  it('asks to transform sdk imports even when not installed', async () => {
+    delete packageJSON.devDependencies;
+
+    await Migrate('@percy/puppeteer', '--skip-cli');
+
+    expect(prompts[2]).toEqual({
+      type: 'confirm',
+      name: 'doTransform',
+      message: 'SDK exports have changed, update imports?',
+      default: true
+    });
+
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
+      `--transform=${require.resolve('../../transforms/import-default')}`,
+      '--percy-sdk=@percy/puppeteer',
+      ...(await globby('test/**/*.test.js').then(f => f.sort()))
+    ]);
+
+    expect(logger.stderr).toEqual([
+      '[percy] The specified SDK was not found in your dependencies\n'
+    ]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
 });
