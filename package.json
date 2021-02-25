@@ -10,6 +10,7 @@
   "files": [
     "bin",
     "dist",
+    "transforms",
     "oclif.manifest.json"
   ],
   "engines": {
