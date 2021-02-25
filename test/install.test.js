@@ -1,8 +1,8 @@
 import expect from 'expect';
-import mockRequire from 'mock-require';
 import {
   Migrate,
   logger,
+  mockRequire,
   mockPackageJSON,
   mockCommands,
   mockPrompts
