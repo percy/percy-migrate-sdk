@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import Command, { flags } from '@oclif/command';
 import PercyConfig from '@percy/config';
 import logger from '@percy/logger';
@@ -128,7 +129,12 @@ class Migrate extends Command {
 
     if (doConfig) {
       let percybin = `${process.cwd()}/node_modules/@percy/cli/bin/run`;
-      await run(percybin, ['config:migrate']);
+
+      if (!existsSync(percybin)) {
+        this.log.warn('Could not run config migration, @percy/cli is not installed');
+      } else {
+        await run(percybin, ['config:migrate']);
+      }
     }
   }
 

@@ -2,6 +2,7 @@ import expect from 'expect';
 import {
   Migrate,
   logger,
+  mockRequire,
   mockPrompts,
   mockCommands,
   mockPackageJSON,
@@ -9,6 +10,7 @@ import {
 } from './helpers';
 
 describe('Config migration', () => {
+  let percybin = `${process.cwd()}/node_modules/@percy/cli/bin/run`;
   let migrated, prompts;
 
   beforeEach(() => {
@@ -22,10 +24,14 @@ describe('Config migration', () => {
     mockCommands({
       npm: () => ({ status: 0 }),
       yarn: () => ({ status: 0 }),
-      [`${process.cwd()}/node_modules/@percy/cli/bin/run`]: args => {
+      [percybin]: args => {
         migrated = args[0] === 'config:migrate';
         return { status: 0 };
       }
+    });
+
+    mockRequire('fs', {
+      existsSync: p => p.endsWith('@percy/cli/bin/run')
     });
   });
 
@@ -59,7 +65,28 @@ describe('Config migration', () => {
     ]);
   });
 
-  it('Does not prompt when no config file was found', async () => {
+  it('does not migrate when @percy/cli is not installed', async () => {
+    mockRequire('fs', { existsSync: () => false });
+    await Migrate('--only-cli');
+
+    expect(prompts[1]).toEqual({
+      type: 'confirm',
+      name: 'doConfig',
+      message: 'Migrate Percy config file?',
+      default: true
+    });
+
+    expect(migrated).toBe(false);
+
+    expect(logger.stderr).toEqual([
+      '[percy] Could not run config migration, @percy/cli is not installed\n'
+    ]);
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
+    ]);
+  });
+
+  it('does not prompt when no config file was found', async () => {
     mockConfigSearch(() => ({}));
     await Migrate('--only-cli');
 
@@ -72,7 +99,7 @@ describe('Config migration', () => {
     ]);
   });
 
-  it('Logs an error when the config file fails to parse', async () => {
+  it('logs an error when the config file fails to parse', async () => {
     mockConfigSearch(() => { throw new Error('config parse failure'); });
     await Migrate('--only-cli');
 
