@@ -7,7 +7,7 @@ class PuppeteerMigration extends SDKMigration {
   static version = '^2.0.0';
 
   async upgrade() {
-    await npm.install(`${this.name}@${this.version}`, { dev: true });
+    await npm.install(`${this.name}@${this.version}`);
   }
 
   transforms = [{
