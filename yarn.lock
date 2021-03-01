@@ -864,9 +864,9 @@
     "@babel/plugin-transform-typescript" "^7.12.17"
 
 "@babel/register@^7.0.0", "@babel/register@^7.11.5":
-  version "7.12.13"
-  resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.12.13.tgz#e9cb57618264f2944634da941ba9755088ef9ec5"
-  integrity sha512-fnCeRXj970S9seY+973oPALQg61TRvAaW0nRDe1f4ytKqM3fZgsNXewTZWmqZedg74LFIRpg/11dsrPZZvYs2g==
+  version "7.13.8"
+  resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.13.8.tgz#d9051dc6820cb4e86375cc0e2d55a4862b31184f"
+  integrity sha512-yCVtABcmvQjRsX2elcZFUV5Q5kDDpHdtXKKku22hNDma60lYuhKmtp1ykZ/okRCPLT2bR5S+cA1kvtBdAFlDTQ==
   dependencies:
     find-cache-dir "^2.0.0"
     lodash "^4.17.19"
@@ -1085,7 +1085,7 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-1.0.4.tgz#b740f68609dfae8aa71c3a6cab15d816407ba493"
   integrity sha512-60CHpq+eqnTxLZQ4PGHYNwUX572hgpMHGPtTWMjdTMsAvlm69lZV/4ly6O3sAYkomo4NggGcomrDpBe34rxUqw==
 
-"@percy/config@^1.0.0-beta.35":
+"@percy/config@^1.0.0-beta.36":
   version "1.0.0-beta.36"
   resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.36.tgz#35e20d5f1b5ee913c8ca37be354b8b0c955f2428"
   integrity sha512-NjUh5j73ZWlkTIL9RA5t+R0Js4YESvNQO7uGUddu0wTeVe2U8HqoY11zo0MxdEaXe4OT2oqjqUxlGeSP/sKNjQ==
@@ -1094,11 +1094,6 @@
     ajv "^7.0.3"
     cosmiconfig "^7.0.0"
     yaml "^1.10.0"
-
-"@percy/logger@^1.0.0-beta.35":
-  version "1.0.0-beta.35"
-  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.35.tgz#c877350333d49d06e849ada73adfd03214cd2f3e"
-  integrity sha512-Rb0rRb+T8dJEy5WJl+32prdyO7nATp4kUvEQzTrhdjImTUAggqpISF7bagExoQ7JOytXhebk3MpJBD3xVk92rg==
 
 "@percy/logger@^1.0.0-beta.36":
   version "1.0.0-beta.36"
