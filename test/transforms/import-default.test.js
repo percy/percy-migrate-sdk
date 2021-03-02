@@ -37,4 +37,18 @@ describe('Transforms - import-default.js', () => {
     expect(() => applyTransform(transform, {}))
       .toThrow('--percy-sdk is required');
   });
+
+  it('does not error when encountering unexpected trees', () => {
+    expect(applyTransform(transform, {
+      'percy-sdk': '@percy/sdk'
+    }, dedent`
+      let { percySnapshot } = require('@percy/sdk');
+      let foo = foobar(); // callee with no args
+      let bar; // declaration with no init
+    `)).toEqual(dedent`
+      let percySnapshot = require('@percy/sdk');
+      let foo = foobar(); // callee with no args
+      let bar; // declaration with no init
+    `);
+  });
 });

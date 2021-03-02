@@ -29,13 +29,13 @@ export default function({ source }, { j }, options) {
   // + const <local> = require(<sdk>)
   root
     .find(j.VariableDeclarator, node => (
-      (node.init.type === 'CallExpression' &&
+      (node.init?.type === 'CallExpression' &&
        node.init.callee.name === 'require' &&
-       node.init.arguments[0].value === installed) ||
-      (node.init.type === 'MemberExpression' &&
+       node.init.arguments[0]?.value === installed) ||
+      (node.init?.type === 'MemberExpression' &&
        node.init.object.type === 'CallExpression' &&
        node.init.object.callee.name === 'require' &&
-       node.init.object.arguments[0].value === installed)
+       node.init.object.arguments[0]?.value === installed)
     ))
     .forEach(({ value: node }) => {
       let local = node.id.properties?.[0].value.name ?? node.id.name;
