@@ -96,15 +96,22 @@ class Migrate extends Command {
   async confirmCLI({ agent, cli }) {
     if (cli) return;
 
-    let { installCLI } = await inquirer.prompt([{
+    let { installCLI, skipCLI } = await inquirer.prompt([{
       type: 'confirm',
       name: 'installCLI',
-      message: 'Install @percy/cli' +
-        (agent ? ' (and remove @percy/agent)?' : '?'),
+      message: `Install @percy/cli ${agent
+        ? '(and remove @percy/agent)?'
+        : '(required to run percy)?'}`,
       default: true
+    }, {
+      type: 'confirm',
+      name: 'skipCLI',
+      when: ({ installCLI }) => !installCLI,
+      message: 'Are you sure you want to skip installing @percy/cli?',
+      default: false
     }]);
 
-    if (installCLI) {
+    if (installCLI || !skipCLI) {
       if (agent) await npm.uninstall('@percy/agent');
       await npm.install('@percy/cli');
     }

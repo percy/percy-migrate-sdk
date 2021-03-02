@@ -34,7 +34,7 @@ describe('CLI installation', () => {
     expect(prompts[0]).toEqual({
       type: 'confirm',
       name: 'installCLI',
-      message: 'Install @percy/cli?',
+      message: 'Install @percy/cli (required to run percy)?',
       default: true
     });
 
@@ -47,19 +47,42 @@ describe('CLI installation', () => {
     ]);
   });
 
-  it('does not install the CLI when not confirmed', async () => {
+  it('confirms again when answering no', async () => {
     prompts = mockPrompts({
-      installCLI: false
+      installCLI: false,
+      skipCLI: false
     });
 
     await Migrate('--only-cli');
 
-    expect(prompts[0]).toEqual({
+    expect(prompts[1]).toEqual({
       type: 'confirm',
-      name: 'installCLI',
-      message: 'Install @percy/cli?',
-      default: true
+      name: 'skipCLI',
+      when: expect.any(Function),
+      message: 'Are you sure you want to skip installing @percy/cli?',
+      default: false
     });
+
+    // test that `when` returns the correct values for the previous answer
+    expect(prompts[1].when({ installCLI: false })).toEqual(true);
+    expect(prompts[1].when({ installCLI: true })).toEqual(false);
+
+    expect(run.npm.calls[0].args)
+      .toEqual(['install', '--save-dev', '@percy/cli']);
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      expect.stringMatching('See further migration instructions here:')
+    ]);
+  });
+
+  it('does not install the CLI when not confirmed', async () => {
+    prompts = mockPrompts({
+      installCLI: false,
+      skipCLI: true
+    });
+
+    await Migrate('--only-cli');
 
     expect(run.npm.calls).toBeUndefined();
 

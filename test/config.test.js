@@ -18,6 +18,7 @@ describe('Config migration', () => {
     mockPackageJSON({});
 
     prompts = mockPrompts({
+      skipCLI: true,
       doConfig: true
     });
 
@@ -38,7 +39,7 @@ describe('Config migration', () => {
   it('confirms config migration', async () => {
     await Migrate('--only-cli');
 
-    expect(prompts[1]).toEqual({
+    expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doConfig',
       message: 'Migrate Percy config file?',
@@ -69,7 +70,7 @@ describe('Config migration', () => {
     mockRequire('fs', { existsSync: () => false });
     await Migrate('--only-cli');
 
-    expect(prompts[1]).toEqual({
+    expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doConfig',
       message: 'Migrate Percy config file?',
@@ -90,7 +91,7 @@ describe('Config migration', () => {
     mockConfigSearch(() => ({}));
     await Migrate('--only-cli');
 
-    expect(prompts[1]).toBeUndefined();
+    expect(prompts[2]).toBeUndefined();
     expect(migrated).toBe(false);
 
     expect(logger.stderr).toEqual([]);
