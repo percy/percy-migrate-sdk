@@ -1,5 +1,6 @@
 module.exports = [
   require('./puppeteer'),
+  require('./nightmare'),
   require('./protractor'),
   require('./webdriverio'),
   // non-js
