@@ -1,4 +1,5 @@
 module.exports = [
+  require('./testcafe'),
   require('./puppeteer'),
   require('./nightmare'),
   require('./nightwatch'),
