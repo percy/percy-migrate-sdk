@@ -32,9 +32,9 @@ class SDKMigration {
     return this.constructor.name;
   }
 
-  // get aliases() {
-  //   return this.constructor.aliases;
-  // }
+  get aliases() {
+    return this.constructor.aliases;
+  }
 
   get aliased() {
     return this.constructor.aliased;

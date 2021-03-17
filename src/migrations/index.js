@@ -5,6 +5,7 @@ module.exports = [
   require('./nightwatch'),
   require('./protractor'),
   require('./webdriverio'),
+  require('./selenium-javascript'),
   // non-js
   require('./capybara'),
   require('./selenium-java'),
