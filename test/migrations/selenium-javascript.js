@@ -34,7 +34,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
     expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doTransform',
-      message: 'SDK exports have changed, update imports?',
+      message: 'The SDK package name has changed, update imports?',
       default: true
     });
 
@@ -57,7 +57,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
     expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doTransform',
-      message: 'SDK exports have changed, update imports?',
+      message: 'The SDK package name has changed, update imports?',
       default: true
     });
 
@@ -101,7 +101,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       expect(prompts[2]).toEqual({
         type: 'confirm',
         name: 'doTransform',
-        message: 'SDK exports have changed, update imports?',
+        message: 'The SDK package name has changed, update imports?',
         default: true
       });
 
