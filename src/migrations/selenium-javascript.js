@@ -16,7 +16,7 @@ class SeleniumJavaScriptMigration extends SDKMigration {
   }
 
   transforms = [{
-    message: 'SDK exports have changed, update imports?',
+    message: 'The SDK package name has changed, update imports?',
     default: '{test,tests}/**/*{-test,.test}.{js,ts}',
     async transform(paths) {
       await run(require.resolve('jscodeshift/bin/jscodeshift'), [
