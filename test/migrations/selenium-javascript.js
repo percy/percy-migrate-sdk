@@ -42,7 +42,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/selenium-webdriver',
       '--percy-sdk=@percy/selenium-webdriver',
-      ...(await globby('test/**/*.test.js').then((f) => f.sort()))
+      ...(await globby('test/**/*.js').then((f) => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual([]);
@@ -64,7 +64,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-sdk=@percy/selenium-webdriver',
-      ...(await globby('test/**/*.test.js').then((f) => f.sort()))
+      ...(await globby('test/**/*.js').then((f) => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual(['[percy] The specified SDK was not found in your dependencies\n']);
@@ -109,7 +109,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
         `--transform=${require.resolve('../../transforms/import-default')}`,
         '--percy-installed=@percy/seleniumjs',
         '--percy-sdk=@percy/selenium-webdriver',
-        ...(await globby('test/**/*.test.js').then((f) => f.sort()))
+        ...(await globby('test/**/*.js').then((f) => f.sort()))
       ]);
 
       expect(logger.stderr).toEqual([]);

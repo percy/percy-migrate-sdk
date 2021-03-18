@@ -12,7 +12,7 @@ class NightmareMigration extends SDKMigration {
 
   transforms = [{
     message: 'SDK exports have changed, update imports?',
-    default: '{test,tests}/**/*{-test,.test}.{js,ts}',
+    default: '{test,spec}?(s)/**/*.js',
     async transform(paths) {
       await run(require.resolve('jscodeshift/bin/jscodeshift'), [
         `--transform=${path.resolve(__dirname, '../../transforms/import-default.js')}`,

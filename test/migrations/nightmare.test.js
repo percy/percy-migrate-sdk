@@ -49,7 +49,7 @@ describe('Migrations - @percy/nightmare', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/nightmare',
       '--percy-sdk=@percy/nightmare',
-      ...(await globby('test/**/*.test.js').then(f => f.sort()))
+      ...(await globby('test/**/*.js').then(f => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual([]);
@@ -73,7 +73,7 @@ describe('Migrations - @percy/nightmare', () => {
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-sdk=@percy/nightmare',
-      ...(await globby('test/**/*.test.js').then(f => f.sort()))
+      ...(await globby('test/**/*.js').then(f => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual([

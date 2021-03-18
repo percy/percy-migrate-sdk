@@ -239,6 +239,11 @@ class Migrate extends Command {
         filter: glob => globby(glob)
       }]);
 
+      if (!filePaths?.length) {
+        this.log.error('Could not find any files matching the pattern');
+        continue;
+      }
+
       await t.transform.call(sdk, filePaths);
     }
   }

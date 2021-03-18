@@ -49,7 +49,7 @@ describe('Migrations - @percy/protractor', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/protractor',
       '--percy-sdk=@percy/protractor',
-      ...(await globby('test/**/*.test.js').then(f => f.sort()))
+      ...(await globby('test/**/*.js').then(f => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual([]);
@@ -73,7 +73,7 @@ describe('Migrations - @percy/protractor', () => {
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-sdk=@percy/protractor',
-      ...(await globby('test/**/*.test.js').then(f => f.sort()))
+      ...(await globby('test/**/*.js').then(f => f.sort()))
     ]);
 
     expect(logger.stderr).toEqual([
