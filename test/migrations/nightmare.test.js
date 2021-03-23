@@ -87,4 +87,37 @@ describe('Migrations - @percy/nightmare', () => {
       '[percy] Migration complete!\n'
     ]);
   });
+
+  describe('with TypeScript files', () => {
+    beforeEach(() => {
+      ({ packageJSON, prompts, run } = setupMigrationTest('nightmare', {
+        mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
+        filePaths: ['test/bar.ts']
+      }));
+    });
+
+    it('transforms sdk imports for TypeScript', async () => {
+      await Migrate('@percy/nightmare', '--skip-cli');
+
+      expect(prompts[2]).toEqual({
+        type: 'confirm',
+        name: 'doTransform',
+        message: 'SDK exports have changed, update imports?',
+        default: true
+      });
+
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
+        `--transform=${require.resolve('../../transforms/import-default')}`,
+        '--percy-installed=@percy/nightmare',
+        '--parser=ts',
+        '--percy-sdk=@percy/nightmare',
+        'test/bar.ts'
+      ]);
+
+      expect(logger.stderr).toEqual([]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
+    });
+  });
 });

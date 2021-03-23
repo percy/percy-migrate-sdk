@@ -16,6 +16,19 @@ describe('Transforms - import-default.js', () => {
     `);
   });
 
+  it('transforms TypeScript named imports into TS imports', () => {
+    expect(applyTransform(transform, {
+      'percy-installed': '@percy/sdk-old',
+      'percy-sdk': '@percy/sdk-new'
+    }, dedent`
+      import { percySnapshot } from '@percy/sdk-old';
+      import { percySnapshot as psnap } from '@percy/sdk-old';
+    `, 'test/bar.ts')).toEqual(dedent`
+      import * as percySnapshot from '@percy/sdk-new';
+      import * as psnap from '@percy/sdk-new';
+    `);
+  });
+
   it('transforms required variables', () => {
     expect(applyTransform(transform, {
       'percy-sdk': '@percy/sdk',

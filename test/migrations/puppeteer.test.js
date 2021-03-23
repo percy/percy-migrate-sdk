@@ -87,4 +87,37 @@ describe('Migrations - @percy/puppeteer', () => {
       '[percy] Migration complete!\n'
     ]);
   });
+
+  describe('with TypeScript files', () => {
+    beforeEach(() => {
+      ({ packageJSON, prompts, run } = setupMigrationTest('puppeteer', {
+        mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
+        filePaths: ['test/bar.ts']
+      }));
+    });
+
+    it('transforms sdk imports for TypeScript', async () => {
+      await Migrate('@percy/puppeteer', '--skip-cli');
+
+      expect(prompts[2]).toEqual({
+        type: 'confirm',
+        name: 'doTransform',
+        message: 'SDK exports have changed, update imports?',
+        default: true
+      });
+
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
+        `--transform=${require.resolve('../../transforms/import-default')}`,
+        '--percy-installed=@percy/puppeteer',
+        '--parser=ts',
+        '--percy-sdk=@percy/puppeteer',
+        'test/bar.ts'
+      ]);
+
+      expect(logger.stderr).toEqual([]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
+    });
+  });
 });
