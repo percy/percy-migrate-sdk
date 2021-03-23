@@ -5,7 +5,7 @@
  * --percy-installed=NAME  installed SDK package name (default: --percy-sdk)
  * --print-options=JSON    output print options (default: {"quote":"single","lineTerminator":"\n"})
 */
-export default function({ source }, { j }, options) {
+export default function({ path, source }, { j }, options) {
   let sdk = options['percy-sdk'];
   if (!sdk) throw new Error('--percy-sdk is required');
 
@@ -20,7 +20,13 @@ export default function({ source }, { j }, options) {
     ))
     .forEach(({ value: node }) => {
       let local = node.specifiers[0].local.name;
-      node.specifiers = [j.importDefaultSpecifier(j.identifier(local))];
+
+      if (path.endsWith('.ts')) {
+        node.specifiers = [j.importNamespaceSpecifier(j.identifier(local))];
+      } else {
+        node.specifiers = [j.importDefaultSpecifier(j.identifier(local))];
+      }
+
       node.source.value = sdk;
     });
 

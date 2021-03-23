@@ -1,5 +1,4 @@
 import expect from 'expect';
-import globby from 'globby';
 import {
   Migrate,
   logger,
@@ -12,7 +11,8 @@ describe('Migrations - @percy/webdriverio', () => {
 
   beforeEach(() => {
     ({ packageJSON, prompts, run } = setupMigrationTest('webdriverio', {
-      mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
+      mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
+      filePaths: ['test/foo.js', 'test/bar.js', 'test/bazz.js']
     }));
   });
 
@@ -49,7 +49,9 @@ describe('Migrations - @percy/webdriverio', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/webdriverio',
       '--percy-sdk=@percy/webdriverio',
-      ...(await globby('test/**/*.js').then(f => f.sort()))
+      'test/foo.js',
+      'test/bar.js',
+      'test/bazz.js'
     ]);
 
     expect(logger.stderr).toEqual([]);
@@ -73,7 +75,9 @@ describe('Migrations - @percy/webdriverio', () => {
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-sdk=@percy/webdriverio',
-      ...(await globby('test/**/*.js').then(f => f.sort()))
+      'test/foo.js',
+      'test/bar.js',
+      'test/bazz.js'
     ]);
 
     expect(logger.stderr).toEqual([
