@@ -7,8 +7,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
 
   beforeEach(() => {
     ({ packageJSON, prompts, run } = setupMigrationTest('selenium-javascript', {
-      mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
-      filePaths: ['test/foo.js', 'test/bar.js', 'test/bazz.js']
+      mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));
   });
 
@@ -127,7 +126,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
     beforeEach(() => {
       ({ packageJSON, prompts, run } = setupMigrationTest('selenium-javascript', {
         mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
-        filePaths: ['test/bar.ts']
+        mockPrompts: { filePaths: ['test/bar.ts'] }
       }));
     });
 

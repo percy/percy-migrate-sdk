@@ -15,7 +15,7 @@ export default function setupMigrationTest(filename, mocks) {
     isSDK: true,
     upgradeSDK: true,
     doTransform: true,
-    filePaths: mocks.filePaths,
+    filePaths: ['test/foo.js', 'test/bar.js', 'test/bazz.js'],
     ...mocks.mockPrompts
   });
 
