@@ -1,5 +1,4 @@
 import expect from 'expect';
-import globby from 'globby';
 import {
   Migrate,
   logger,
@@ -49,7 +48,9 @@ describe('Migrations - @percy/webdriverio', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/webdriverio',
       '--percy-sdk=@percy/webdriverio',
-      ...(await globby('test/**/*.js').then(f => f.sort()))
+      'test/foo.js',
+      'test/bar.js',
+      'test/bazz.js'
     ]);
 
     expect(logger.stderr).toEqual([]);
@@ -73,7 +74,9 @@ describe('Migrations - @percy/webdriverio', () => {
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-sdk=@percy/webdriverio',
-      ...(await globby('test/**/*.js').then(f => f.sort()))
+      'test/foo.js',
+      'test/bar.js',
+      'test/bazz.js'
     ]);
 
     expect(logger.stderr).toEqual([
@@ -82,5 +85,38 @@ describe('Migrations - @percy/webdriverio', () => {
     expect(logger.stdout).toEqual([
       '[percy] Migration complete!\n'
     ]);
+  });
+
+  describe('with TypeScript files', () => {
+    beforeEach(() => {
+      ({ packageJSON, prompts, run } = setupMigrationTest('webdriverio', {
+        mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
+        mockPrompts: { filePaths: ['test/bar.ts'] }
+      }));
+    });
+
+    it('transforms sdk imports for TypeScript', async () => {
+      await Migrate('@percy/webdriverio', '--skip-cli');
+
+      expect(prompts[2]).toEqual({
+        type: 'confirm',
+        name: 'doTransform',
+        message: 'SDK exports have changed, update imports?',
+        default: true
+      });
+
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
+        `--transform=${require.resolve('../../transforms/import-default')}`,
+        '--percy-installed=@percy/webdriverio',
+        '--parser=ts',
+        '--percy-sdk=@percy/webdriverio',
+        'test/bar.ts'
+      ]);
+
+      expect(logger.stderr).toEqual([]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
+    });
   });
 });

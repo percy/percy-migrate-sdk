@@ -1,5 +1,4 @@
 import expect from 'expect';
-import globby from 'globby';
 import {
   Migrate,
   logger,
@@ -49,7 +48,9 @@ describe('Migrations - @percy/puppeteer', () => {
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-installed=@percy/puppeteer',
       '--percy-sdk=@percy/puppeteer',
-      ...(await globby('test/**/*.js').then(f => f.sort()))
+      'test/foo.js',
+      'test/bar.js',
+      'test/bazz.js'
     ]);
 
     expect(logger.stderr).toEqual([]);
@@ -73,7 +74,9 @@ describe('Migrations - @percy/puppeteer', () => {
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${require.resolve('../../transforms/import-default')}`,
       '--percy-sdk=@percy/puppeteer',
-      ...(await globby('test/**/*.js').then(f => f.sort()))
+      'test/foo.js',
+      'test/bar.js',
+      'test/bazz.js'
     ]);
 
     expect(logger.stderr).toEqual([
@@ -82,5 +85,38 @@ describe('Migrations - @percy/puppeteer', () => {
     expect(logger.stdout).toEqual([
       '[percy] Migration complete!\n'
     ]);
+  });
+
+  describe('with TypeScript files', () => {
+    beforeEach(() => {
+      ({ packageJSON, prompts, run } = setupMigrationTest('puppeteer', {
+        mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
+        mockPrompts: { filePaths: ['test/bar.ts'] }
+      }));
+    });
+
+    it('transforms sdk imports for TypeScript', async () => {
+      await Migrate('@percy/puppeteer', '--skip-cli');
+
+      expect(prompts[2]).toEqual({
+        type: 'confirm',
+        name: 'doTransform',
+        message: 'SDK exports have changed, update imports?',
+        default: true
+      });
+
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
+        `--transform=${require.resolve('../../transforms/import-default')}`,
+        '--percy-installed=@percy/puppeteer',
+        '--parser=ts',
+        '--percy-sdk=@percy/puppeteer',
+        'test/bar.ts'
+      ]);
+
+      expect(logger.stderr).toEqual([]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
+    });
   });
 });

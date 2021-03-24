@@ -28,8 +28,8 @@ export function dedent(raw, ...values) {
 }
 
 // Call the transform function with the appropriate arguments
-export default function applyTransform(module, options = {}, source) {
+export default function applyTransform(module, options = {}, source, path = 'test.js') {
   let transform = module.default ?? module;
   let api = { j: jscodeshift, jscodeshift };
-  return transform({ source }, api, options);
+  return transform({ path, source }, api, options);
 }
