@@ -1,4 +1,5 @@
 module.exports = [
+  require('./cypress'),
   require('./testcafe'),
   require('./puppeteer'),
   require('./nightmare'),
