@@ -41,7 +41,7 @@ describe('Migrations - @percy/cypress', () => {
     expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doTransform',
-      message: 'Percy tasks were removed, update plugins file?',
+      message: 'Percy tasks were removed, update Cypress plugins file?',
       default: true
     });
 
@@ -64,7 +64,7 @@ describe('Migrations - @percy/cypress', () => {
     expect(prompts[2]).toEqual({
       type: 'confirm',
       name: 'doTransform',
-      message: 'Percy tasks were removed, update plugins file?',
+      message: 'Percy tasks were removed, update Cypress plugins file?',
       default: true
     });
 

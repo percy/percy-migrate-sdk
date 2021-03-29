@@ -11,7 +11,7 @@ class CypressMigration extends SDKMigration {
   }
 
   transforms = [{
-    message: 'Percy tasks were removed, update plugins file?',
+    message: 'Percy tasks were removed, update Cypress plugins file?',
     default: 'cypress/plugins/index.js',
     async transform(paths) {
       await run(require.resolve('jscodeshift/bin/jscodeshift'), [
