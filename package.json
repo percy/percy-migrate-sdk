@@ -1,7 +1,7 @@
 {
   "name": "@percy/migrate",
   "description": "Easily upgrade and migrate your Percy SDK to the latest version",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "license": "MIT",
   "main": "dist/index.js",
   "bin": {
