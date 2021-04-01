@@ -20,7 +20,7 @@ export default function({ source }, { j }, options) {
   // - const <local> = require('@percy/cypress/task')
   root
     .find(j.VariableDeclarator, node => (
-      node.init.type === 'CallExpression' &&
+      node.init?.type === 'CallExpression' &&
       node.init.callee.name === 'require' &&
       node.init.arguments[0].value === '@percy/cypress/task'
     ))
@@ -34,11 +34,11 @@ export default function({ source }, { j }, options) {
   root
     .find(j.CallExpression, node => (
       node.callee.name === 'on' &&
-      node.arguments[0].type === 'Literal' &&
+      node.arguments[0]?.type === 'Literal' &&
       node.arguments[0].value === 'task' &&
-      ((node.arguments[1].type === 'Identifier' &&
+      ((node.arguments[1]?.type === 'Identifier' &&
         node.arguments[1].name === local) ||
-       (node.arguments[1].type === 'CallExpression' &&
+       (node.arguments[1]?.type === 'CallExpression' &&
         node.arguments[1].callee.name === 'require' &&
         node.arguments[1].arguments[0].value === '@percy/cypress/task'))
     ))

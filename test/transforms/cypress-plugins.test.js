@@ -45,4 +45,17 @@ describe('Transforms - cypress-plugins.js', () => {
       };
     `);
   });
+
+  it('does not error when encountering unexpected trees', () => {
+    expect(applyTransform(transform, {}, dedent`
+      let percyHealthCheck = require('@percy/cypress/task');
+      let foo = on('task'); // callee one args
+      let bar = on(); // callee with no args
+      let baz; // declaration with no init
+    `)).toEqual(dedent`
+      let foo = on('task'); // callee one args
+      let bar = on(); // callee with no args
+      let baz; // declaration with no init
+    `);
+  });
 });
