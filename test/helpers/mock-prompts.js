@@ -2,6 +2,7 @@ import inquirer from 'inquirer';
 
 // Mock prompts by stubbing the inquirer.prompt function
 export default function mockPrompts(answers) {
+  let props = Object.getOwnPropertyDescriptors(inquirer.prompt);
   let prompts = [];
 
   inquirer.prompt = async questions => {
@@ -17,5 +18,6 @@ export default function mockPrompts(answers) {
     return result;
   };
 
+  Object.defineProperties(inquirer.prompt, props);
   return prompts;
 }
