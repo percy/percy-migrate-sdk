@@ -1,5 +1,4 @@
 import expect from 'expect';
-import globby from 'globby';
 import {
   Migrate,
   logger,
@@ -21,6 +20,52 @@ describe('SDK transforms', () => {
     prompts = mockPrompts({
       isSDK: true,
       doTransform: false
+    });
+  });
+
+  describe('conditional transforms', () => {
+    beforeEach(() => {
+      transformed = [];
+
+      prompts = mockPrompts({
+        isSDK: true,
+        doTransform: true,
+        filePaths: ['test/foo.js']
+      });
+
+      mockMigrations([{
+        name: '@percy/sdk-test',
+        version: '^2.0.0',
+        transforms: [{
+          message: 'Transform v0?',
+          default: 'test/**/*.js',
+          when: i => i.version === '^0.0.0',
+          transform: () => transformed.push('v0')
+        }, {
+          message: 'Transform v1?',
+          when: i => i.version === '^1.0.0',
+          default: 'test/**/*.js',
+          transform: () => transformed.push('v1')
+        }]
+      }]);
+    });
+
+    it('skips prompting when the condition is false', async () => {
+      await Migrate('@percy/sdk-test', '--skip-cli');
+
+      expect(prompts[2]).toEqual({
+        type: 'confirm',
+        name: 'doTransform',
+        message: 'Transform v1?',
+        default: true
+      });
+
+      expect(transformed).toEqual(['v1']);
+
+      expect(logger.stderr).toEqual([]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
     });
   });
 
@@ -70,33 +115,28 @@ describe('SDK transforms', () => {
       prompts = mockPrompts({
         isSDK: true,
         doTransform: true,
-        filePaths: q => q.filter(q.default)
-          .then(f => f.sort())
+        filePaths: ['test/foo.js']
       });
 
       await Migrate('@percy/sdk-test', '--skip-cli');
 
       expect(prompts[3]).toEqual({
-        type: 'input',
+        type: 'glob',
         name: 'filePaths',
         message: 'Which files?',
         default: 'test/**/*.js',
-        filter: expect.any(Function)
+        glob: { ignore: 'node_modules' }
       });
 
       expect(prompts[5]).toEqual({
-        type: 'input',
+        type: 'glob',
         name: 'filePaths',
         message: 'Which files?',
         default: 'test/**/*.js',
-        filter: expect.any(Function)
+        glob: { ignore: 'node_modules' }
       });
 
-      expect(transformed).toEqual(
-        await globby('test/**/*.js')
-          .then(f => f.sort())
-      );
-
+      expect(transformed).toEqual(['test/foo.js']);
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
         '[percy] Migration complete!\n'
@@ -123,8 +163,7 @@ describe('SDK transforms', () => {
       mockPrompts({
         isSDK: true,
         doTransform: true,
-        filePaths: q => q.filter(q.default)
-          .then(f => f.sort())
+        filePaths: []
       });
 
       await Migrate('@percy/sdk-test', '--skip-cli');

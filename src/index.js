@@ -221,6 +221,10 @@ class Migrate extends Command {
   // Confirms running available SDK transforms
   async confirmTransforms(sdk) {
     for (let t of sdk.transforms) {
+      if (sdk.installed && t.when?.(sdk.installed) === false) {
+        continue;
+      }
+
       let { doTransform } = await inquirer.prompt([{
         type: 'confirm',
         name: 'doTransform',
