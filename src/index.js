@@ -3,10 +3,11 @@ import Command, { flags } from '@oclif/command';
 import PercyConfig from '@percy/config';
 import logger from '@percy/logger';
 import inquirer from 'inquirer';
-import globby from 'globby';
 import inspectDeps from './inspect';
 import migrations from './migrations';
 import { run, npm } from './utils';
+
+inquirer.registerPrompt('glob', require('inquirer-glob-prompt'));
 
 class Migrate extends Command {
   static description = 'Upgrade and migrate your Percy SDK to the latest version';
@@ -220,6 +221,10 @@ class Migrate extends Command {
   // Confirms running available SDK transforms
   async confirmTransforms(sdk) {
     for (let t of sdk.transforms) {
+      if (sdk.installed && t.when?.(sdk.installed) === false) {
+        continue;
+      }
+
       let { doTransform } = await inquirer.prompt([{
         type: 'confirm',
         name: 'doTransform',
@@ -232,11 +237,13 @@ class Migrate extends Command {
       }
 
       let { filePaths } = await inquirer.prompt([{
-        type: 'input',
+        type: 'glob',
         name: 'filePaths',
         message: 'Which files?',
         default: t.default,
-        filter: glob => globby(glob)
+        glob: {
+          ignore: 'node_modules'
+        }
       }]);
 
       if (!filePaths?.length) {

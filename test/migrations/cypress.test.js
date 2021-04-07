@@ -11,6 +11,7 @@ describe('Migrations - @percy/cypress', () => {
 
   beforeEach(() => {
     ({ packageJSON, prompts, run } = setupMigrationTest('cypress', {
+      version: '2.1.3',
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
       mockPrompts: { filePaths: ['cypress/plugins/index.js'] }
     }));
@@ -76,6 +77,20 @@ describe('Migrations - @percy/cypress', () => {
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK was not found in your dependencies\n'
     ]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
+
+  it('does not ask to remove tasks for older versions', async () => {
+    packageJSON.devDependencies['@percy/cypress'] = '1.0.0';
+
+    await Migrate('@percy/cypress', '--skip-cli');
+
+    expect(prompts[2]).toBeUndefined();
+    expect(run[jscodeshiftbin].calls).toBeUndefined();
+
+    expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
       '[percy] Migration complete!\n'
     ]);
