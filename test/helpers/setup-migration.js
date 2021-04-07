@@ -7,7 +7,7 @@ import mockCommands from './mock-commands';
 export default function setupMigrationTest(filename, mocks) {
   let packageJSON = mockPackageJSON({
     devDependencies: {
-      [require(`../../src/migrations/${filename}`).name]: '0.0.0'
+      [require(`../../src/migrations/${filename}`).name]: mocks.version || '0.0.0'
     }
   });
 
