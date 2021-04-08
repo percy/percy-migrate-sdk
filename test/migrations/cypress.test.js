@@ -11,7 +11,7 @@ describe('Migrations - @percy/cypress', () => {
 
   beforeEach(() => {
     ({ packageJSON, prompts, run } = setupMigrationTest('cypress', {
-      version: '2.1.3',
+      installed: { version: '2.1.3' },
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
       mockPrompts: { filePaths: ['cypress/plugins/index.js'] }
     }));
