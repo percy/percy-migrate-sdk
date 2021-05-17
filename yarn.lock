@@ -1187,19 +1187,19 @@
   integrity sha512-60CHpq+eqnTxLZQ4PGHYNwUX572hgpMHGPtTWMjdTMsAvlm69lZV/4ly6O3sAYkomo4NggGcomrDpBe34rxUqw==
 
 "@percy/config@^1.0.0-beta.36":
-  version "1.0.0-beta.39"
-  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.39.tgz#96dc58f42200516f9a95b1c901ca41e98ffa5a59"
-  integrity sha512-Mnpo0xXtH2GOhUZmzqG4bT/r56eRYIkB9joAZ27JG2lHr597k4ZlmX0oz//Hnc4VQkMa9JvRfy66iQP+L2Oxiw==
+  version "1.0.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.49.tgz#5fa62cc39487e940c1140ab6af28e48e867abfe7"
+  integrity sha512-nE+KEB60STTvkVI8M+hUrIURb/jxipiUXVn6PIaZ08qZrstTrdjwtr+ohTmNefHmCrXuQJ6CqpfPuHqqEIFmqg==
   dependencies:
-    "@percy/logger" "^1.0.0-beta.39"
-    ajv "^7.0.3"
+    "@percy/logger" "^1.0.0-beta.49"
+    ajv "^8.0.5"
     cosmiconfig "^7.0.0"
     yaml "^1.10.0"
 
-"@percy/logger@^1.0.0-beta.36", "@percy/logger@^1.0.0-beta.39":
-  version "1.0.0-beta.39"
-  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.39.tgz#dd5c03866d0d494157be191237602d86d43de5ff"
-  integrity sha512-aEnKxCO3r9+bhxogIhJhxjh80QGImiIhbmik/oKCWNIc2KywATGRXsJvRmlF1DskA+RQcwzG/fENerSLNRycgQ==
+"@percy/logger@^1.0.0-beta.36", "@percy/logger@^1.0.0-beta.49":
+  version "1.0.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.49.tgz#31f50c6b0bbdb8fc95c381951d2e1e0b9bff70a9"
+  integrity sha512-CDr4QbbcwNV4iqASH/Qfmg97yykTfN3lmY3m2g5YEFGhrXB/7PHUdLHL6MWR5aU6BV+Ec/V1s06s7aDV+OQmSw==
 
 "@types/glob@^7.1.1":
   version "7.1.3"
@@ -1298,10 +1298,20 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^7.0.2, ajv@^7.0.3:
+ajv@^7.0.2:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.1.1.tgz#1e6b37a454021fa9941713f38b952fc1c8d32a84"
   integrity sha512-ga/aqDYnUy/o7vbsRTFhhTsNeXiYb5JWDIcRIeZfwRNCefwjNTVYCGdGSUrEmiu3yDK3vFvNbgJxvrQW4JXrYQ==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
+
+ajv@^8.0.5:
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.4.0.tgz#48984fdb2ce225cab15795f0772a8d85669075e4"
+  integrity sha512-7QD2l6+KBSLwf+7MuYocbWvRPdOu63/trReTLu2KFwkgctnub1auoF+Y1WYcm09CTM7quuscrzqmASaLHC/K4Q==
   dependencies:
     fast-deep-equal "^3.1.1"
     json-schema-traverse "^1.0.0"
