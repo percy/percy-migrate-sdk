@@ -25,3 +25,4 @@ export { logger, mockRequire, mockCommands };
 export { default as mockPrompts } from './mock-prompts';
 export { default as mockMigrations } from './mock-migrations';
 export { default as setupMigrationTest } from './setup-migration';
+export { default as setupCodeshift } from './setup-codeshift';

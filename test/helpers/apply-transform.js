@@ -1,5 +1,3 @@
-import jscodeshift from 'jscodeshift';
-
 // Dedent large blocks of template strings to make reading tests easier
 export function dedent(raw, ...values) {
   let result = raw.reduce((acc, str, i) => {
@@ -29,6 +27,7 @@ export function dedent(raw, ...values) {
 
 // Call the transform function with the appropriate arguments
 export default function applyTransform(module, options = {}, source, path = 'test.js') {
+  let jscodeshift = require('../../.codeshift/js/node_modules/jscodeshift');
   let transform = module.default ?? module;
   let api = { j: jscodeshift, jscodeshift };
   return transform({ path, source }, api, options);

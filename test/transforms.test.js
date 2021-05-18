@@ -4,11 +4,12 @@ import {
   logger,
   mockPackageJSON,
   mockPrompts,
-  mockMigrations
+  mockMigrations,
+  mockCommands
 } from './helpers';
 
 describe('SDK transforms', () => {
-  let transformed, prompts;
+  let transformed, prompts, run;
 
   beforeEach(() => {
     mockPackageJSON({
@@ -172,6 +173,81 @@ describe('SDK transforms', () => {
       expect(logger.stderr).toEqual([
         '[percy] Could not find any files matching the pattern\n'
       ]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
+    });
+  });
+
+  describe('installing codeshift libraries', () => {
+    beforeEach(() => {
+      run = mockCommands({
+        npm: () => ({ status: 0 }),
+        gem: () => ({ status: 0 })
+      });
+
+      mockMigrations([{
+        name: '@percy/sdk-test',
+        version: '^2.0.0',
+        transforms: [{
+          message: 'Transform v0?',
+          default: 'test/**/*.js',
+          transform: () => {}
+        }]
+      }, {
+        name: 'percy-ruby',
+        version: '^5.0.0',
+        language: 'ruby',
+        transforms: [{
+          message: 'Transform Ruby?',
+          default: 'test/**/*.rb',
+          transform: () => {}
+        }]
+      }]);
+    });
+
+    it('installs jscodeshift for JS SDKs', async () => {
+      prompts = mockPrompts({
+        isSDK: true,
+        doTransform: true,
+        filePaths: ['test/foo.js']
+      });
+
+      await Migrate('@percy/sdk-test', '--skip-cli');
+
+      expect(run.npm.calls[0].args[0].endsWith('.codeshift/js')).toBe(true);
+      expect(run.npm.calls[0].args[1]).toEqual('install');
+      expect(run.npm.calls[0].args[2]).toEqual('jscodeshift');
+
+      expect(run.gem.calls).toEqual(undefined);
+      expect(logger.stderr).toEqual([]);
+      expect(logger.stdout).toEqual([
+        '[percy] Migration complete!\n'
+      ]);
+    });
+
+    it('confirms any SDK transforms', async () => {
+      prompts = mockPrompts({
+        isSDK: true,
+        doTransform: true,
+        filePaths: ['test/foo.rb']
+      });
+
+      // TODO HACK
+      mockPackageJSON({
+        devDependencies: {
+          'percy-ruby': '^1.0.0'
+        }
+      });
+
+      await Migrate('percy-ruby', '--skip-cli');
+
+      expect(run.gem.calls[0].args[0]).toEqual('install');
+      expect(run.gem.calls[0].args[1]).toEqual('codeshift');
+      expect(run.gem.calls[0].args[2].endsWith('.codeshift/ruby')).toBe(true);
+      expect(run.gem.calls[0].args[3]).toEqual('--no-document');
+
+      expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
         '[percy] Migration complete!\n'
       ]);

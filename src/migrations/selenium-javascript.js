@@ -19,7 +19,7 @@ class SeleniumJavaScriptMigration extends SDKMigration {
     message: 'The SDK package name has changed, update imports?',
     default: '{test,spec}?(s)/**/*.{js,ts}',
     async transform(paths) {
-      await run(require.resolve('jscodeshift/bin/jscodeshift'), [
+      await run(path.resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift'), [
         `--transform=${path.resolve(__dirname, '../../transforms/import-default.js')}`,
         this.installed && `--percy-installed=${this.installed.name}`,
         paths.some((p) => p.endsWith('.ts')) && '--parser=ts',

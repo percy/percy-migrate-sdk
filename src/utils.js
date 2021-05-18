@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { existsSync } from 'fs';
 import logger from '@percy/logger';
 import spawn from 'cross-spawn';
@@ -65,3 +66,15 @@ export const npm = {
     }[npm.manager]);
   }
 };
+
+export async function installCodeshift(language) {
+  let installLocation = `${resolve(__dirname, '../')}/.codeshift`;
+
+  if (language === 'js') {
+    await run('npm', [`--prefix=${installLocation}/js`, 'install', 'jscodeshift']);
+  }
+
+  if (language === 'ruby') {
+    await run('gem', ['install', 'codeshift', `-i=${installLocation}/ruby`, '--no-document']);
+  }
+}

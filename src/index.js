@@ -5,7 +5,7 @@ import logger from '@percy/logger';
 import inquirer from 'inquirer';
 import inspectDeps from './inspect';
 import migrations from './migrations';
-import { run, npm } from './utils';
+import { run, npm, installCodeshift } from './utils';
 
 inquirer.registerPrompt('glob', require('inquirer-glob-prompt'));
 
@@ -235,6 +235,8 @@ class Migrate extends Command {
       if (!doTransform) {
         continue;
       }
+
+      await installCodeshift(sdk.language);
 
       let { filePaths } = await inquirer.prompt([{
         type: 'glob',

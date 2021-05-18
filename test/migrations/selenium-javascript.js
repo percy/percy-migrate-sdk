@@ -1,8 +1,9 @@
+import { resolve } from 'path';
 import expect from 'expect';
 import { Migrate, logger, setupMigrationTest } from '../helpers';
 
 describe('Migrations - @percy/selenium-webdriver', () => {
-  let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift');
   let packageJSON, prompts, run;
 
   beforeEach(() => {

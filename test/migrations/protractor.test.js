@@ -4,9 +4,10 @@ import {
   logger,
   setupMigrationTest
 } from '../helpers';
+import { resolve } from 'path';
 
 describe('Migrations - @percy/protractor', () => {
-  let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift');
   let packageJSON, prompts, run;
 
   beforeEach(() => {
