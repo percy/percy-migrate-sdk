@@ -7,7 +7,7 @@ import {
 } from '../helpers';
 
 describe('Migrations - @percy/webdriverio', () => {
-  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift.js');
   let packageJSON, prompts, run;
 
   beforeEach(() => {

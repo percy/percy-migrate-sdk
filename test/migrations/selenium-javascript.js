@@ -3,7 +3,7 @@ import expect from 'expect';
 import { Migrate, logger, setupMigrationTest } from '../helpers';
 
 describe('Migrations - @percy/selenium-webdriver', () => {
-  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift.js');
   let packageJSON, prompts, run;
 
   beforeEach(() => {
