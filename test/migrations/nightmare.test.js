@@ -4,10 +4,10 @@ import {
   logger,
   setupMigrationTest
 } from '../helpers';
-import { resolve } from 'path';
+import { codeshift } from '../../src/utils';
 
 describe('Migrations - @percy/nightmare', () => {
-  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift.js');
+  let jscodeshiftbin = codeshift.js.bin;
   let packageJSON, prompts, run;
 
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { codeshift } from '../../src/utils';
 import expect from 'expect';
 import {
   Migrate,
@@ -7,7 +7,7 @@ import {
 } from '../helpers';
 
 describe('Migrations - @percy/webdriverio', () => {
-  let jscodeshiftbin = resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift.js');
+  let jscodeshiftbin = codeshift.js.bin;
   let packageJSON, prompts, run;
 
   beforeEach(() => {

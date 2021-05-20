@@ -1,5 +1,5 @@
 import path from 'path';
-import { run, npm } from '../utils';
+import { npm, codeshift } from '../utils';
 import SDKMigration from './base';
 
 class EmberMigration extends SDKMigration {
@@ -16,7 +16,7 @@ class EmberMigration extends SDKMigration {
     default: '{test,spec}?(s)/**/*.{js,ts}',
     when: i => i.name === 'ember-percy',
     async transform(paths) {
-      await run(path.resolve(__dirname, '../../.codeshift/js/node_modules/jscodeshift/bin/jscodeshift.js'), [
+      await codeshift.run('js', [
         `--transform=${path.resolve(__dirname, '../../transforms/import-default.js')}`,
         this.installed && `--percy-installed=${this.installed.name}`,
         paths.some((p) => p.endsWith('.ts')) && '--parser=ts',

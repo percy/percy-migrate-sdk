@@ -29,7 +29,10 @@
     "access": "public"
   },
   "mocha": {
-    "require": "@babel/register",
+    "require": [
+      "@babel/register",
+      "./test/helpers/setup-codeshift"
+    ],
     "recursive": true
   },
   "oclif": {

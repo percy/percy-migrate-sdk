@@ -1,11 +1,6 @@
 import expect from 'expect';
 import applyTransform, { dedent } from '../helpers/apply-transform';
 import transform from '../../transforms/import-default';
-import setupCodeshift from '../helpers/setup-codeshift';
-
-(async function() {
-  await setupCodeshift();
-})();
 
 describe('Transforms - import-default.js', () => {
   it('transforms named imports into default imports', () => {

@@ -1,11 +1,6 @@
 import expect from 'expect';
 import applyTransform, { dedent } from '../helpers/apply-transform';
 import transform from '../../transforms/cypress-plugins';
-import setupCodeshift from '../helpers/setup-codeshift';
-
-(async function() {
-  await setupCodeshift();
-})();
 
 describe('Transforms - cypress-plugins.js', function() {
   this.timeout(6000);
