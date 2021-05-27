@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { existsSync } from 'fs';
 import logger from '@percy/logger';
 import spawn from 'cross-spawn';
@@ -63,5 +64,34 @@ export const npm = {
       npm: ['uninstall'].concat(specs),
       yarn: ['remove'].concat(specs)
     }[npm.manager]);
+  }
+};
+
+export const codeshift = {
+  get path() {
+    let value = resolve(__dirname, '../.codeshift');
+    Object.defineProperty(codeshift, 'path', { value });
+    return value;
+  },
+
+  async install(lang, bin, install) {
+    bin = resolve(__dirname, '../.codeshift', lang, bin);
+
+    if (!existsSync(bin)) {
+      await install();
+    }
+
+    codeshift[lang].bin = bin;
+    return bin;
+  },
+
+  async run(lang, args) {
+    return run(await codeshift[lang].install(), args);
+  },
+
+  js: {
+    install: () => codeshift.install('js', 'node_modules/jscodeshift/bin/jscodeshift.js', () => {
+      return run('npm', [`--prefix=${codeshift.path}/js`, 'install', 'jscodeshift']);
+    })
   }
 };

@@ -1,4 +1,5 @@
 import expect from 'expect';
+import { codeshift } from '../../src/utils';
 import {
   Migrate,
   logger,
@@ -6,7 +7,7 @@ import {
 } from '../helpers';
 
 describe('Migrations - @percy/ember', () => {
-  let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = codeshift.js.bin;
   let packageJSON, prompts, run;
 
   beforeEach(() => {

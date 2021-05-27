@@ -1,8 +1,9 @@
+import { codeshift } from '../../src/utils';
 import expect from 'expect';
 import { Migrate, logger, setupMigrationTest } from '../helpers';
 
 describe('Migrations - @percy/selenium-webdriver', () => {
-  let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = codeshift.js.bin;
   let packageJSON, prompts, run;
 
   beforeEach(() => {
@@ -149,9 +150,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       ]);
 
       expect(logger.stderr).toEqual([]);
-      expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
-      ]);
+      expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
     });
   });
 });

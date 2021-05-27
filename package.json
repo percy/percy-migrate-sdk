@@ -29,7 +29,11 @@
     "access": "public"
   },
   "mocha": {
-    "require": "@babel/register",
+    "require": [
+      "@babel/register",
+      "./test/helpers/setup-codeshift"
+    ],
+    "timeout": 10000,
     "recursive": true
   },
   "oclif": {
@@ -44,7 +48,6 @@
     "cross-spawn": "^7.0.3",
     "inquirer": "^8.0.0",
     "inquirer-glob-prompt": "^0.1.0",
-    "jscodeshift": "^0.12.0",
     "semver": "^7.3.4"
   },
   "devDependencies": {

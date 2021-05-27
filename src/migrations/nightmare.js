@@ -1,5 +1,5 @@
 import path from 'path';
-import { run, npm } from '../utils';
+import { npm, codeshift } from '../utils';
 import SDKMigration from './base';
 
 class NightmareMigration extends SDKMigration {
@@ -14,7 +14,7 @@ class NightmareMigration extends SDKMigration {
     message: 'SDK exports have changed, update imports?',
     default: '{test,spec}?(s)/**/*.{js,ts}',
     async transform(paths) {
-      await run(require.resolve('jscodeshift/bin/jscodeshift'), [
+      await codeshift.run('js', [
         `--transform=${path.resolve(__dirname, '../../transforms/import-default.js')}`,
         this.installed && `--percy-installed=${this.installed.name}`,
         paths.some((p) => p.endsWith('.ts')) && '--parser=ts',

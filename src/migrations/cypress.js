@@ -1,6 +1,6 @@
 import path from 'path';
 import semver from 'semver';
-import { run, npm } from '../utils';
+import { npm, codeshift } from '../utils';
 import SDKMigration from './base';
 
 class CypressMigration extends SDKMigration {
@@ -16,7 +16,7 @@ class CypressMigration extends SDKMigration {
     default: 'cypress/plugins/index.js',
     when: i => semver.satisfies(i.version, '2 - 3'),
     async transform(paths) {
-      await run(require.resolve('jscodeshift/bin/jscodeshift'), [
+      await codeshift.run('js', [
         `--transform=${path.resolve(__dirname, '../../transforms/cypress-plugins.js')}`,
         ...paths
       ]);

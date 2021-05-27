@@ -4,9 +4,10 @@ import {
   logger,
   setupMigrationTest
 } from '../helpers';
+import { codeshift } from '../../src/utils';
 
 describe('Migrations - @percy/puppeteer', () => {
-  let jscodeshiftbin = require.resolve('jscodeshift/bin/jscodeshift');
+  let jscodeshiftbin = codeshift.js.bin;
   let packageJSON, prompts, run;
 
   beforeEach(() => {

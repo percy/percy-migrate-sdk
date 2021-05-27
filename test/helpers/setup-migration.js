@@ -27,7 +27,7 @@ export default function setupMigrationTest(filename, mocks) {
   });
 
   mockRequire('fs', {
-    existsSync: path => path.endsWith('package-lock.json')
+    existsSync: path => path.endsWith('package-lock.json') || path.includes('/.codeshift/')
   });
 
   mockRequire.reRequire('../../src/utils');
