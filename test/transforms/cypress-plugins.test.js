@@ -3,7 +3,6 @@ import applyTransform, { dedent } from '../helpers/apply-transform';
 import transform from '../../transforms/cypress-plugins';
 
 describe('Transforms - cypress-plugins.js', function() {
-  this.timeout(6000);
   it('removes common task usage', () => {
     expect(applyTransform(transform, {}, dedent`
       const someOtherTask = require('some-other-package');
