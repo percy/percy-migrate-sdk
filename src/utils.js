@@ -93,5 +93,10 @@ export const codeshift = {
     install: () => codeshift.install('js', 'node_modules/jscodeshift/bin/jscodeshift.js', () => {
       return run('npm', [`--prefix=${codeshift.path}/js`, 'install', 'jscodeshift']);
     })
+  },
+  ruby: {
+    install: () => codeshift.install('ruby', 'bin/codeshift', () => {
+      return run('gem', ['install', 'codeshift', `--install-dir=${codeshift.path}/ruby`, '--no-document']);
+    })
   }
 };

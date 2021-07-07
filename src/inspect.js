@@ -1,5 +1,8 @@
+import semver from 'semver';
+import { resolve } from 'path';
 import logger from '@percy/logger';
 import migrations from './migrations';
+import { execSync } from 'child_process';
 
 // Tries to detect the installed SDK by checking the current project's CWD. Checks non-dev deps in
 // addition to dev deps even though SDKs should only be installed as dev deps.
@@ -17,7 +20,7 @@ function inspectPackageJSON(info) {
 
     info.inspected.push('js');
   } catch (error) {
-    let log = logger('migrate:inspect');
+    let log = logger('migrate:inspect:js');
 
     if (error.code === 'MODULE_NOT_FOUND') {
       log.warn('Could not find package.json in current directory');
@@ -25,6 +28,30 @@ function inspectPackageJSON(info) {
       log.error('Encountered an error inspecting package.json');
       log.error(error);
     }
+  }
+}
+
+async function inspectGemFile(info) {
+  try {
+    let inspectRuby = resolve(__dirname, './inspect_gemfile.rb');
+    let output = execSync(`ruby ${inspectRuby}`, {
+      stdio: ['ignore', 'pipe', 'ignore'],
+      encoding: 'utf-8'
+    });
+
+    info.inspected.push('ruby');
+
+    if (!output) return;
+
+    let { name, version } = JSON.parse(output);
+    let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
+
+    version = semver.coerce(version).version;
+    if (SDK && version !== '0.0.0') info.installed.push(new SDK({ name, version }));
+  } catch (error) {
+    let log = logger('migrate:inspect:ruby');
+    log.error('Encountered an error inspecting Gemfile');
+    log.error(error);
   }
 }
 
@@ -40,7 +67,8 @@ export default function inspectDeps() {
   // JS projects
   inspectPackageJSON(info);
 
-  // @todo: other project languages?
+  // Ruby projects
+  inspectGemFile(info);
 
   return info;
 }
