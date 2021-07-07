@@ -19,5 +19,13 @@ export default function mockCommands(cmds) {
     }
   });
 
+  mockRequire('child_process', {
+    execSync: (cmd, args, options) => {
+      // match the ruby scripts output
+      // eslint-disable-next-line
+      return `{ \"name\": \"percy-capybara\", \"version\": \"0.0.0\" }`;
+    }
+  });
+
   return cmds;
 }

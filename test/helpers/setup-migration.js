@@ -21,17 +21,17 @@ export default function setupMigrationTest(filename, mocks) {
     ...mocks.mockPrompts
   });
 
+  let run = mockCommands({
+    npm: () => ({ status: 0 }),
+    ...mocks.mockCommands
+  });
+
   mockRequire('child_process', {
     execSync: (cmd, args, options) => {
       // match the ruby scripts output
       // eslint-disable-next-line
       return `{ \"name\": \"percy-capybara\", \"version\": \"${mocks.installed?.version || '0.0.0'}\" }`;
     }
-  });
-
-  let run = mockCommands({
-    npm: () => ({ status: 0 }),
-    ...mocks.mockCommands
   });
 
   mockRequire('fs', {

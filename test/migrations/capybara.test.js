@@ -115,7 +115,7 @@ describe('Migrations - percy-capybara', () => {
 
     expect(logger.stderr).toEqual([
       '[percy] Encountered an error inspecting Gemfile\n',
-      '[percy] The error that happens here\n'
+      '[percy] Error: The error that happens here\n'
     ]);
     expect(logger.stdout).toEqual([
       '[percy] Migration complete!\n'

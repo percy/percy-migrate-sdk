@@ -40,9 +40,6 @@ async function inspectGemFile(info) {
     });
 
     info.inspected.push('ruby');
-
-    if (!output) return;
-
     let { name, version } = JSON.parse(output);
     let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
 
