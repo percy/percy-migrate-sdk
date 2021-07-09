@@ -82,31 +82,4 @@ describe('Migrations - percy-capybara', () => {
       '[percy] Migration complete!\n'
     ]);
   });
-
-  it('catches errors', async () => {
-    ({ prompts, run } = setupMigrationTest('capybara', {
-      installed: { version: '4.3.3' },
-      mockCommands: {
-        [rubycodeshiftbin]: () => ({ status: 0 }),
-        bundle: () => ({ status: 0 })
-      },
-      mockPrompts: { filePaths: ['specs/my_test.rb'] }
-    }));
-
-    mockRequire('child_process', {
-      execSync: (cmd, args, options) => {
-        throw new Error('The error that happens here');
-      }
-    });
-
-    await Migrate('percy-capybara', '--skip-cli');
-
-    expect(logger.stderr).toEqual([
-      '[percy] Encountered an error inspecting Gemfile\n',
-      '[percy] Error: The error that happens here\n'
-    ]);
-    expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
-    ]);
-  });
 });
