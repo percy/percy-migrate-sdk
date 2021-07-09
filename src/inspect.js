@@ -39,12 +39,12 @@ async function inspectGemFile(info) {
       encoding: 'utf-8'
     });
 
-    info.inspected.push('ruby');
     let { name, version } = JSON.parse(output);
     let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
+    version = semver.coerce(version)?.version;
+    if (SDK) info.installed.push(new SDK({ name, version }));
 
-    version = semver.coerce(version).version;
-    if (SDK && version !== '0.0.0') info.installed.push(new SDK({ name, version }));
+    info.inspected.push('ruby');
   } catch (error) {
     let log = logger('migrate:inspect:ruby');
     log.error('Encountered an error inspecting Gemfile');
