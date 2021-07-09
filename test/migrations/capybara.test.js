@@ -9,69 +9,57 @@ import {
 
 describe('Migrations - percy-capybara', () => {
   let rubycodeshiftbin = codeshift.ruby.bin;
-  let prompts, run;
+  let inspectGemfile, prompts, run;
 
-  describe('with an old sdk installed', () => {
-    beforeEach(() => {
-      ({ prompts, run } = setupMigrationTest('capybara', {
-        installed: { version: '4.3.3' },
-        mockCommands: {
-          [rubycodeshiftbin]: () => ({ status: 0 }),
-          bundle: () => ({ status: 0 })
-        },
-        mockPrompts: { filePaths: ['specs/my_test.rb'] }
-      }));
+  beforeEach(() => {
+    ({ inspectGemfile, prompts, run } = setupMigrationTest('capybara', {
+      installed: { version: '4.3.3' },
+      mockCommands: { [rubycodeshiftbin]: () => ({ status: 0 }) },
+      mockPrompts: { filePaths: ['specs/my_test.rb'] }
+    }));
+  });
+
+  it('upgrades the sdk', async () => {
+    await Migrate('percy-capybara', '--skip-cli');
+
+    expect(prompts[1]).toEqual({
+      type: 'confirm',
+      name: 'upgradeSDK',
+      message: 'Upgrade SDK to percy-capybara@^5.0.0?',
+      default: true
     });
 
-    it('upgrades the sdk', async () => {
-      await Migrate('percy-capybara', '--skip-cli');
+    expect(run.bundle.calls[0].args).toEqual(['remove', 'percy-capybara']);
 
-      expect(prompts[1]).toEqual({
-        type: 'confirm',
-        name: 'upgradeSDK',
-        message: 'Upgrade SDK to percy-capybara@^5.0.0?',
-        default: true
-      });
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
+  });
 
-      expect(run.bundle.calls[0].args).toEqual(['remove', 'percy-capybara']);
+  it('runs the codemod to convert to the new API', async () => {
+    await Migrate('percy-capybara', '--skip-cli');
 
-      expect(logger.stderr).toEqual([]);
-      expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
-      ]);
+    expect(prompts[2]).toEqual({
+      type: 'confirm',
+      name: 'doTransform',
+      message: 'The Capybara API has breaking changes, automatically convert to the new API?',
+      default: true
     });
 
-    it('runs the codemod to convert to the new API', async () => {
-      await Migrate('percy-capybara', '--skip-cli');
+    expect(run[rubycodeshiftbin].calls[0].args).toEqual([
+      `--transform=${require.resolve('../../transforms/capybara.rb')}`,
+      'specs/my_test.rb'
+    ]);
 
-      expect(prompts[2]).toEqual({
-        type: 'confirm',
-        name: 'doTransform',
-        message: 'The Capybara API has breaking changes, automatically convert to the new API?',
-        default: true
-      });
-
-      expect(run[rubycodeshiftbin].calls[0].args).toEqual([
-        `--transform=${require.resolve('../../transforms/capybara.rb')}`,
-        'specs/my_test.rb'
-      ]);
-
-      expect(logger.stderr).toEqual([]);
-      expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
-      ]);
-    });
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Migration complete!\n'
+    ]);
   });
 
   it('asks to remove tasks even when not installed', async () => {
-    ({ prompts, run } = setupMigrationTest('capybara', {
-      installed: { version: '' },
-      mockCommands: {
-        [rubycodeshiftbin]: () => ({ status: 0 }),
-        bundle: () => ({ status: 0 })
-      },
-      mockPrompts: { filePaths: ['specs/my_test.rb'] }
-    }));
+    inspectGemfile.output = {};
 
     await Migrate('percy-capybara', '--skip-cli');
 
