@@ -39,10 +39,14 @@ async function inspectGemFile(info) {
       encoding: 'utf-8'
     });
 
-    let { name, version } = JSON.parse(output);
-    let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
-    version = semver.coerce(version)?.version;
-    if (SDK) info.installed.push(new SDK({ name, version }));
+    for (let { name, version } of JSON.parse(output)) {
+      let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
+
+      if (SDK) {
+        version = semver.coerce(version)?.version;
+        info.installed.push(new SDK({ name, version }));
+      }
+    }
 
     info.inspected.push('ruby');
   } catch (error) {

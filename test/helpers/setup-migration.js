@@ -17,10 +17,10 @@ export default function setupMigrationTest(filename, mocks) {
   });
 
   let inspectGemfile = mockInspectGemfile(
-    language !== 'ruby' ? {} : {
+    language !== 'ruby' ? [] : [{
       name: mocks.installed?.name || name,
-      version: mocks.installed?.version || '0.0.0'
-    }
+      version: mocks.installed?.version || '= 0'
+    }]
   );
 
   let prompts = mockPrompts({

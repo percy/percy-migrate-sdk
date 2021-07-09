@@ -229,10 +229,9 @@ describe('SDK inspection', () => {
         version: '^2.0.0'
       }]);
 
-      inspectGemfile = mockInspectGemfile({
-        name: 'percy-ruby-sdk',
-        version: '1.0.0'
-      });
+      inspectGemfile = mockInspectGemfile([
+        { name: 'percy-ruby-sdk', version: '= 1.0' }
+      ]);
     });
 
     it('inspects the gemfile to guess the installed SDK', async () => {

@@ -59,7 +59,7 @@ describe('Migrations - percy-capybara', () => {
   });
 
   it('asks to remove tasks even when not installed', async () => {
-    inspectGemfile.output = {};
+    inspectGemfile.output = [];
 
     await Migrate('percy-capybara', '--skip-cli');
 
