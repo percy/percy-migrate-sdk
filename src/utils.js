@@ -5,11 +5,13 @@ import spawn from 'cross-spawn';
 import which from 'which';
 
 // Run a command with the specified args
-export async function run(command, args) {
+export function run(command, args, pipe) {
   // adjust stdio based on the loglevel
   let stdio = ['inherit', 'inherit', 'inherit'];
 
-  if (logger.loglevel() === 'silent') {
+  if (pipe) {
+    stdio = ['ignore', 'pipe', 'pipe'];
+  } else if (logger.loglevel() === 'silent') {
     stdio = ['ignore', 'ignore', 'ignore'];
   } else if (logger.loglevel() === 'warn') {
     stdio = ['ignore', 'ignore', 'inherit'];
@@ -18,12 +20,14 @@ export async function run(command, args) {
   // run the command synchronously
   args = args.filter(Boolean);
   logger('migrate:run').debug(`Running "${command} ${args.join(' ')}"`);
-  let { status, error } = spawn.sync(which.sync(command), args, { stdio });
+  let result = spawn.sync(which.sync(command), args, { stdio });
+  let { status, stdout, stderr, error } = result;
 
   // handle errors
   if (!error && status) {
     error = Object.assign(new Error(), {
-      message: `${command} failed with exit code ${status}`,
+      message: `${command} failed with exit code ${status}` + (
+        stderr ? `:\n\n${stderr}` : '.'),
       status
     });
   }
@@ -31,6 +35,9 @@ export async function run(command, args) {
   if (error) {
     throw error;
   }
+
+  // return output
+  return stdout;
 }
 
 // Common commands to manage node packages
@@ -74,19 +81,15 @@ export const codeshift = {
     return value;
   },
 
-  async install(lang, bin, install) {
+  install(lang, bin, install) {
     bin = resolve(__dirname, '../.codeshift', lang, bin);
-
-    if (!existsSync(bin)) {
-      await install();
-    }
-
+    if (!existsSync(bin)) install();
     codeshift[lang].bin = bin;
     return bin;
   },
 
-  async run(lang, args) {
-    return run(await codeshift[lang].install(), args);
+  run(lang, args) {
+    return run(codeshift[lang].install(), args);
   },
 
   js: {
