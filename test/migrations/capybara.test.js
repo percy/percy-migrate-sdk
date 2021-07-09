@@ -4,15 +4,15 @@ import {
   Migrate,
   logger,
   setupMigrationTest,
-  mockRequire
+  mockGemfile
 } from '../helpers';
 
 describe('Migrations - percy-capybara', () => {
   let rubycodeshiftbin = codeshift.ruby.bin;
-  let inspectGemfile, prompts, run;
+  let prompts, run;
 
   beforeEach(() => {
-    ({ inspectGemfile, prompts, run } = setupMigrationTest('capybara', {
+    ({ prompts, run } = setupMigrationTest('capybara', {
       installed: { version: '4.3.3' },
       mockCommands: { [rubycodeshiftbin]: () => ({ status: 0 }) },
       mockPrompts: { filePaths: ['specs/my_test.rb'] }
@@ -59,7 +59,7 @@ describe('Migrations - percy-capybara', () => {
   });
 
   it('asks to remove tasks even when not installed', async () => {
-    inspectGemfile.output = [];
+    mockGemfile('');
 
     await Migrate('percy-capybara', '--skip-cli');
 

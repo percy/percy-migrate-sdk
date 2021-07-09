@@ -192,7 +192,7 @@ describe('CLI installation', () => {
 
     expect(logger.stdout).toEqual([]);
     expect(logger.stderr).toEqual([
-      '[percy] Error: npm failed with exit code 3\n'
+      '[percy] Error: npm failed with exit code 3.\n'
     ]);
   });
 });

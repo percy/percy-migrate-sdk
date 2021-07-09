@@ -1,7 +1,7 @@
 import mockRequire from 'mock-require';
 import {
   mockPackageJSON,
-  mockInspectGemfile
+  mockGemfile
 } from './common';
 import mockPrompts from './mock-prompts';
 import mockCommands from './mock-commands';
@@ -16,12 +16,11 @@ export default function setupMigrationTest(filename, mocks) {
     }
   });
 
-  let inspectGemfile = mockInspectGemfile(
-    language !== 'ruby' ? [] : [{
-      name: mocks.installed?.name || name,
-      version: mocks.installed?.version || '= 0'
-    }]
-  );
+  if (language === 'ruby') {
+    mockGemfile(
+      `gem '${mocks.installed?.name || name}', ` +
+        `'${mocks.installed?.version || 0}'`);
+  }
 
   let prompts = mockPrompts({
     isSDK: true,
@@ -45,5 +44,5 @@ export default function setupMigrationTest(filename, mocks) {
   mockRequire.reRequire(`../../src/migrations/${filename}`);
   mockRequire.reRequire('../../src/migrations');
 
-  return { packageJSON, inspectGemfile, prompts, run };
+  return { packageJSON, prompts, run };
 }

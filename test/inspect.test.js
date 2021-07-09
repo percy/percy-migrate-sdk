@@ -3,7 +3,7 @@ import {
   Migrate,
   logger,
   mockPackageJSON,
-  mockInspectGemfile,
+  mockGemfile,
   mockPrompts,
   mockMigrations
 } from './helpers';
@@ -220,8 +220,6 @@ describe('SDK inspection', () => {
   });
 
   describe('Ruby SDKs', () => {
-    let inspectGemfile;
-
     beforeEach(() => {
       mockMigrations([{
         name: 'percy-ruby-sdk',
@@ -229,8 +227,11 @@ describe('SDK inspection', () => {
         version: '^2.0.0'
       }]);
 
-      inspectGemfile = mockInspectGemfile([
-        { name: 'percy-ruby-sdk', version: '= 1.0' }
+      mockGemfile([
+        'gem "foobar", ">=3.0.0"',
+        'gem "percy-unsupported-sdk", ">=0.beta.1"',
+        'gem "percy-ruby-sdk", "~>1.0.0"',
+        'gem "other-package", "~>2.0.0"'
       ]);
     });
 
@@ -251,15 +252,13 @@ describe('SDK inspection', () => {
     });
 
     it('logs any error encounted while parsing the gemfile', async () => {
-      Object.defineProperty(inspectGemfile, 'output', {
-        get() { throw new Error('some error'); }
-      });
+      mockGemfile('this is invalid');
 
       await Migrate('--skip-cli');
 
       expect(logger.stderr).toEqual([
         '[percy] Encountered an error inspecting Gemfile\n',
-        '[percy] Error: some error\n'
+        expect.stringMatching(/\[percy] Error: ruby failed with exit code 1:\n/)
       ]);
       expect(logger.stdout).toEqual([
         expect.stringMatching('See further migration instructions here:')

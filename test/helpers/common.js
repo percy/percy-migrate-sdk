@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import mockRequire from 'mock-require';
 
@@ -20,22 +21,8 @@ export function mockConfigSearch(search) {
   mockRequire.reRequire('@percy/config');
 }
 
-// Mock the inspect_gemfile.rb script
-export function mockInspectGemfile(output) {
-  let inspectCmd = `ruby ${path.resolve(__dirname, '../../src/inspect_gemfile.rb')}`;
-  let { execSync } = require('child_process');
-  let ret = { output };
-
-  mockRequire('child_process', {
-    execSync: (cmda, options) => {
-      if (cmda === inspectCmd) {
-        return JSON.stringify(ret.output);
-      } else {
-        return execSync(cmda, options);
-      }
-    }
-  });
-
-  mockRequire.reRequire('../../src/inspect');
-  return ret;
+// "Mock" a Gemfile by actually writing one to the current directory
+export function mockGemfile(contents) {
+  let file = mockGemfile.filepath = path.join(process.cwd(), 'Gemfile');
+  fs.writeFileSync(file, [].concat(contents).join('\n'));
 }
