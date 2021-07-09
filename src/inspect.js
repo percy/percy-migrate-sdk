@@ -2,7 +2,7 @@ import semver from 'semver';
 import { resolve } from 'path';
 import logger from '@percy/logger';
 import migrations from './migrations';
-import { execSync } from 'child_process';
+import { run } from './utils';
 
 // Tries to detect the installed SDK by checking the current project's CWD. Checks non-dev deps in
 // addition to dev deps even though SDKs should only be installed as dev deps.
@@ -31,13 +31,11 @@ function inspectPackageJSON(info) {
   }
 }
 
-async function inspectGemFile(info) {
+async function inspectGemfile(info) {
   try {
-    let inspectRuby = resolve(__dirname, './inspect_gemfile.rb');
-    let output = execSync(`ruby ${inspectRuby}`, {
-      stdio: ['ignore', 'pipe', 'ignore'],
-      encoding: 'utf-8'
-    });
+    let output = run('ruby', [
+      resolve(__dirname, './inspect_gemfile.rb')
+    ], true);
 
     for (let { name, version } of JSON.parse(output)) {
       let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
@@ -69,7 +67,7 @@ export default function inspectDeps() {
   inspectPackageJSON(info);
 
   // Ruby projects
-  inspectGemFile(info);
+  inspectGemfile(info);
 
   return info;
 }
