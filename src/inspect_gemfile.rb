@@ -1,8 +1,6 @@
 require 'bundler'
 require 'json'
 
-return puts '[]' unless File.exist?("#{Dir.pwd}/Gemfile")
-
 deps = Bundler::Definition.build("#{Dir.pwd}/Gemfile", nil, {}).dependencies
 
 found = deps.reduce([]) do |all, dep|

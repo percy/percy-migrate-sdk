@@ -1,5 +1,6 @@
+import fs from 'fs';
+import path from 'path';
 import semver from 'semver';
-import { resolve } from 'path';
 import logger from '@percy/logger';
 import migrations from './migrations';
 import { run } from './utils';
@@ -32,9 +33,16 @@ function inspectPackageJSON(info) {
 }
 
 async function inspectGemfile(info) {
+  let log = logger('migrate:inspect:ruby');
+
   try {
+    if (!fs.existsSync(path.join(process.cwd(), 'Gemfile'))) {
+      log.debug('Could not find Gemfile in current directory');
+      return;
+    }
+
     let output = run('ruby', [
-      resolve(__dirname, './inspect_gemfile.rb')
+      path.join(__dirname, 'inspect_gemfile.rb')
     ], true);
 
     for (let { name, version } of JSON.parse(output)) {
@@ -48,7 +56,6 @@ async function inspectGemfile(info) {
 
     info.inspected.push('ruby');
   } catch (error) {
-    let log = logger('migrate:inspect:ruby');
     log.error('Encountered an error inspecting Gemfile');
     log.error(error);
   }
