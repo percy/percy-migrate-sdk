@@ -37,7 +37,9 @@ export default function setupMigrationTest(filename, mocks) {
   });
 
   mockRequire('fs', {
-    existsSync: path => path.endsWith('package-lock.json') || path.includes('/.codeshift/')
+    existsSync: path => path.includes('/.codeshift/') ||
+      (language === 'js' && path.endsWith('package-lock.json')) ||
+      (language === 'ruby' && path.endsWith('Gemfile'))
   });
 
   mockRequire.reRequire('../../src/utils');

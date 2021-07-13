@@ -58,8 +58,8 @@ describe('Migrations - percy-capybara', () => {
     ]);
   });
 
-  it('asks to remove tasks even when not installed', async () => {
-    mockGemfile('');
+  it('asks to transform files even when not installed', async () => {
+    mockGemfile('gem "foobar", "1.0"');
 
     await Migrate('percy-capybara', '--skip-cli');
 
