@@ -129,7 +129,7 @@ describe('SDK inspection', () => {
     await Migrate('@percy/sdk-test', '--skip-cli');
 
     expect(logger.stderr).toEqual([
-      '[percy] Make sure your SDK is upgraded to the latest version!\n'
+      '[percy] Make sure your SDK is upgraded to the latest version (@percy/sdk-test ^2.0.0)!\n'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')
