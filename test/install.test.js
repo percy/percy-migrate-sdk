@@ -144,7 +144,8 @@ describe('CLI installation', () => {
   });
 
   it('warns and uses npm when both a yarn.lock and package-lock.json exists', async () => {
-    mockRequire('fs', { existsSync: () => true });
+    let existsSync = path => path.endsWith('.lock') || path.endsWith('-lock.json');
+    mockRequire('fs', { existsSync });
     await Migrate('--only-cli');
 
     expect(run.npm.calls[0].args)
@@ -192,7 +193,7 @@ describe('CLI installation', () => {
 
     expect(logger.stdout).toEqual([]);
     expect(logger.stderr).toEqual([
-      '[percy] Error: npm failed with exit code 3\n'
+      '[percy] Error: npm failed with exit code 3.\n'
     ]);
   });
 });

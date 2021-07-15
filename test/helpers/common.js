@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import mockRequire from 'mock-require';
 
 // Run migrate after re-requiring specific modules
@@ -17,4 +19,10 @@ export function mockPackageJSON(pkg) {
 export function mockConfigSearch(search) {
   mockRequire('@percy/config', { search });
   mockRequire.reRequire('@percy/config');
+}
+
+// "Mock" a Gemfile by actually writing one to the current directory
+export function mockGemfile(contents) {
+  let file = mockGemfile.filepath = path.join(process.cwd(), 'Gemfile');
+  fs.writeFileSync(file, [].concat(contents).join('\n'));
 }

@@ -1,6 +1,7 @@
+import fs from 'fs';
 import logger from '@percy/logger/test/helper';
 import mockRequire from 'mock-require';
-import { mockConfigSearch } from './common';
+import { mockConfigSearch, mockGemfile } from './common';
 import mockCommands from './mock-commands';
 
 // common hooks
@@ -16,6 +17,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  if (mockGemfile.filepath) {
+    fs.unlinkSync(mockGemfile.filepath);
+    delete mockGemfile.filepath;
+  }
+
   process.removeAllListeners();
   mockRequire.stopAll();
 });
