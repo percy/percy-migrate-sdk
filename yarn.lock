@@ -1144,9 +1144,9 @@
     yaml "^1.10.0"
 
 "@percy/logger@^1.0.0-beta.36", "@percy/logger@^1.0.0-beta.39":
-  version "1.0.0-beta.39"
-  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.39.tgz#dd5c03866d0d494157be191237602d86d43de5ff"
-  integrity sha512-aEnKxCO3r9+bhxogIhJhxjh80QGImiIhbmik/oKCWNIc2KywATGRXsJvRmlF1DskA+RQcwzG/fENerSLNRycgQ==
+  version "1.0.0-beta.62"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.62.tgz#c923dce45235b70a71e5e7acdec4a52bf9984aa2"
+  integrity sha512-ILdCq9S6Prok5hfoCxqthA7we/rAg7SttNZRTaFogewdPnpJ99KBAzVx9wQWGEbpIGjlQt2PHb+ymQ1yIXz56A==
 
 "@types/glob@^7.1.1":
   version "7.1.3"

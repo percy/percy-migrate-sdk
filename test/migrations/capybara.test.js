@@ -33,7 +33,7 @@ describe('Migrations - percy-capybara', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -54,7 +54,7 @@ describe('Migrations - percy-capybara', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -76,10 +76,10 @@ describe('Migrations - percy-capybara', () => {
     ]);
 
     expect(logger.stderr).toEqual([
-      '[percy] The specified SDK was not found in your dependencies\n'
+      '[percy] The specified SDK was not found in your dependencies'
     ]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 });

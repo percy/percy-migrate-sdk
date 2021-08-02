@@ -152,7 +152,7 @@ describe('CLI installation', () => {
       .toEqual(['install', '--save-dev', '@percy/cli']);
 
     expect(logger.stderr).toEqual([
-      '[percy] Found both a yarn.lock and package-lock.json, defaulting to npm\n'
+      '[percy] Found both a yarn.lock and package-lock.json, defaulting to npm'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')
@@ -193,7 +193,7 @@ describe('CLI installation', () => {
 
     expect(logger.stdout).toEqual([]);
     expect(logger.stderr).toEqual([
-      '[percy] Error: npm failed with exit code 3.\n'
+      '[percy] Error: npm failed with exit code 3.'
     ]);
   });
 });

@@ -1,5 +1,5 @@
 import expect from 'expect';
-import logger from '@percy/logger/test/helper';
+import logger from '@percy/logger/test/helpers';
 import Migrate from '../src';
 
 describe('@percy/migrate', () => {
@@ -21,7 +21,7 @@ describe('@percy/migrate', () => {
 
     expect(logger.stdout).toEqual([]);
     expect(logger.stderr).toEqual([
-      '[percy] Error: test error\n'
+      '[percy] Error: test error'
     ]);
   });
 

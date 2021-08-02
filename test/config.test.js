@@ -80,7 +80,7 @@ describe('Config migration', () => {
     expect(migrated).toBe(false);
 
     expect(logger.stderr).toEqual([
-      '[percy] Could not run config migration, @percy/cli is not installed\n'
+      '[percy] Could not run config migration, @percy/cli is not installed'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')
@@ -107,7 +107,7 @@ describe('Config migration', () => {
     expect(migrated).toBe(false);
 
     expect(logger.stderr).toEqual([
-      '[percy] Error: config parse failure\n'
+      '[percy] Error: config parse failure'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')

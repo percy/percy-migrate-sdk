@@ -45,7 +45,7 @@ describe('SDK upgrade', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -62,7 +62,7 @@ describe('SDK upgrade', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -84,7 +84,7 @@ describe('SDK upgrade', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -102,7 +102,7 @@ describe('SDK upgrade', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -113,7 +113,7 @@ describe('SDK upgrade', () => {
     expect(prompts[1]).toBeUndefined();
 
     expect(logger.stderr).toEqual([
-      '[percy] The specified SDK is not supported\n'
+      '[percy] The specified SDK is not supported'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')

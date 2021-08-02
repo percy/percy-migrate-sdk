@@ -54,7 +54,7 @@ describe('SDK inspection', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -63,7 +63,7 @@ describe('SDK inspection', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -78,7 +78,7 @@ describe('SDK inspection', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -86,7 +86,7 @@ describe('SDK inspection', () => {
     await Migrate('@percy/sdk-test-3', '--skip-cli');
 
     expect(logger.stderr).toEqual([
-      '[percy] The specified SDK is not supported\n'
+      '[percy] The specified SDK is not supported'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')
@@ -97,10 +97,10 @@ describe('SDK inspection', () => {
     await Migrate('@percy/sdk-test-2', '--skip-cli');
 
     expect(logger.stderr).toEqual([
-      '[percy] The specified SDK was not found in your dependencies\n'
+      '[percy] The specified SDK was not found in your dependencies'
     ]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -115,7 +115,7 @@ describe('SDK inspection', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 
@@ -129,7 +129,7 @@ describe('SDK inspection', () => {
     await Migrate('@percy/sdk-test', '--skip-cli');
 
     expect(logger.stderr).toEqual([
-      '[percy] Make sure your SDK is upgraded to the latest version (@percy/sdk-test ^2.0.0)!\n'
+      '[percy] Make sure your SDK is upgraded to the latest version (@percy/sdk-test ^2.0.0)!'
     ]);
     expect(logger.stdout).toEqual([
       expect.stringMatching('See further migration instructions here:')
@@ -161,7 +161,7 @@ describe('SDK inspection', () => {
 
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
 
@@ -180,7 +180,7 @@ describe('SDK inspection', () => {
 
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
 
@@ -194,7 +194,7 @@ describe('SDK inspection', () => {
       await Migrate('--skip-cli');
 
       expect(logger.stderr).toEqual([
-        '[percy] Could not find package.json in current directory\n'
+        '[percy] Could not find package.json in current directory'
       ]);
 
       expect(logger.stdout).toEqual([
@@ -210,8 +210,8 @@ describe('SDK inspection', () => {
       await Migrate('--skip-cli');
 
       expect(logger.stderr).toEqual([
-        '[percy] Encountered an error inspecting package.json\n',
-        '[percy] Error: some error\n'
+        '[percy] Encountered an error inspecting package.json',
+        '[percy] Error: some error'
       ]);
       expect(logger.stdout).toEqual([
         expect.stringMatching('See further migration instructions here:')
@@ -247,7 +247,7 @@ describe('SDK inspection', () => {
 
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
 
@@ -257,8 +257,8 @@ describe('SDK inspection', () => {
       await Migrate('--skip-cli');
 
       expect(logger.stderr).toEqual([
-        '[percy] Encountered an error inspecting Gemfile\n',
-        expect.stringMatching(/\[percy] Error: ruby failed with exit code 1:\n/)
+        '[percy] Encountered an error inspecting Gemfile',
+        expect.stringMatching(/\[percy] Error: ruby failed with exit code 1:/)
       ]);
       expect(logger.stdout).toEqual([
         expect.stringMatching('See further migration instructions here:')
