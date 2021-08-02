@@ -25,7 +25,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
     expect(run.npm.calls[0].args).toEqual(['install', '--save-dev', '@percy/selenium-webdriver@^1.0.0']);
 
     expect(logger.stderr).toEqual([]);
-    expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
+    expect(logger.stdout).toEqual(['[percy] Migration complete!']);
   });
 
   it('transforms sdk imports', async () => {
@@ -48,7 +48,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
     ]);
 
     expect(logger.stderr).toEqual([]);
-    expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
+    expect(logger.stdout).toEqual(['[percy] Migration complete!']);
   });
 
   it('asks to transform sdk imports even when not installed', async () => {
@@ -71,8 +71,8 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       'test/bazz.js'
     ]);
 
-    expect(logger.stderr).toEqual(['[percy] The specified SDK was not found in your dependencies\n']);
-    expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
+    expect(logger.stderr).toEqual(['[percy] The specified SDK was not found in your dependencies']);
+    expect(logger.stdout).toEqual(['[percy] Migration complete!']);
   });
 
   describe('migrating from @percy/seleniumjs', () => {
@@ -96,7 +96,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       expect(run.npm.calls[1].args).toEqual(['install', '--save-dev', '@percy/selenium-webdriver@^1.0.0']);
 
       expect(logger.stderr).toEqual([]);
-      expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
+      expect(logger.stdout).toEqual(['[percy] Migration complete!']);
     });
 
     it('transforms sdk imports', async () => {
@@ -119,7 +119,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       ]);
 
       expect(logger.stderr).toEqual([]);
-      expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
+      expect(logger.stdout).toEqual(['[percy] Migration complete!']);
     });
   });
 
@@ -150,7 +150,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       ]);
 
       expect(logger.stderr).toEqual([]);
-      expect(logger.stdout).toEqual(['[percy] Migration complete!\n']);
+      expect(logger.stdout).toEqual(['[percy] Migration complete!']);
     });
   });
 });

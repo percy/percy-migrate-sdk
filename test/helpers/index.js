@@ -1,5 +1,5 @@
 import fs from 'fs';
-import logger from '@percy/logger/test/helper';
+import logger from '@percy/logger/test/helpers';
 import mockRequire from 'mock-require';
 import { mockConfigSearch, mockGemfile } from './common';
 import mockCommands from './mock-commands';

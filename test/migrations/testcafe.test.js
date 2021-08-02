@@ -27,7 +27,7 @@ describe('Migrations - @percy/testcafe', () => {
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
-      '[percy] Migration complete!\n'
+      '[percy] Migration complete!'
     ]);
   });
 });

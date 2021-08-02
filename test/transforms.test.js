@@ -64,7 +64,7 @@ describe('SDK transforms', () => {
 
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
   });
@@ -107,7 +107,7 @@ describe('SDK transforms', () => {
 
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
 
@@ -139,7 +139,7 @@ describe('SDK transforms', () => {
       expect(transformed).toEqual(['test/foo.js']);
       expect(logger.stderr).toEqual([]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
   });
@@ -170,10 +170,10 @@ describe('SDK transforms', () => {
 
       expect(transformed).toBe(false);
       expect(logger.stderr).toEqual([
-        '[percy] Could not find any files matching the pattern\n'
+        '[percy] Could not find any files matching the pattern'
       ]);
       expect(logger.stdout).toEqual([
-        '[percy] Migration complete!\n'
+        '[percy] Migration complete!'
       ]);
     });
   });
