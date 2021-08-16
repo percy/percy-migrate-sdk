@@ -1148,10 +1148,15 @@
     cosmiconfig "^7.0.0"
     yaml "^1.10.0"
 
-"@percy/logger@1.0.0-beta.63", "@percy/logger@^1.0.0-beta.36":
+"@percy/logger@1.0.0-beta.63":
   version "1.0.0-beta.63"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.63.tgz#81d4b2747859d9fdc1f2a6c06e50eddda1b9a2b1"
   integrity sha512-iumIt1JjrZQiD9fPShbqaUtyqgRBA1crJzwhh6MPZz4s0XJLxcEzhawKzqhtOoiB8Wr5AxVygswLOkTfPcVuFg==
+
+"@percy/logger@^1.0.0-beta.36":
+  version "1.0.0-beta.65"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.65.tgz#30a34797c935003334124e970f62914b0d124968"
+  integrity sha512-BJV0pjNlvcj4Y3nuMUGdb5RhjMduK40fRJJ9Lh/2qNk3pmnkGb9rH+GY+/0WY7quupNKxQjjyXcIP7I46/azNg==
 
 "@types/glob@^7.1.1":
   version "7.1.3"
