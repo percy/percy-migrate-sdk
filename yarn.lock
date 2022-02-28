@@ -1253,20 +1253,20 @@
   integrity sha512-S/SF/XYJeevwIgHFmVDAFRUvM3m+OjhvCAYMk78ZJQCYCQ5wS7j+LTt1ZEv2jpEEGg2tx/F6TYYWxddNAYHrFQ==
 
 "@percy/config@^1.0.0-beta.36":
-  version "1.0.0-beta.71"
-  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.71.tgz#f13791e7da8ab5b322b9def24f856ac858d15de0"
-  integrity sha512-LA7lokLPGnqdhF2VMJrntXbN+s1amjjAHbvgPH7wAoTczcHoTu4ulmDSkwcY90pj1KdD++ahN1O3SEHtrmdy0Q==
+  version "1.0.0-beta.76"
+  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.76.tgz#71b0f8df28053769c964acae461bfd8b705a674d"
+  integrity sha512-e3sLzcrVlsax5q1RwO8sek2Qjqb617WFpa1+wnXqPSMSxiEBlr+lbUC/C5a1hHKEWdFz4RKSJC+2mjhT8ylm3g==
   dependencies:
-    "@percy/logger" "1.0.0-beta.71"
+    "@percy/logger" "1.0.0-beta.76"
     ajv "^8.6.2"
     cosmiconfig "^7.0.0"
     yaml "^1.10.0"
 
-"@percy/logger@1.0.0-beta.71":
-  version "1.0.0-beta.71"
-  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.71.tgz#03b458b1e43506c08c062f11b46aa2c9b1826fbf"
-  integrity sha512-09MgfGbvSFgvmQ1g0AkPnRwfkJvXluj7TLVlcgBsKEdo0cKfmctvXUtRBgiueqJFSb7jF+JwzE5i17bHnLy0ng==
-
+"@percy/logger@1.0.0-beta.76", "@percy/logger@^1.0.0-beta.36":
+  version "1.0.0-beta.76"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.76.tgz#1a75c583670acc078389a43d8b7410fd655c0b92"
+  integrity sha512-v5zIMNv1xqdcWBAOK5A6ZEO99ZBwzWS3phLEfkKbIlGIUxvjkJHSfZv/k1dnt2RRfpDNkM6X5pMg2yI8j1+d+g==
+  
 "@percy/logger@^1.0.0-beta.36":
   version "1.0.0-beta.76"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.76.tgz#1a75c583670acc078389a43d8b7410fd655c0b92"
