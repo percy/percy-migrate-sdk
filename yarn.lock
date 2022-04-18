@@ -1273,19 +1273,19 @@
   integrity sha512-S/SF/XYJeevwIgHFmVDAFRUvM3m+OjhvCAYMk78ZJQCYCQ5wS7j+LTt1ZEv2jpEEGg2tx/F6TYYWxddNAYHrFQ==
 
 "@percy/config@^1.0.0-beta.36":
-  version "1.0.0-beta.71"
-  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.0-beta.71.tgz#f13791e7da8ab5b322b9def24f856ac858d15de0"
-  integrity sha512-LA7lokLPGnqdhF2VMJrntXbN+s1amjjAHbvgPH7wAoTczcHoTu4ulmDSkwcY90pj1KdD++ahN1O3SEHtrmdy0Q==
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.0.8.tgz#8dd114256d28145f62d3d9d60b26784023b021b4"
+  integrity sha512-WufbOoxl2q/Gti+IGeG3qjUL/Poa4vLe5G/+kkL0naXHN51AfoPoTdC8PszIDbm7mnh+3x6FCkyy5eb0dKt9tA==
   dependencies:
-    "@percy/logger" "1.0.0-beta.71"
+    "@percy/logger" "1.0.8"
     ajv "^8.6.2"
     cosmiconfig "^7.0.0"
-    yaml "^1.10.0"
+    yaml "^2.0.0"
 
-"@percy/logger@1.0.0-beta.71", "@percy/logger@^1.0.0-beta.36":
-  version "1.0.0-beta.71"
-  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.0-beta.71.tgz#03b458b1e43506c08c062f11b46aa2c9b1826fbf"
-  integrity sha512-09MgfGbvSFgvmQ1g0AkPnRwfkJvXluj7TLVlcgBsKEdo0cKfmctvXUtRBgiueqJFSb7jF+JwzE5i17bHnLy0ng==
+"@percy/logger@1.0.8", "@percy/logger@^1.0.0-beta.36":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.0.8.tgz#c30606b39bdbf646fe896056b772a93314fcf409"
+  integrity sha512-uHIk6YW7iJGcl/y/QHRl1R8t4NavyTZwji6oe1WW0BUGpR4xE6WjzXqSWv6UezfLLvZGV0AI8vrFqD95d8LLXg==
 
 "@types/glob@^7.1.1":
   version "7.1.3"
@@ -4775,6 +4775,11 @@ yaml@^1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.0.tgz#3b593add944876077d4d683fee01081bd9fff31e"
   integrity sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
+
+yaml@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.0.1.tgz#71886d6021f3da28169dbefde78d4dd0f8d83650"
+  integrity sha512-1NpAYQ3wjzIlMs0mgdBmYzLkFgWBIWrzYVDYfrixhoFNNgJ444/jT2kUT2sicRbJES3oQYRZugjB6Ro8SjKeFg==
 
 yargs-parser@20.2.4:
   version "20.2.4"
