@@ -2,14 +2,15 @@ import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import logger from '@percy/logger';
-import migrations from './migrations';
-import { run } from './utils';
+import { migrations } from './migrations/index.js';
+import { run } from './utils.js';
+import { getPackageJSON } from '@percy/cli-command/utils';
 
 // Tries to detect the installed SDK by checking the current project's CWD. Checks non-dev deps in
 // addition to dev deps even though SDKs should only be installed as dev deps.
 function inspectPackageJSON(info) {
   try {
-    let pkg = require(`${process.cwd()}/package.json`);
+    let pkg = getPackageJSON(`${process.cwd()}/package.json`);
     let deps = { ...pkg.dependencies, ...pkg.devDependencies };
 
     for (let [name, version] of Object.entries(deps)) {

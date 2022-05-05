@@ -1,6 +1,6 @@
 import path from 'path';
-import { npm, codeshift } from '../utils';
-import SDKMigration from './base';
+import { npm, codeshift, ROOT } from '../utils.js';
+import SDKMigration from './base.js';
 
 class ProtractorMigration extends SDKMigration {
   static name = '@percy/protractor';
@@ -15,7 +15,7 @@ class ProtractorMigration extends SDKMigration {
     default: '{test,spec}?(s)/**/*.{js,ts}',
     async transform(paths) {
       await codeshift.run('js', [
-        `--transform=${path.resolve(__dirname, '../../transforms/import-default.js')}`,
+        `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         this.installed && `--percy-installed=${this.installed.name}`,
         paths.some((p) => p.endsWith('.ts')) && '--parser=ts',
         `--percy-sdk=${this.name}`,
@@ -25,4 +25,4 @@ class ProtractorMigration extends SDKMigration {
   }];
 }
 
-module.exports = ProtractorMigration;
+export default ProtractorMigration;

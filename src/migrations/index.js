@@ -1,15 +1,28 @@
-module.exports = [
-  require('./cypress'),
-  require('./testcafe'),
-  require('./puppeteer'),
-  require('./nightmare'),
-  require('./nightwatch'),
-  require('./protractor'),
-  require('./webdriverio'),
-  require('./ember'),
-  require('./selenium-javascript'),
-  // non-js
-  require('./capybara'),
-  require('./selenium-java'),
-  require('./selenium-python')
+import CypressMigration from './cypress.js';
+import TestCafeMigration from './testcafe.js';
+import PuppeteerMigration from './puppeteer.js';
+import NightmareMigration from './nightmare.js';
+import NightwatchMigration from './nightwatch.js';
+import ProtractorMigration from './protractor.js';
+import WebdriverMigration from './webdriverio.js';
+import EmberMigration from './ember.js';
+import SeleniumJSMigration from './selenium-javascript.js';
+// non-js
+import CapybaraMigration from './capybara.js';
+import SeleniumJavaMigration from './selenium-java.js';
+import SeleniumPythonMigration from './selenium-python.js';
+
+export const migrations = [
+  CypressMigration,
+  TestCafeMigration,
+  PuppeteerMigration,
+  NightmareMigration,
+  NightwatchMigration,
+  ProtractorMigration,
+  WebdriverMigration,
+  EmberMigration,
+  CapybaraMigration,
+  SeleniumJSMigration,
+  SeleniumJavaMigration,
+  SeleniumPythonMigration
 ];

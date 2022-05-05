@@ -1,4 +1,4 @@
-import SDKMigration from './base';
+import SDKMigration from './base.js';
 
 class SeleniumPythonMigration extends SDKMigration {
   static language = 'python';
@@ -7,4 +7,4 @@ class SeleniumPythonMigration extends SDKMigration {
   static version = '^1.0.0';
 };
 
-module.exports = SeleniumPythonMigration;
+export default SeleniumPythonMigration;

@@ -1,4 +1,4 @@
-import SDKMigration from './base';
+import SDKMigration from './base.js';
 
 class SeleniumJavaMigration extends SDKMigration {
   static language = 'java';
@@ -7,4 +7,4 @@ class SeleniumJavaMigration extends SDKMigration {
   static version = '^1.0.0';
 };
 
-module.exports = SeleniumJavaMigration;
+export default SeleniumJavaMigration;

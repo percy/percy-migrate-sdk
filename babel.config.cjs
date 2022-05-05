@@ -1,13 +1,11 @@
 module.exports = {
   presets: [
     ['@babel/env', {
+      modules: false,
       targets: {
-        node: '12'
+        node: '14'
       }
     }]
-  ],
-  plugins: [
-    '@babel/proposal-class-properties'
   ],
   env: {
     test: {

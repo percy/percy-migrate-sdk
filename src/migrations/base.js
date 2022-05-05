@@ -55,4 +55,4 @@ class SDKMigration {
   }
 }
 
-module.exports = SDKMigration;
+export default SDKMigration;

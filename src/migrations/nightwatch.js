@@ -1,5 +1,5 @@
-import { npm } from '../utils';
-import SDKMigration from './base';
+import { npm } from '../utils.js';
+import SDKMigration from './base.js';
 
 class NightwatchMigration extends SDKMigration {
   static name = '@percy/nightwatch';
@@ -10,4 +10,4 @@ class NightwatchMigration extends SDKMigration {
   }
 }
 
-module.exports = NightwatchMigration;
+export default NightwatchMigration;

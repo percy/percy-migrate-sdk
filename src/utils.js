@@ -1,8 +1,11 @@
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
 import { existsSync } from 'fs';
 import logger from '@percy/logger';
 import spawn from 'cross-spawn';
 import which from 'which';
+import url from 'url';
+
+export const ROOT = dirname(url.fileURLToPath(import.meta.url));
 
 // Run a command with the specified args
 export function run(command, args, pipe) {
@@ -76,13 +79,13 @@ export const npm = {
 
 export const codeshift = {
   get path() {
-    let value = resolve(__dirname, '../.codeshift');
+    let value = resolve(ROOT, '../.codeshift');
     Object.defineProperty(codeshift, 'path', { value });
     return value;
   },
 
   install(lang, bin, install) {
-    bin = resolve(__dirname, '../.codeshift', lang, bin);
+    bin = resolve(ROOT, '../.codeshift', lang, bin);
     if (!existsSync(bin)) install();
     codeshift[lang].bin = bin;
     return bin;
