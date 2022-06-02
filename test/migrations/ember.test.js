@@ -1,23 +1,28 @@
+/* eslint-env jasmine */
+import path from 'path';
 import expect from 'expect';
-import { codeshift } from '../../src/utils';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  mockPackageJSON,
   setupMigrationTest
-} from '../helpers';
+} from '../helpers/index.js';
 
 describe('Migrations - @percy/ember', () => {
   let jscodeshiftbin = codeshift.js.bin;
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    ({ packageJSON, prompts, run } = setupMigrationTest('ember', {
-      mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('ember', {
+      mockCommands: { [jscodeshiftbin]: (p) => ({ status: 0 }) }
     }));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/ember', '--skip-cli');
+    await migrate(['@percy/ember', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -36,9 +41,8 @@ describe('Migrations - @percy/ember', () => {
   });
 
   it('asks to transform sdk imports when not installed', async () => {
-    delete packageJSON.devDependencies;
-
-    await Migrate('@percy/ember', '--skip-cli');
+    mockPackageJSON({});
+    await migrate(['@percy/ember', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -47,8 +51,8 @@ describe('Migrations - @percy/ember', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/ember',
       'test/foo.js',
       'test/bar.js',
@@ -64,10 +68,8 @@ describe('Migrations - @percy/ember', () => {
   });
 
   it('asks to transforms sdk imports when ember-percy is installed', async () => {
-    delete packageJSON.devDependencies['@percy/ember'];
-    packageJSON.devDependencies['ember-percy'] = '1.0.0';
-
-    await Migrate('@percy/ember', '--skip-cli');
+    mockPackageJSON({ "devDependencies": { "ember-percy": "1.0.0" } });
+    await migrate(['@percy/ember', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -76,8 +78,8 @@ describe('Migrations - @percy/ember', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=ember-percy',
       '--percy-sdk=@percy/ember',
       'test/foo.js',
@@ -92,8 +94,8 @@ describe('Migrations - @percy/ember', () => {
   });
 
   describe('with TypeScript files', () => {
-    beforeEach(() => {
-      ({ packageJSON, prompts, run } = setupMigrationTest('ember', {
+    beforeEach(async () => {
+      ({ prompts, run } = await setupMigrationTest('ember', {
         installed: { name: 'ember-percy' },
         mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
         mockPrompts: { filePaths: ['test/bar.ts'] }
@@ -101,7 +103,7 @@ describe('Migrations - @percy/ember', () => {
     });
 
     it('transforms sdk imports for TypeScript', async () => {
-      await Migrate('@percy/ember', '--skip-cli');
+      await migrate(['@percy/ember', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -110,8 +112,8 @@ describe('Migrations - @percy/ember', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args).toEqual([
-        `--transform=${require.resolve('../../transforms/import-default')}`,
+      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+        `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=ember-percy',
         '--parser=ts',
         '--percy-sdk=@percy/ember',

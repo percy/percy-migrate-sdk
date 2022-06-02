@@ -1,6 +1,7 @@
+import fs from 'fs';
 import expect from 'expect';
-import { mockCommands, mockRequire } from '../helpers';
-let { codeshift } = require('../../src/utils.js');
+import { mockCommands } from '../helpers/index.js';
+import { codeshift } from '../../src/utils.js';
 
 describe('Installing codeshift libraries', () => {
   let run;
@@ -10,18 +11,14 @@ describe('Installing codeshift libraries', () => {
     await codeshift.js?.install();
     await codeshift.ruby?.install();
 
-    run = mockCommands({
+    run = await mockCommands({
       npm: () => ({ status: 0 }),
       gem: () => ({ status: 0 }),
       [codeshift.js.bin]: () => ({ status: 0 }),
       [codeshift.ruby.bin]: () => ({ status: 0 })
     });
 
-    mockRequire('fs', {
-      existsSync: (path) => false
-    });
-
-    codeshift = mockRequire.reRequire('../../src/utils').codeshift;
+    spyOn(fs, 'existsSync').and.callFake(p => false);
   });
 
   it('installs jscodeshift for JS SDKs', async () => {
@@ -43,11 +40,7 @@ describe('Installing codeshift libraries', () => {
 
   describe('with .codeshift present', () => {
     beforeEach(() => {
-      mockRequire('fs', {
-        existsSync: (path) => true
-      });
-
-      codeshift = mockRequire.reRequire('../../src/utils').codeshift;
+      spyOn(fs, 'existsSync').and.callFake(p => true);
     });
 
     it('does not install jscodeshift for JS SDKs', async () => {

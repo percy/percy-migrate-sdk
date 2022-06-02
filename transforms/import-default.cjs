@@ -5,7 +5,7 @@
  * --percy-installed=NAME  installed SDK package name (default: --percy-sdk)
  * --print-options=JSON    output print options (default: {"quote":"single","lineTerminator":"\n"})
 */
-export default function({ path, source }, { j }, options) {
+module.exports = function({ path, source }, { j }, options) {
   let sdk = options['percy-sdk'];
   if (!sdk) throw new Error('--percy-sdk is required');
 

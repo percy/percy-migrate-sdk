@@ -1,23 +1,27 @@
+/* eslint-env jasmine */
+import path from 'path';
 import expect from 'expect';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  mockPackageJSON,
   setupMigrationTest
-} from '../helpers';
-import { codeshift } from '../../src/utils';
+} from '../helpers/index.js';
 
 describe('Migrations - @percy/puppeteer', () => {
   let jscodeshiftbin = codeshift.js.bin;
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    ({ packageJSON, prompts, run } = setupMigrationTest('puppeteer', {
+  beforeEach(async () => {
+    await setupTest();
+    ({ prompts, run } = await setupMigrationTest('puppeteer', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/puppeteer', '--skip-cli');
+    await migrate(['@percy/puppeteer', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -36,7 +40,7 @@ describe('Migrations - @percy/puppeteer', () => {
   });
 
   it('transforms sdk imports', async () => {
-    await Migrate('@percy/puppeteer', '--skip-cli');
+    await migrate(['@percy/puppeteer', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -45,8 +49,8 @@ describe('Migrations - @percy/puppeteer', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/puppeteer',
       '--percy-sdk=@percy/puppeteer',
       'test/foo.js',
@@ -61,9 +65,8 @@ describe('Migrations - @percy/puppeteer', () => {
   });
 
   it('asks to transform sdk imports even when not installed', async () => {
-    delete packageJSON.devDependencies;
-
-    await Migrate('@percy/puppeteer', '--skip-cli');
+    mockPackageJSON({});
+    await migrate(['@percy/puppeteer', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -72,8 +75,8 @@ describe('Migrations - @percy/puppeteer', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/puppeteer',
       'test/foo.js',
       'test/bar.js',
@@ -89,15 +92,15 @@ describe('Migrations - @percy/puppeteer', () => {
   });
 
   describe('with TypeScript files', () => {
-    beforeEach(() => {
-      ({ packageJSON, prompts, run } = setupMigrationTest('puppeteer', {
+    beforeEach(async () => {
+      ({ prompts, run } = await setupMigrationTest('puppeteer', {
         mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
         mockPrompts: { filePaths: ['test/bar.ts'] }
       }));
     });
 
     it('transforms sdk imports for TypeScript', async () => {
-      await Migrate('@percy/puppeteer', '--skip-cli');
+      await migrate(['@percy/puppeteer', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -106,8 +109,8 @@ describe('Migrations - @percy/puppeteer', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args).toEqual([
-        `--transform=${require.resolve('../../transforms/import-default')}`,
+      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+        `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/puppeteer',
         '--parser=ts',
         '--percy-sdk=@percy/puppeteer',

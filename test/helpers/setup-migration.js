@@ -1,16 +1,16 @@
-import mockRequire from 'mock-require';
+import fs from 'fs';
 import {
   mockPackageJSON,
   mockGemfile
-} from './common';
-import mockPrompts from './mock-prompts';
-import mockCommands from './mock-commands';
+} from './common.js';
+import mockPrompts from './mock-prompts.js';
+import mockCommands from './mock-commands.js';
 
 // Setup a migration test by mocking package.json, sdk prompts, and upgrade commands
-export default function setupMigrationTest(filename, mocks) {
-  let { name, language } = require(`../../src/migrations/${filename}`);
+export default async function setupMigrationTest(filename, mocks) {
+  let { default: { name, language } } = await import(`../../src/migrations/${filename}.js`);
 
-  let packageJSON = mockPackageJSON({
+  mockPackageJSON({
     devDependencies: language !== 'js' ? {} : {
       [mocks.installed?.name || name]: mocks.installed?.version || '0.0.0'
     }
@@ -30,21 +30,18 @@ export default function setupMigrationTest(filename, mocks) {
     ...mocks.mockPrompts
   });
 
-  let run = mockCommands({
+  let run = await mockCommands({
     npm: () => ({ status: 0 }),
     bundle: () => ({ status: 0 }),
     ...mocks.mockCommands
   });
 
-  mockRequire('fs', {
-    existsSync: path => path.includes('/.codeshift/') ||
+  spyOn(fs, 'existsSync').and.callFake(path => {
+    return path.includes('/.codeshift/') ||
+      path.endsWith('package.json') ||
       (language === 'js' && path.endsWith('package-lock.json')) ||
-      (language === 'ruby' && path.endsWith('Gemfile'))
+      (language === 'ruby' && path.endsWith('Gemfile'));
   });
 
-  mockRequire.reRequire('../../src/utils');
-  mockRequire.reRequire(`../../src/migrations/${filename}`);
-  mockRequire.reRequire('../../src/migrations');
-
-  return { packageJSON, prompts, run };
+  return { prompts, run };
 }

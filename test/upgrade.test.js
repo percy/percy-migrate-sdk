@@ -1,16 +1,18 @@
+/* eslint-env jasmine */
 import expect from 'expect';
+import migrate from '../src/index.js';
 import {
-  Migrate,
-  logger,
   mockPackageJSON,
   mockPrompts,
   mockMigrations
-} from './helpers';
+} from './helpers/index.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 
 describe('SDK upgrade', () => {
   let upgraded, prompts;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setupTest();
     upgraded = false;
 
     mockMigrations([{
@@ -33,7 +35,7 @@ describe('SDK upgrade', () => {
   });
 
   it('confirms the SDK upgrade', async () => {
-    await Migrate('@percy/sdk-test', '--skip-cli');
+    await migrate(['@percy/sdk-test', '--skip-cli']);
 
     expect(upgraded).toBe(true);
     expect(prompts[1]).toEqual({
@@ -50,7 +52,7 @@ describe('SDK upgrade', () => {
   });
 
   it('confirms the SDK upgrade for aliases', async () => {
-    await Migrate('@percy/sdk-old', '--skip-cli');
+    await migrate(['@percy/sdk-old', '--skip-cli']);
 
     expect(upgraded).toBe(true);
     expect(prompts[1]).toEqual({
@@ -72,7 +74,7 @@ describe('SDK upgrade', () => {
       upgrade: false
     });
 
-    await Migrate('@percy/sdk-test', '--skip-cli');
+    await migrate(['@percy/sdk-test', '--skip-cli']);
 
     expect(upgraded).toBe(false);
     expect(prompts[1]).toEqual({
@@ -95,7 +97,7 @@ describe('SDK upgrade', () => {
       }
     });
 
-    await Migrate('@percy/sdk-test', '--skip-cli');
+    await migrate(['@percy/sdk-test', '--skip-cli']);
 
     expect(upgraded).toBe(false);
     expect(prompts[1]).toBeUndefined();
@@ -107,7 +109,7 @@ describe('SDK upgrade', () => {
   });
 
   it('does not confirm when the SDK is not supported', async () => {
-    await Migrate('@percy/sdk-test-2', '--skip-cli');
+    await migrate(['@percy/sdk-test-2', '--skip-cli']);
 
     expect(upgraded).toBe(false);
     expect(prompts[1]).toBeUndefined();

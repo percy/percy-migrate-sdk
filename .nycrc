@@ -1,6 +1,6 @@
 {
   "exclude": [
-    "babel.config.js",
+    "babel.config.cjs",
     "dist",
     "test"
   ],

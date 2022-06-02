@@ -3,7 +3,7 @@
  *
  * --print-options=JSON    output print options (default: {"quote":"single","lineTerminator":"\n"})
 */
-export default function({ source }, { j }, options) {
+module.exports = function({ source }, { j }, options) {
   let root = j(source);
   let local;
 

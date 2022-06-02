@@ -1,17 +1,23 @@
+/* eslint-env jasmine */
+import fs from 'fs';
+import path from 'path';
 import expect from 'expect';
-import { codeshift } from '../../src/utils';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  mockPackageJSON,
   setupMigrationTest
-} from '../helpers';
+} from '../helpers/index.js';
 
 describe('Migrations - @percy/cypress', () => {
   let jscodeshiftbin = codeshift.js.bin;
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    ({ packageJSON, prompts, run } = setupMigrationTest('cypress', {
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('cypress', {
       installed: { version: '2.1.3' },
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
       mockPrompts: { filePaths: ['cypress/plugins/index.js'] }
@@ -19,7 +25,7 @@ describe('Migrations - @percy/cypress', () => {
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/cypress', '--skip-cli');
+    await migrate(['@percy/cypress', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -38,7 +44,7 @@ describe('Migrations - @percy/cypress', () => {
   });
 
   it('removes tasks from plugins', async () => {
-    await Migrate('@percy/cypress', '--skip-cli');
+    await migrate(['@percy/cypress', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -47,8 +53,9 @@ describe('Migrations - @percy/cypress', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/cypress-plugins.js')}`,
+    // @TODO why do I need flat?
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/cypress-plugins.cjs')}`,
       'cypress/plugins/index.js'
     ]);
 
@@ -59,9 +66,8 @@ describe('Migrations - @percy/cypress', () => {
   });
 
   it('asks to remove tasks even when not installed', async () => {
-    delete packageJSON.devDependencies;
-
-    await Migrate('@percy/cypress', '--skip-cli');
+    mockPackageJSON({});
+    await migrate(['@percy/cypress', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -70,8 +76,8 @@ describe('Migrations - @percy/cypress', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/cypress-plugins')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/cypress-plugins.cjs')}`,
       'cypress/plugins/index.js'
     ]);
 
@@ -84,9 +90,8 @@ describe('Migrations - @percy/cypress', () => {
   });
 
   it('does not ask to remove tasks for older versions', async () => {
-    packageJSON.devDependencies['@percy/cypress'] = '1.0.0';
-
-    await Migrate('@percy/cypress', '--skip-cli');
+    mockPackageJSON({ "devDependencies": { "@percy/cypress": "1.0.0" } });
+    await migrate(['@percy/cypress', '--skip-cli']);
 
     expect(prompts[2]).toBeUndefined();
     expect(run[jscodeshiftbin].calls).toBeUndefined();

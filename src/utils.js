@@ -1,9 +1,9 @@
 import { resolve, dirname } from 'path';
-import { existsSync } from 'fs';
 import logger from '@percy/logger';
 import spawn from 'cross-spawn';
 import which from 'which';
 import url from 'url';
+import fs from 'fs';
 
 export const ROOT = dirname(url.fileURLToPath(import.meta.url));
 
@@ -47,8 +47,8 @@ export function run(command, args, pipe) {
 export const npm = {
   // Determine package manager based on lockfile
   get manager() {
-    let hasYarnLock = existsSync(`${process.cwd()}/yarn.lock`);
-    let hasNpmLock = existsSync(`${process.cwd()}/package-lock.json`);
+    let hasYarnLock = fs.existsSync(`${process.cwd()}/yarn.lock`);
+    let hasNpmLock = fs.existsSync(`${process.cwd()}/package-lock.json`);
 
     if (hasYarnLock && hasNpmLock) {
       logger('migrate:npm').warn('Found both a yarn.lock and package-lock.json, defaulting to npm');
@@ -86,7 +86,7 @@ export const codeshift = {
 
   install(lang, bin, install) {
     bin = resolve(ROOT, '../.codeshift', lang, bin);
-    if (!existsSync(bin)) install();
+    if (!fs.existsSync(bin)) install();
     codeshift[lang].bin = bin;
     return bin;
   },
@@ -104,5 +104,29 @@ export const codeshift = {
     install: () => codeshift.install('ruby', 'bin/codeshift', () => {
       return run('gem', ['install', 'codeshift', `--install-dir=${codeshift.path}/ruby`, '--no-document']);
     })
+  }
+};
+
+// gather list of migrations & make it easy to override for testing
+export const migration = {
+  async load() {
+    const MIGRATIONS = [
+      'capybara',
+      'cypress',
+      'ember',
+      'nightmare',
+      'nightwatch',
+      'protractor',
+      'puppeteer',
+      'selenium-java',
+      'selenium-javascript',
+      'selenium-python',
+      'testcafe',
+      'webdriverio'
+    ];
+
+    return Promise.all(MIGRATIONS.map(async m => {
+      return (await import(`./migrations/${m}.js`)).default;
+    }));
   }
 };

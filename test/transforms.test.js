@@ -1,16 +1,17 @@
 import expect from 'expect';
+import migrate from '../src/index.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
   mockPackageJSON,
   mockPrompts,
   mockMigrations
-} from './helpers';
+} from './helpers/index.js';
 
 describe('SDK transforms', () => {
   let transformed, prompts;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setupTest();
     mockPackageJSON({
       devDependencies: {
         '@percy/sdk-test': '^1.0.0'
@@ -51,7 +52,7 @@ describe('SDK transforms', () => {
     });
 
     it('skips prompting when the condition is false', async () => {
-      await Migrate('@percy/sdk-test', '--skip-cli');
+      await migrate(['@percy/sdk-test', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -79,7 +80,7 @@ describe('SDK transforms', () => {
         transforms: [{
           message: 'Run this transform?',
           default: 'test/**/*.js',
-          transform: paths => (transformed = paths)
+          transform: paths => (transformed = paths.flat())
         }, {
           message: 'How about this one?',
           default: 'test/**/*.js',
@@ -89,7 +90,7 @@ describe('SDK transforms', () => {
     });
 
     it('confirms any SDK transforms', async () => {
-      await Migrate('@percy/sdk-test', '--skip-cli');
+      await migrate(['@percy/sdk-test', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -118,7 +119,7 @@ describe('SDK transforms', () => {
         filePaths: ['test/foo.js']
       });
 
-      await Migrate('@percy/sdk-test', '--skip-cli');
+      await migrate(['@percy/sdk-test', '--skip-cli']);
 
       expect(prompts[3]).toEqual({
         type: 'glob',
@@ -166,7 +167,7 @@ describe('SDK transforms', () => {
         filePaths: []
       });
 
-      await Migrate('@percy/sdk-test', '--skip-cli');
+      await migrate(['@percy/sdk-test', '--skip-cli']);
 
       expect(transformed).toBe(false);
       expect(logger.stderr).toEqual([

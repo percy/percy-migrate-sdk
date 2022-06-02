@@ -1,9 +1,8 @@
-import { existsSync } from 'fs';
+import fs from 'fs';
 import PercyConfig from '@percy/config';
 import inquirer from 'inquirer';
 import inspectDeps from './inspect.js';
-import { migrations } from './migrations/index.js';
-import { run, npm } from './utils.js';
+import { run, npm, migration } from './utils.js';
 import command from '@percy/cli-command';
 import { getPackageJSON } from '@percy/cli-command/utils';
 
@@ -15,19 +14,21 @@ export const migrate = command('migrate', {
   version: `${pkg.name} ${pkg.version}`,
 
   args: [{
-    name: 'sdk_name',
+    name: 'sdkName',
     description: 'name of the Percy SDK to migrate (detected by default)'
   }],
 
-  flags: [{
+  flags: [
     // cli installation
-    'only-cli': {
+    {
+      name: 'only-cli',
       description: 'only run @percy/cli installation'
     },
-    'skip-cli': {
+    {
+      name: 'skip-cli',
       description: 'skip @percy/cli installation'
     }
-  }],
+  ],
 
   examples: [
     '$ npx @percy/migrate',
@@ -37,14 +38,14 @@ export const migrate = command('migrate', {
   // Run migration steps
 }, async function*({ args, flags, log, exit }) {
   // inspect dependencies
-  let info = inspectDeps();
+  let info = await inspectDeps();
 
   // get the desired sdk migration
-  let sdk = !flags['only-cli'] &&
-      await confirmSDK(info, args.sdk_name, log);
+  let sdk = !flags.onlyCli &&
+      await confirmSDK(info, args.sdkName, log);
 
   // install @percy/cli and migrate config
-  if (!flags['skip-cli']) {
+  if (!flags.skipCli) {
     await confirmCLI(info);
     await confirmConfig(log);
   }
@@ -110,7 +111,7 @@ async function confirmConfig(log) {
   if (doConfig) {
     let percybin = `${process.cwd()}/node_modules/@percy/cli/bin/run`;
 
-    if (!existsSync(percybin)) {
+    if (!fs.existsSync(percybin)) {
       log.warn('Could not run config migration, @percy/cli is not installed');
     } else {
       await run(percybin, ['config:migrate']);
@@ -132,6 +133,8 @@ async function confirmSDK({ installed, inspected }, name, log) {
 
     return sdk;
   };
+
+  let migrations = await migration.load();
 
   // don't guess when a name is provided
   if (name) {
@@ -194,7 +197,6 @@ async function confirmUpgrade(sdk) {
 async function confirmTransforms(sdk, log) {
   for (let t of sdk.transforms) {
     if (sdk.installed && t.when?.(sdk.installed) === false) {
-      console.log('hahaha nooo', sdk, t, t.when);
       continue;
     }
 
@@ -227,55 +229,5 @@ async function confirmTransforms(sdk, log) {
     await t.transform.call(sdk, Array.isArray(filePaths) ? [filePaths] : filePaths);
   }
 }
-
-// class Migrate extends Command {
-// Initialize flags, args, the loglevel, and attach process handlers for cleanup
-// Run migration steps
-// async run() {
-//   // inspect dependencies
-//   let info = inspectDeps();
-
-//   // get the desired sdk migration
-//   let sdk = !this.flags['only-cli'] &&
-//       await this.confirmSDK(info, this.args.sdk_name);
-
-//   // install @percy/cli and migrate config
-//   if (!this.flags['skip-cli']) {
-//     await this.confirmCLI(info);
-//     await this.confirmConfig();
-//   }
-
-//   // perform sdk migration
-//   if (sdk?.upgrade) {
-//     await this.confirmUpgrade(sdk);
-//     await this.confirmTransforms(sdk);
-//     this.log.info('Migration complete!');
-//   } else {
-//     if (sdk) {
-//       this.log.warn(
-//         `Make sure your SDK is upgraded to the latest version (${sdk.name} ${sdk.version})!`
-//       );
-//     }
-//     this.log.info('See further migration instructions here: ' + (
-//       'https://docs.percy.io/docs/migrating-to-percy-cli'));
-//   }
-// }
-
-// Confirms installing @percy/cli and possibly removing @percy/agent
-
-// Log errors using the Percy logger
-// async catch(err) {
-//   try {
-//     // real errors will bubble
-//     await super.catch(err);
-//   } catch (err) {
-//     // oclif exit method actually throws an error, let it continue
-//     if (err.oclif && err.code === 'EEXIT') throw err;
-//     // log all other errors and exit
-//     this.log.error(err);
-//     this.exit(err.status || 1);
-//   }
-// }
-// }
 
 export default migrate;

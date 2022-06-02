@@ -26,7 +26,8 @@
     "clean": "rm -rf packages/**/{dist,.nyc_output,coverage,oclif.manifest.json}",
     "lint": "eslint --ignore-path .gitignore .",
     "readme": "./scripts/readme",
-    "test": "cross-env NODE_ENV=test mocha",
+    "test": "yarn test:env jasmine --config=./test/jasmine.json",
+    "test:env": "cross-env NODE_ENV=test NODE_OPTIONS='--loader=./test/loader.js'",
     "test:coverage": "nyc yarn test"
   },
   "publishConfig": {
@@ -35,7 +36,7 @@
   "mocha": {
     "require": [
       "@babel/register",
-      "./test/helpers/setup-codeshift"
+      "./test/helpers/setup-codeshift.js"
     ],
     "timeout": 10000,
     "recursive": true
@@ -64,7 +65,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "expect": "^27.0.2",
-    "mocha": "^9.0.0",
+    "jasmine": "^4.1.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "memfs": "^3.4.3",
     "mock-require": "^3.0.3",
     "nyc": "^15.1.0"
   }

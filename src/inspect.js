@@ -2,16 +2,19 @@ import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import logger from '@percy/logger';
-import { migrations } from './migrations/index.js';
 import { run } from './utils.js';
+import { ROOT, migration } from './utils.js';
 import { getPackageJSON } from '@percy/cli-command/utils';
 
 // Tries to detect the installed SDK by checking the current project's CWD. Checks non-dev deps in
 // addition to dev deps even though SDKs should only be installed as dev deps.
-function inspectPackageJSON(info) {
+async function inspectPackageJSON(info) {
   try {
-    let pkg = getPackageJSON(`${process.cwd()}/package.json`);
+    let pkg = getPackageJSON(process.cwd());
+    // @TODO hack
+    if (!pkg) throw { code: 'MODULE_NOT_FOUND', message: 'lol boyz' }
     let deps = { ...pkg.dependencies, ...pkg.devDependencies };
+    let migrations = await migration.load();
 
     for (let [name, version] of Object.entries(deps)) {
       if (name === '@percy/cli') info.cli = version;
@@ -35,6 +38,7 @@ function inspectPackageJSON(info) {
 
 async function inspectGemfile(info) {
   let log = logger('migrate:inspect:ruby');
+  let migrations = await migration.load();
 
   try {
     if (!fs.existsSync(path.join(process.cwd(), 'Gemfile'))) {
@@ -43,7 +47,7 @@ async function inspectGemfile(info) {
     }
 
     let output = run('ruby', [
-      path.join(__dirname, 'inspect_gemfile.rb')
+      path.join(ROOT, 'inspect_gemfile.rb')
     ], true);
 
     for (let { name, version } of JSON.parse(output)) {
@@ -64,7 +68,7 @@ async function inspectGemfile(info) {
 
 // Returns an object containing installed SDK information including whether `@percy/agent` was found
 // within the project's direct dependencies.
-export default function inspectDeps() {
+export default async function inspectDeps() {
   let info = {
     agent: null,
     installed: [],
@@ -72,7 +76,7 @@ export default function inspectDeps() {
   };
 
   // JS projects
-  inspectPackageJSON(info);
+  await inspectPackageJSON(info);
 
   // Ruby projects
   inspectGemfile(info);

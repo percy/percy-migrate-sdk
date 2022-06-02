@@ -1,28 +1,22 @@
+/* eslint-env jasmine */
+import fs from 'fs';
 import expect from 'expect';
+import migrate from '../src/index.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
-  mockRequire,
   mockPrompts,
   mockCommands,
-  mockPackageJSON,
-  mockConfigSearch
-} from './helpers';
+  mockMigrations,
+  mockPackageJSON
+} from './helpers/index.js';
 
 describe('Config migration', () => {
   let percybin = `${process.cwd()}/node_modules/@percy/cli/bin/run`;
   let migrated, prompts;
 
-  beforeEach(() => {
-    migrated = false;
-    mockPackageJSON({});
-
-    prompts = mockPrompts({
-      skipCLI: true,
-      doConfig: true
-    });
-
-    mockCommands({
+  beforeEach(async () => {
+    await setupTest();
+    await mockCommands({
       npm: () => ({ status: 0 }),
       yarn: () => ({ status: 0 }),
       [percybin]: args => {
@@ -31,13 +25,28 @@ describe('Config migration', () => {
       }
     });
 
-    mockRequire('fs', {
-      existsSync: p => p.endsWith('@percy/cli/bin/run')
+    mockMigrations([{
+      name: '@percy/sdk-test',
+      version: '^2.0.0'
+    }]);
+
+    spyOn(fs, 'existsSync').and.callFake(p => {
+      return p.endsWith('@percy/cli/bin/run') || p.endsWith('package.json');
     });
+
+    migrated = false;
+    mockPackageJSON({});
+
+    prompts = mockPrompts({
+      skipCLI: true,
+      doConfig: true
+    });
+
+    fs.writeFileSync('.percy.yml', 'hi');
   });
 
   it('confirms config migration', async () => {
-    await Migrate('--only-cli');
+    await migrate(['--only-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -56,7 +65,7 @@ describe('Config migration', () => {
 
   it('does not migrate config when not confirmed', async () => {
     mockPrompts({ doConfig: false });
-    await Migrate('--only-cli');
+    await migrate(['--only-cli']);
 
     expect(migrated).toBe(false);
 
@@ -67,8 +76,8 @@ describe('Config migration', () => {
   });
 
   it('does not migrate when @percy/cli is not installed', async () => {
-    mockRequire('fs', { existsSync: () => false });
-    await Migrate('--only-cli');
+    spyOn(fs, 'existsSync').and.callFake(p => p.endsWith('package.json'));
+    await migrate(['--only-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -88,8 +97,8 @@ describe('Config migration', () => {
   });
 
   it('does not prompt when no config file was found', async () => {
-    mockConfigSearch(() => ({}));
-    await Migrate('--only-cli');
+    fs.unlinkSync('.percy.yml');
+    await migrate(['--only-cli']);
 
     expect(prompts[2]).toBeUndefined();
     expect(migrated).toBe(false);
@@ -101,11 +110,10 @@ describe('Config migration', () => {
   });
 
   it('logs an error when the config file fails to parse', async () => {
-    mockConfigSearch(() => { throw new Error('config parse failure'); });
-    await Migrate('--only-cli');
+    spyOn(fs, 'statSync').and.throwError('config parse failure');
+    await migrate(['--only-cli']);
 
     expect(migrated).toBe(false);
-
     expect(logger.stderr).toEqual([
       '[percy] Error: config parse failure'
     ]);

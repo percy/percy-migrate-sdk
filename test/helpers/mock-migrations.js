@@ -1,5 +1,5 @@
-import mockRequire from 'mock-require';
-import SDKMigration from '../../src/migrations/base';
+import SDKMigration from '../../src/migrations/base.js';
+import { migration } from '../../src/utils.js';
 
 // Mock supported migrations by extending the base class
 export default function mockMigrations(migrations) {
@@ -14,7 +14,9 @@ export default function mockMigrations(migrations) {
     }
   ));
 
-  mockRequire('../../src/migrations', migrations);
-  mockRequire.reRequire('../../src/migrations');
+  spyOn(migration, 'load').and.callFake(() => {
+    return migrations;
+  });
+
   return migrations;
 }

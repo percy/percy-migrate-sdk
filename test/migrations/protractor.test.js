@@ -1,23 +1,28 @@
+/* eslint-env jasmine */
+import fs from 'fs';
+import path from 'path';
 import expect from 'expect';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  mockPackageJSON,
   setupMigrationTest
-} from '../helpers';
-import { codeshift } from '../../src/utils';
+} from '../helpers/index.js';
 
 describe('Migrations - @percy/protractor', () => {
   let jscodeshiftbin = codeshift.js.bin;
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    ({ packageJSON, prompts, run } = setupMigrationTest('protractor', {
+  beforeEach(async () => {
+    await setupTest();
+    ({ prompts, run } = await setupMigrationTest('protractor', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/protractor', '--skip-cli');
+    await migrate(['@percy/protractor', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -36,7 +41,7 @@ describe('Migrations - @percy/protractor', () => {
   });
 
   it('transforms sdk imports', async () => {
-    await Migrate('@percy/protractor', '--skip-cli');
+    await migrate(['@percy/protractor', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -45,8 +50,8 @@ describe('Migrations - @percy/protractor', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/protractor',
       '--percy-sdk=@percy/protractor',
       'test/foo.js',
@@ -61,9 +66,8 @@ describe('Migrations - @percy/protractor', () => {
   });
 
   it('asks to transform sdk imports even when not installed', async () => {
-    delete packageJSON.devDependencies;
-
-    await Migrate('@percy/protractor', '--skip-cli');
+    mockPackageJSON({});
+    await migrate(['@percy/protractor', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -72,8 +76,8 @@ describe('Migrations - @percy/protractor', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/protractor',
       'test/foo.js',
       'test/bar.js',
@@ -89,15 +93,15 @@ describe('Migrations - @percy/protractor', () => {
   });
 
   describe('with TypeScript files', () => {
-    beforeEach(() => {
-      ({ packageJSON, prompts, run } = setupMigrationTest('protractor', {
+    beforeEach(async () => {
+      ({ prompts, run } = await setupMigrationTest('protractor', {
         mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
         mockPrompts: { filePaths: ['test/bar.ts'] }
       }));
     });
 
     it('transforms sdk imports for TypeScript', async () => {
-      await Migrate('@percy/protractor', '--skip-cli');
+      await migrate(['@percy/protractor', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -106,8 +110,8 @@ describe('Migrations - @percy/protractor', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args).toEqual([
-        `--transform=${require.resolve('../../transforms/import-default')}`,
+      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+        `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/protractor',
         '--parser=ts',
         '--percy-sdk=@percy/protractor',
