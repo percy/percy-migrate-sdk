@@ -85,7 +85,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
   describe('migrating from @percy/seleniumjs', () => {
     beforeEach(() => {
       // mock out having the old SDK installed
-      mockPackageJSON({ "devDependencies": { "@percy/seleniumjs": "^0.2.0" } });
+      mockPackageJSON({ devDependencies: { '@percy/seleniumjs': '^0.2.0' } });
     });
 
     it('uninstalls the old SDK', async () => {

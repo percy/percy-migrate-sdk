@@ -1,5 +1,4 @@
 /* eslint-env jasmine */
-import fs from 'fs';
 import path from 'path';
 import expect from 'expect';
 import migrate from '../../src/index.js';
@@ -90,7 +89,7 @@ describe('Migrations - @percy/cypress', () => {
   });
 
   it('does not ask to remove tasks for older versions', async () => {
-    mockPackageJSON({ "devDependencies": { "@percy/cypress": "1.0.0" } });
+    mockPackageJSON({ devDependencies: { '@percy/cypress': '1.0.0' } });
     await migrate(['@percy/cypress', '--skip-cli']);
 
     expect(prompts[2]).toBeUndefined();

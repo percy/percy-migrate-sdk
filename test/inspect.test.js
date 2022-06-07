@@ -169,7 +169,7 @@ describe('SDK inspection', () => {
     });
 
     it('includes aliases when guessing the installed SDK', async () => {
-      mockPackageJSON({ devDependencies: { "@percy/sdk-old": "1.0.0" } });
+      mockPackageJSON({ devDependencies: { '@percy/sdk-old': '1.0.0' } });
 
       await migrate(['--skip-cli']);
 
@@ -188,7 +188,6 @@ describe('SDK inspection', () => {
 
     it('warns when missing a package.json file', async () => {
       fs.unlinkSync('package.json');
-
       await migrate(['--skip-cli']);
 
       expect(logger.stderr).toEqual([

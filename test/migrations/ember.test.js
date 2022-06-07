@@ -68,7 +68,7 @@ describe('Migrations - @percy/ember', () => {
   });
 
   it('asks to transforms sdk imports when ember-percy is installed', async () => {
-    mockPackageJSON({ "devDependencies": { "ember-percy": "1.0.0" } });
+    mockPackageJSON({ devDependencies: { 'ember-percy': '1.0.0' } });
     await migrate(['@percy/ember', '--skip-cli']);
 
     expect(prompts[2]).toEqual({

@@ -1,5 +1,4 @@
 /* eslint-env jasmine */
-import fs from 'fs';
 import path from 'path';
 import expect from 'expect';
 import migrate from '../../src/index.js';

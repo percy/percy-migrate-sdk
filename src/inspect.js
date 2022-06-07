@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import logger from '@percy/logger';
-import { run } from './utils.js';
-import { ROOT, migration } from './utils.js';
+import { run, ROOT, migration } from './utils.js';
 import { getPackageJSON } from '@percy/cli-command/utils';
 
 // Tries to detect the installed SDK by checking the current project's CWD. Checks non-dev deps in
@@ -11,8 +10,7 @@ import { getPackageJSON } from '@percy/cli-command/utils';
 async function inspectPackageJSON(info) {
   try {
     let pkg = getPackageJSON(process.cwd());
-    // @TODO hack
-    if (!pkg) throw { code: 'MODULE_NOT_FOUND', message: 'lol boyz' }
+    if (!pkg) throw Error('Missing package.json');
     let deps = { ...pkg.dependencies, ...pkg.devDependencies };
     let migrations = await migration.load();
 
@@ -27,7 +25,7 @@ async function inspectPackageJSON(info) {
   } catch (error) {
     let log = logger('migrate:inspect:js');
 
-    if (error.code === 'MODULE_NOT_FOUND') {
+    if (error.message === 'Missing package.json') {
       log.warn('Could not find package.json in current directory');
     } else {
       log.error('Encountered an error inspecting package.json');

@@ -99,7 +99,7 @@ describe('CLI installation', () => {
   });
 
   it('does not confirm when the CLI is already installed', async () => {
-    mockPackageJSON({ "devDependencies": { "@percy/cli": "^1.0.0" } });
+    mockPackageJSON({ devDependencies: { '@percy/cli': '^1.0.0' } });
     await migrate(['--only-cli']);
 
     expect(prompts).not.toHaveProperty('0.name', 'installCLI');
@@ -112,7 +112,7 @@ describe('CLI installation', () => {
   });
 
   it('removes @percy/agent when necessary', async () => {
-    mockPackageJSON({ "devDependencies": { "@percy/agent": "^0.1.0" } });
+    mockPackageJSON({ devDependencies: { '@percy/agent': '^0.1.0' } });
     await migrate(['--only-cli']);
 
     expect(prompts[0]).toEqual({
@@ -134,7 +134,7 @@ describe('CLI installation', () => {
   });
 
   it('uses yarn when a yarn.lock exists', async () => {
-    mockPackageJSON({ "devDependencies": { "@percy/agent": "^0.1.0" } });
+    mockPackageJSON({ devDependencies: { '@percy/agent': '^0.1.0' } });
     fs.writeFileSync('yarn.lock', '');
     Object.defineProperty(npm, 'manager', { get: () => 'yarn' });
 
