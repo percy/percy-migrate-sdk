@@ -27,7 +27,7 @@
     "lint": "eslint --ignore-path .gitignore .",
     "readme": "./scripts/readme",
     "test": "yarn test:env jasmine --config=./test/jasmine.json",
-    "test:env": "cross-env NODE_ENV=test NODE_OPTIONS='--loader=./test/loader.js'",
+    "test:env": "cross-env NODE_ENV=test NODE_OPTIONS='--loader=./test/loader.js' DUMP_FAILED_TEST_LOGS=1",
     "test:coverage": "nyc yarn test"
   },
   "publishConfig": {
@@ -70,5 +70,8 @@
     "memfs": "^3.4.3",
     "mock-require": "^3.0.3",
     "nyc": "^15.1.0"
+  },
+  "volta": {
+    "node": "14.19.3"
   }
 }

@@ -26,7 +26,8 @@ describe('Migrations - percy-capybara', () => {
             name: 'percy-capybara',
             version: '4.3.3'
           }])
-        })
+        }),
+        gem: () => ({ status: 0 })
       },
       mockPrompts: { filePaths: ['specs/my_test.rb'] }
     }));
@@ -82,7 +83,8 @@ describe('Migrations - percy-capybara', () => {
           name: 'foobar',
           version: '1.0'
         }])
-      })
+      }),
+      gem: () => ({ status: 0 })
     });
 
     await migrate(['percy-capybara', '--skip-cli']);
