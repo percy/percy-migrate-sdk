@@ -49,7 +49,7 @@ describe('Migrations - @percy/puppeteer', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/puppeteer',
       '--percy-sdk=@percy/puppeteer',
@@ -75,7 +75,7 @@ describe('Migrations - @percy/puppeteer', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/puppeteer',
       'test/foo.js',
@@ -109,7 +109,7 @@ describe('Migrations - @percy/puppeteer', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/puppeteer',
         '--parser=ts',

@@ -46,7 +46,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/selenium-webdriver',
       '--percy-sdk=@percy/selenium-webdriver',
@@ -70,7 +70,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/selenium-webdriver',
       'test/foo.js',
@@ -115,7 +115,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/seleniumjs',
         '--percy-sdk=@percy/selenium-webdriver',
@@ -147,7 +147,7 @@ describe('Migrations - @percy/selenium-webdriver', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/selenium-webdriver',
         '--parser=ts',

@@ -19,7 +19,7 @@ class EmberMigration extends SDKMigration {
       await codeshift.run('js', [
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         this.installed && `--percy-installed=${this.installed.name}`,
-        paths.flat().some((p) => p.endsWith('.ts')) && '--parser=ts',
+        paths.some((p) => p.endsWith('.ts')) && '--parser=ts',
         `--percy-sdk=${this.name}`,
         ...paths
       ]);

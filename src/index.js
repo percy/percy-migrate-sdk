@@ -226,7 +226,10 @@ async function confirmTransforms(sdk, log) {
       continue;
     }
 
-    await t.transform.call(sdk, Array.isArray(filePaths) ? [filePaths] : filePaths);
+    // @TODO check back on the glob inquire package. In real testing it wasn't returning an array of file paths anymore
+    // hopefully should be fixed upstream. If not, we'll need to wrap it in an array:
+    // await t.transform.call(sdk, Array.isArray(filePaths) ? filePaths : [filePaths]);
+    await t.transform.call(sdk, filePaths);
   }
 }
 

@@ -27,11 +27,9 @@ describe('CLI installation', () => {
       npm: () => ({ status: 0 }),
       yarn: () => ({ status: 0 })
     });
-  });
 
-  afterEach(() => {
     // reset npm manager cached value
-    Object.defineProperty(npm, 'manager', { get: () => CACHED_NPM_MANAGER.get() });
+    Object.defineProperty(npm, 'manager', CACHED_NPM_MANAGER);
   });
 
   it('confirms the CLI installation', async () => {
@@ -136,7 +134,6 @@ describe('CLI installation', () => {
   it('uses yarn when a yarn.lock exists', async () => {
     mockPackageJSON({ devDependencies: { '@percy/agent': '^0.1.0' } });
     fs.writeFileSync('yarn.lock', '');
-    Object.defineProperty(npm, 'manager', { get: () => 'yarn' });
 
     await migrate(['--only-cli']);
 

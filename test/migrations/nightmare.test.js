@@ -49,7 +49,7 @@ describe('Migrations - @percy/nightmare', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/nightmare',
       '--percy-sdk=@percy/nightmare',
@@ -75,7 +75,7 @@ describe('Migrations - @percy/nightmare', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/nightmare',
       'test/foo.js',
@@ -109,7 +109,7 @@ describe('Migrations - @percy/nightmare', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/nightmare',
         '--parser=ts',

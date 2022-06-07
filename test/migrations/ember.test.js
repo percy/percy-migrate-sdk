@@ -51,7 +51,7 @@ describe('Migrations - @percy/ember', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/ember',
       'test/foo.js',
@@ -78,7 +78,7 @@ describe('Migrations - @percy/ember', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=ember-percy',
       '--percy-sdk=@percy/ember',
@@ -112,7 +112,7 @@ describe('Migrations - @percy/ember', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=ember-percy',
         '--parser=ts',

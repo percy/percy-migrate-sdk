@@ -49,7 +49,7 @@ describe('Migrations - @percy/webdriverio', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/webdriverio',
       '--percy-sdk=@percy/webdriverio',
@@ -75,7 +75,7 @@ describe('Migrations - @percy/webdriverio', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/webdriverio',
       'test/foo.js',
@@ -109,7 +109,7 @@ describe('Migrations - @percy/webdriverio', () => {
         default: true
       });
 
-      expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+      expect(run[jscodeshiftbin].calls[0].args).toEqual([
         `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/webdriverio',
         '--parser=ts',

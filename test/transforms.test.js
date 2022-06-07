@@ -80,7 +80,7 @@ describe('SDK transforms', () => {
         transforms: [{
           message: 'Run this transform?',
           default: 'test/**/*.js',
-          transform: paths => (transformed = paths.flat())
+          transform: paths => (transformed = paths)
         }, {
           message: 'How about this one?',
           default: 'test/**/*.js',

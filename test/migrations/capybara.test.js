@@ -60,7 +60,7 @@ describe('Migrations - percy-capybara', () => {
       default: true
     });
 
-    expect(run[rubycodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[rubycodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/capybara.rb')}`,
       'specs/my_test.rb'
     ]);
@@ -94,7 +94,7 @@ describe('Migrations - percy-capybara', () => {
       default: true
     });
 
-    expect(run[rubycodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[rubycodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/capybara.rb')}`,
       'specs/my_test.rb'
     ]);

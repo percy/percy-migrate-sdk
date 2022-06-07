@@ -52,8 +52,7 @@ describe('Migrations - @percy/cypress', () => {
       default: true
     });
 
-    // @TODO why do I need flat?
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/cypress-plugins.cjs')}`,
       'cypress/plugins/index.js'
     ]);
@@ -75,7 +74,7 @@ describe('Migrations - @percy/cypress', () => {
       default: true
     });
 
-    expect(run[jscodeshiftbin].calls[0].args.flat()).toEqual([
+    expect(run[jscodeshiftbin].calls[0].args).toEqual([
       `--transform=${path.resolve(ROOT, '../transforms/cypress-plugins.cjs')}`,
       'cypress/plugins/index.js'
     ]);
