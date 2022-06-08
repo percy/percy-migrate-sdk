@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import { SpecReporter } from 'jasmine-spec-reporter';
 
 // in some tests, storybook takes a little while to start

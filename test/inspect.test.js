@@ -1,9 +1,8 @@
-/* eslint-env jasmine */
 import fs from 'fs';
 import semver from 'semver';
 import expect from 'expect';
 import migrate from '../src/index.js';
-import { logger, setupTest } from '@percy/cli-command/test/helpers';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
   mockPackageJSON,
   mockGemfile,
@@ -16,7 +15,6 @@ describe('SDK inspection', () => {
   let prompts;
 
   beforeEach(async () => {
-    await setupTest();
     mockPackageJSON({
       devDependencies: {
         '@percy/sdk-test': '^1.0.0'

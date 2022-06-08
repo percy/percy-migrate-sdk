@@ -1,17 +1,16 @@
 import fs from 'fs';
 import { mockGemfile } from './common.js';
 import mockCommands from './mock-commands.js';
+import { setupTest } from '@percy/cli-command/test/helpers';
 
 // common hooks
 beforeEach(async () => {
-  // mockConfigSearch(() => ({
-  //   filepath: '.percy.yml'
-  // }));
-
+  await setupTest();
   await mockCommands({
     npm: () => ({ status: 0 }),
     yarn: () => ({ status: 0 }),
-    ruby: () => ({ status: 0 })
+    ruby: () => ({ status: 0 }),
+    gem: () => ({ status: 0 })
   });
 });
 

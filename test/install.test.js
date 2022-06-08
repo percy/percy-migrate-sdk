@@ -1,9 +1,8 @@
-/* eslint-env jasmine */
 import fs from 'fs';
 import expect from 'expect';
 import migrate from '../src/index.js';
-import { logger, setupTest } from '@percy/cli-command/test/helpers';
 import { npm } from '../src/utils.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
   mockPackageJSON,
   mockCommands,
@@ -16,9 +15,7 @@ describe('CLI installation', () => {
   let prompts, run;
 
   beforeEach(async () => {
-    await setupTest();
     mockPackageJSON({});
-
     prompts = mockPrompts({
       installCLI: true
     });

@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 export default async function mockCommands(cmds) {
   let { default: which } = await import('which');
   let { default: crossSpawn } = await import('cross-spawn');

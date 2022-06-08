@@ -1,9 +1,8 @@
-/* eslint-env jasmine */
 import path from 'path';
 import expect from 'expect';
 import migrate from '../../src/index.js';
 import { ROOT, codeshift } from '../../src/utils.js';
-import { logger, setupTest } from '@percy/cli-command/test/helpers';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
   mockPackageJSON,
   setupMigrationTest
@@ -14,7 +13,6 @@ describe('Migrations - @percy/puppeteer', () => {
   let prompts, run;
 
   beforeEach(async () => {
-    await setupTest();
     ({ prompts, run } = await setupMigrationTest('puppeteer', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));

@@ -1,20 +1,18 @@
 /* eslint-env jasmine */
 import expect from 'expect';
 import migrate from '../src/index.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
   mockPackageJSON,
   mockPrompts,
   mockMigrations
 } from './helpers/index.js';
-import { logger, setupTest } from '@percy/cli-command/test/helpers';
 
 describe('SDK upgrade', () => {
   let upgraded, prompts;
 
-  beforeEach(async () => {
-    await setupTest();
+  beforeEach(() => {
     upgraded = false;
-
     mockMigrations([{
       name: '@percy/sdk-test',
       aliases: ['@percy/sdk-old'],

@@ -3,7 +3,7 @@ import path from 'path';
 import expect from 'expect';
 import migrate from '../../src/index.js';
 import { ROOT, codeshift } from '../../src/utils.js';
-import { logger, setupTest } from '@percy/cli-command/test/helpers';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
   mockPackageJSON,
   setupMigrationTest
@@ -14,7 +14,6 @@ describe('Migrations - @percy/webdriverio', () => {
   let prompts, run;
 
   beforeEach(async () => {
-    await setupTest();
     ({ prompts, run } = await setupMigrationTest('webdriverio', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));

@@ -1,8 +1,7 @@
-/* eslint-env jasmine */
 import fs from 'fs';
 import expect from 'expect';
 import migrate from '../src/index.js';
-import { logger, setupTest } from '@percy/cli-command/test/helpers';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
   mockPrompts,
   mockCommands,
@@ -15,7 +14,6 @@ describe('Config migration', () => {
   let migrated, prompts;
 
   beforeEach(async () => {
-    await setupTest();
     await mockCommands({
       npm: () => ({ status: 0 }),
       yarn: () => ({ status: 0 }),
