@@ -1,12 +1,13 @@
 import fs from 'fs';
-import PercyConfig from '@percy/config';
 import inquirer from 'inquirer';
+import PercyConfig from '@percy/config';
 import inspectDeps from './inspect.js';
-import { run, npm, migration } from './utils.js';
 import command from '@percy/cli-command';
+import GlobPrompt from 'inquirer-glob-prompt';
+import { run, npm, migration } from './utils.js';
 import { getPackageJSON } from '@percy/cli-command/utils';
 
-inquirer.registerPrompt('glob', await import('inquirer-glob-prompt').default);
+inquirer.registerPrompt('glob', GlobPrompt);
 const pkg = getPackageJSON(import.meta.url);
 
 export const migrate = command('migrate', {
@@ -226,9 +227,6 @@ async function confirmTransforms(sdk, log) {
       continue;
     }
 
-    // @TODO check back on the glob inquire package. In real testing it wasn't returning an array of file paths anymore
-    // hopefully should be fixed upstream. If not, we'll need to wrap it in an array:
-    // await t.transform.call(sdk, Array.isArray(filePaths) ? filePaths : [filePaths]);
     await t.transform.call(sdk, filePaths);
   }
 }

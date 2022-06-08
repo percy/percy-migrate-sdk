@@ -33,14 +33,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "mocha": {
-    "require": [
-      "@babel/register",
-      "./test/helpers/setup-codeshift.js"
-    ],
-    "timeout": 10000,
-    "recursive": true
-  },
   "dependencies": {
     "@percy/cli-command": "^1.1.0",
     "@percy/config": "^1.1.0",
