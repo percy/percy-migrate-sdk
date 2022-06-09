@@ -36,7 +36,7 @@ export default async function setupMigrationTest(filename, mocks) {
     ...mocks.mockCommands
   });
 
-  spyOn(fs, 'existsSync').and.callFake(path => {
+  fs.existsSync.and.callFake(path => {
     return path.includes('/.codeshift/') ||
       path.endsWith('package.json') ||
       (language === 'js' && path.endsWith('package-lock.json')) ||

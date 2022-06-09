@@ -1,12 +1,13 @@
 import fs from 'fs';
 import expect from 'expect';
-import { mockCommands } from '../helpers/index.js';
+import { setupTest, mockCommands } from '../helpers/index.js';
 import { codeshift } from '../../src/utils.js';
 
 describe('Installing codeshift libraries', () => {
   let run;
 
   beforeEach(async () => {
+    await setupTest();
     // set the `bin` path in the `codeshift` util
     await codeshift.js?.install();
     await codeshift.ruby?.install();

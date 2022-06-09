@@ -1,5 +1,5 @@
 import SDKMigration from '../../src/migrations/base.js';
-import { migration } from '../../src/utils.js';
+import { migrations as sdkMigrations } from '../../src/utils.js';
 
 // Mock supported migrations by extending the base class
 export default function mockMigrations(migrations) {
@@ -14,7 +14,7 @@ export default function mockMigrations(migrations) {
     }
   ));
 
-  spyOn(migration, 'load').and.callFake(() => {
+  spyOn(sdkMigrations, 'load').and.callFake(() => {
     return migrations;
   });
 

@@ -5,6 +5,7 @@ import migrate from '../../src/index.js';
 import { ROOT, codeshift } from '../../src/utils.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPackageJSON,
   setupMigrationTest
 } from '../helpers/index.js';
@@ -14,6 +15,8 @@ describe('Migrations - @percy/webdriverio', () => {
   let prompts, run;
 
   beforeEach(async () => {
+    await setupTest();
+
     ({ prompts, run } = await setupMigrationTest('webdriverio', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));

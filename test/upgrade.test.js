@@ -3,6 +3,7 @@ import expect from 'expect';
 import migrate from '../src/index.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPackageJSON,
   mockPrompts,
   mockMigrations
@@ -11,7 +12,9 @@ import {
 describe('SDK upgrade', () => {
   let upgraded, prompts;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setupTest();
+
     upgraded = false;
     mockMigrations([{
       name: '@percy/sdk-test',

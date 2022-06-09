@@ -1,12 +1,14 @@
 import expect from 'expect';
 import migrate from '../../src/index.js';
 import { logger } from '@percy/cli-command/test/helpers';
-import { setupMigrationTest } from '../helpers/index.js';
+import { setupTest, setupMigrationTest } from '../helpers/index.js';
 
 describe('Migrations - @percy/testcafe', () => {
   let prompts, run;
 
   beforeEach(async () => {
+    await setupTest();
+
     ({ prompts, run } = await setupMigrationTest('testcafe', {}));
   });
 

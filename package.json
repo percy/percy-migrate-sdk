@@ -16,11 +16,6 @@
   "engines": {
     "node": ">=14"
   },
-  "@percy/cli": {
-    "commands": [
-      "./dist/index.js"
-    ]
-  },
   "scripts": {
     "build": "babel --root-mode upward src --copy-files --out-dir dist",
     "clean": "rm -rf packages/**/{dist,.nyc_output,coverage,oclif.manifest.json}",
@@ -62,8 +57,5 @@
     "memfs": "^3.4.3",
     "mock-require": "^3.0.3",
     "nyc": "^15.1.0"
-  },
-  "volta": {
-    "node": "14.19.3"
   }
 }

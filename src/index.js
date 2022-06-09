@@ -4,7 +4,7 @@ import PercyConfig from '@percy/config';
 import inspectDeps from './inspect.js';
 import command from '@percy/cli-command';
 import GlobPrompt from 'inquirer-glob-prompt';
-import { run, npm, migration } from './utils.js';
+import { run, npm, migrations } from './utils.js';
 import { getPackageJSON } from '@percy/cli-command/utils';
 
 inquirer.registerPrompt('glob', GlobPrompt);
@@ -15,12 +15,11 @@ export const migrate = command('migrate', {
   version: `${pkg.name} ${pkg.version}`,
 
   args: [{
-    name: 'sdkName',
+    name: 'sdk',
     description: 'name of the Percy SDK to migrate (detected by default)'
   }],
 
   flags: [
-    // cli installation
     {
       name: 'only-cli',
       description: 'only run @percy/cli installation'
@@ -43,7 +42,7 @@ export const migrate = command('migrate', {
 
   // get the desired sdk migration
   let sdk = !flags.onlyCli &&
-      await confirmSDK(info, args.sdkName, log);
+      await confirmSDK(info, args.sdk, log);
 
   // install @percy/cli and migrate config
   if (!flags.skipCli) {
@@ -68,6 +67,7 @@ export const migrate = command('migrate', {
   }
 });
 
+// Confirms installing @percy/cli and possibly removing @percy/agent
 async function confirmCLI({ agent, cli }) {
   if (cli) return;
 
@@ -135,11 +135,11 @@ async function confirmSDK({ installed, inspected }, name, log) {
     return sdk;
   };
 
-  let migrations = await migration.load();
+  let sdkMigrations = await migrations.load();
 
   // don't guess when a name is provided
   if (name) {
-    let SDK = migrations.find(SDK => SDK.matches(name));
+    let SDK = sdkMigrations.find(SDK => SDK.matches(name));
     if (!SDK) log.warn('The specified SDK is not supported');
     else sdk = fromInstalled(SDK);
   } else {
@@ -165,8 +165,8 @@ async function confirmSDK({ installed, inspected }, name, log) {
     type: 'list',
     name: 'fromChoice',
     message: 'Which SDK are you using?',
-    default: sdk ? migrations.indexOf(sdk.constructor) : 0,
-    choices: migrations.map(SDK => ({
+    default: sdk ? sdkMigrations.indexOf(sdk.constructor) : 0,
+    choices: sdkMigrations.map(SDK => ({
       name: SDK.aliased,
       value: () => fromInstalled(SDK)
     })).concat({

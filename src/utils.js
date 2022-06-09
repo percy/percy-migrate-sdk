@@ -1,11 +1,11 @@
-import { resolve, dirname } from 'path';
-import logger from '@percy/logger';
-import spawn from 'cross-spawn';
-import which from 'which';
-import url from 'url';
 import fs from 'fs';
+import url from 'url';
+import path from 'path';
+import which from 'which';
+import spawn from 'cross-spawn';
+import logger from '@percy/logger';
 
-export const ROOT = dirname(url.fileURLToPath(import.meta.url));
+export const ROOT = path.dirname(url.fileURLToPath(import.meta.url));
 
 // Run a command with the specified args
 export function run(command, args, pipe) {
@@ -79,13 +79,13 @@ export const npm = {
 
 export const codeshift = {
   get path() {
-    let value = resolve(ROOT, '../.codeshift');
+    let value = path.resolve(ROOT, '../.codeshift');
     Object.defineProperty(codeshift, 'path', { value });
     return value;
   },
 
   install(lang, bin, install) {
-    bin = resolve(ROOT, '../.codeshift', lang, bin);
+    bin = path.resolve(ROOT, '../.codeshift', lang, bin);
     if (!fs.existsSync(bin)) install();
     codeshift[lang].bin = bin;
     return bin;
@@ -108,9 +108,9 @@ export const codeshift = {
 };
 
 // gather list of migrations & make it easy to override for testing
-export const migration = {
+export const migrations = {
   async load() {
-    const MIGRATIONS = [
+    return Promise.all([
       'capybara',
       'cypress',
       'ember',
@@ -123,10 +123,8 @@ export const migration = {
       'selenium-python',
       'testcafe',
       'webdriverio'
-    ];
-
-    return Promise.all(MIGRATIONS.map(async m => {
-      return (await import(`./migrations/${m}.js`)).default;
-    }));
+    ].map(async m => (
+      await import(`./migrations/${m}.js`)
+    ).default));
   }
 };

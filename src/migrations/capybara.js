@@ -1,6 +1,6 @@
 import path from 'path';
 import SDKMigration from './base.js';
-import { codeshift, run, ROOT } from '../utils.js';
+import { ROOT, codeshift, run } from '../utils.js';
 
 class CapybaraMigration extends SDKMigration {
   static language = 'ruby';

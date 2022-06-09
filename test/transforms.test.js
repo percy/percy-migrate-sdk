@@ -2,6 +2,7 @@ import expect from 'expect';
 import migrate from '../src/index.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPackageJSON,
   mockPrompts,
   mockMigrations
@@ -10,7 +11,9 @@ import {
 describe('SDK transforms', () => {
   let transformed, prompts;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setupTest();
+
     mockPackageJSON({
       devDependencies: {
         '@percy/sdk-test': '^1.0.0'

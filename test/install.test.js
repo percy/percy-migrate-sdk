@@ -4,6 +4,7 @@ import migrate from '../src/index.js';
 import { npm } from '../src/utils.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPackageJSON,
   mockCommands,
   mockPrompts
@@ -15,6 +16,8 @@ describe('CLI installation', () => {
   let prompts, run;
 
   beforeEach(async () => {
+    await setupTest();
+
     mockPackageJSON({});
     prompts = mockPrompts({
       installCLI: true

@@ -3,6 +3,7 @@ import expect from 'expect';
 import migrate from '../src/index.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPrompts,
   mockCommands,
   mockMigrations,
@@ -14,6 +15,8 @@ describe('Config migration', () => {
   let migrated, prompts;
 
   beforeEach(async () => {
+    await setupTest();
+
     await mockCommands({
       npm: () => ({ status: 0 }),
       yarn: () => ({ status: 0 }),
@@ -74,7 +77,7 @@ describe('Config migration', () => {
   });
 
   it('does not migrate when @percy/cli is not installed', async () => {
-    spyOn(fs, 'existsSync').and.callFake(p => p.endsWith('package.json'));
+    fs.existsSync.and.callFake(p => p.endsWith('package.json'));
     await migrate(['--only-cli']);
 
     expect(prompts[2]).toEqual({
@@ -108,7 +111,8 @@ describe('Config migration', () => {
   });
 
   it('logs an error when the config file fails to parse', async () => {
-    spyOn(fs, 'statSync').and.throwError('config parse failure');
+    fs.statSync.and.throwError('config parse failure');
+
     await migrate(['--only-cli']);
 
     expect(migrated).toBe(false);

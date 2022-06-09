@@ -4,6 +4,7 @@ import migrate from '../../src/index.js';
 import { ROOT, codeshift } from '../../src/utils.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPackageJSON,
   setupMigrationTest
 } from '../helpers/index.js';
@@ -13,6 +14,8 @@ describe('Migrations - @percy/cypress', () => {
   let prompts, run;
 
   beforeEach(async () => {
+    await setupTest();
+
     ({ prompts, run } = await setupMigrationTest('cypress', {
       installed: { version: '2.1.3' },
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },

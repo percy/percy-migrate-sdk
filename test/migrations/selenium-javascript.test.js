@@ -4,6 +4,7 @@ import migrate from '../../src/index.js';
 import { ROOT, codeshift } from '../../src/utils.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockPackageJSON,
   setupMigrationTest
 } from '../helpers/index.js';
@@ -13,6 +14,8 @@ describe('Migrations - @percy/selenium-webdriver', () => {
   let prompts, run;
 
   beforeEach(async () => {
+    await setupTest();
+
     ({ prompts, run } = await setupMigrationTest('selenium-javascript', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));

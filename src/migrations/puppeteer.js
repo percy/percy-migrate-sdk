@@ -1,5 +1,5 @@
 import path from 'path';
-import { npm, codeshift, ROOT } from '../utils.js';
+import { ROOT, npm, codeshift } from '../utils.js';
 import SDKMigration from './base.js';
 
 class PuppeteerMigration extends SDKMigration {

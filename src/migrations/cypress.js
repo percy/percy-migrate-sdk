@@ -1,6 +1,6 @@
 import path from 'path';
 import semver from 'semver';
-import { npm, codeshift, ROOT } from '../utils.js';
+import { ROOT, npm, codeshift } from '../utils.js';
 import SDKMigration from './base.js';
 
 class CypressMigration extends SDKMigration {

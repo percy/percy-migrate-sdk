@@ -4,6 +4,7 @@ import migrate from '../../src/index.js';
 import { ROOT, codeshift } from '../../src/utils.js';
 import { logger } from '@percy/cli-command/test/helpers';
 import {
+  setupTest,
   mockGemfile,
   mockCommands,
   setupMigrationTest
@@ -14,6 +15,8 @@ describe('Migrations - percy-capybara', () => {
   let prompts, run;
 
   beforeEach(async () => {
+    await setupTest();
+
     ({ prompts, run } = await setupMigrationTest('capybara', {
       installed: { version: '4.3.3' },
       mockCommands: {
@@ -72,6 +75,7 @@ describe('Migrations - percy-capybara', () => {
 
   it('asks to transform files even when not installed', async () => {
     mockGemfile('gem "foobar", "1.0"');
+
     run = await mockCommands({
       bundle: () => ({ status: 0 }),
       [rubycodeshiftbin]: () => ({ status: 0 }),
