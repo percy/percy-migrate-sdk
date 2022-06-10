@@ -1,23 +1,28 @@
+import path from 'path';
 import expect from 'expect';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  setupTest,
+  mockPackageJSON,
   setupMigrationTest
-} from '../helpers';
-import { codeshift } from '../../src/utils';
+} from '../helpers/index.js';
 
 describe('Migrations - @percy/nightmare', () => {
   let jscodeshiftbin = codeshift.js.bin;
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    ({ packageJSON, prompts, run } = setupMigrationTest('nightmare', {
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('nightmare', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/nightmare', '--skip-cli');
+    await migrate(['@percy/nightmare', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -36,7 +41,7 @@ describe('Migrations - @percy/nightmare', () => {
   });
 
   it('transforms sdk imports', async () => {
-    await Migrate('@percy/nightmare', '--skip-cli');
+    await migrate(['@percy/nightmare', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -46,7 +51,7 @@ describe('Migrations - @percy/nightmare', () => {
     });
 
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/nightmare',
       '--percy-sdk=@percy/nightmare',
       'test/foo.js',
@@ -61,9 +66,8 @@ describe('Migrations - @percy/nightmare', () => {
   });
 
   it('asks to transform sdk imports even when not installed', async () => {
-    delete packageJSON.devDependencies;
-
-    await Migrate('@percy/nightmare', '--skip-cli');
+    mockPackageJSON({});
+    await migrate(['@percy/nightmare', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -73,7 +77,7 @@ describe('Migrations - @percy/nightmare', () => {
     });
 
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/nightmare',
       'test/foo.js',
       'test/bar.js',
@@ -89,15 +93,15 @@ describe('Migrations - @percy/nightmare', () => {
   });
 
   describe('with TypeScript files', () => {
-    beforeEach(() => {
-      ({ packageJSON, prompts, run } = setupMigrationTest('nightmare', {
+    beforeEach(async () => {
+      ({ prompts, run } = await setupMigrationTest('nightmare', {
         mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
         mockPrompts: { filePaths: ['test/bar.ts'] }
       }));
     });
 
     it('transforms sdk imports for TypeScript', async () => {
-      await Migrate('@percy/nightmare', '--skip-cli');
+      await migrate(['@percy/nightmare', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -107,7 +111,7 @@ describe('Migrations - @percy/nightmare', () => {
       });
 
       expect(run[jscodeshiftbin].calls[0].args).toEqual([
-        `--transform=${require.resolve('../../transforms/import-default')}`,
+        `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/nightmare',
         '--parser=ts',
         '--percy-sdk=@percy/nightmare',

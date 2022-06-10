@@ -1,7 +1,7 @@
 import path from 'path';
 import semver from 'semver';
-import { npm, codeshift } from '../utils';
-import SDKMigration from './base';
+import { ROOT, npm, codeshift } from '../utils.js';
+import SDKMigration from './base.js';
 
 class CypressMigration extends SDKMigration {
   static name = '@percy/cypress';
@@ -14,14 +14,14 @@ class CypressMigration extends SDKMigration {
   transforms = [{
     message: 'Percy tasks were removed, update Cypress plugins file?',
     default: 'cypress/plugins/index.js',
-    when: i => semver.satisfies(i.version, '2 - 3'),
+    when: i => semver.satisfies(semver.coerce(i.version), '2 - 3'),
     async transform(paths) {
       await codeshift.run('js', [
-        `--transform=${path.resolve(__dirname, '../../transforms/cypress-plugins.js')}`,
+        `--transform=${path.resolve(ROOT, '../transforms/cypress-plugins.cjs')}`,
         ...paths
       ]);
     }
   }];
 };
 
-module.exports = CypressMigration;
+export default CypressMigration;

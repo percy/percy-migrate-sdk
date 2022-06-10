@@ -1,10 +1,9 @@
-import expect from 'expect';
-import applyTransform, { dedent } from '../helpers/apply-transform';
-import transform from '../../transforms/import-default';
+import applyTransform, { dedent } from '../helpers/apply-transform.js';
+import transform from '../../transforms/import-default.cjs';
 
 describe('Transforms - import-default.js', () => {
-  it('transforms named imports into default imports', () => {
-    expect(applyTransform(transform, {
+  it('transforms named imports into default imports', async () => {
+    expect(await applyTransform(transform, {
       'percy-installed': '@percy/sdk-old',
       'percy-sdk': '@percy/sdk-new'
     }, dedent`
@@ -16,8 +15,8 @@ describe('Transforms - import-default.js', () => {
     `);
   });
 
-  it('transforms TypeScript named imports into TS imports', () => {
-    expect(applyTransform(transform, {
+  it('transforms TypeScript named imports into TS imports', async () => {
+    expect(await applyTransform(transform, {
       'percy-installed': '@percy/sdk-old',
       'percy-sdk': '@percy/sdk-new'
     }, dedent`
@@ -29,8 +28,8 @@ describe('Transforms - import-default.js', () => {
     `);
   });
 
-  it('transforms required variables', () => {
-    expect(applyTransform(transform, {
+  it('transforms required variables', async () => {
+    expect(await applyTransform(transform, {
       'percy-sdk': '@percy/sdk',
       'print-options': { quote: 'double' }
     }, dedent`
@@ -46,13 +45,13 @@ describe('Transforms - import-default.js', () => {
     `);
   });
 
-  it('throws an error when --percy-sdk is missing', () => {
-    expect(() => applyTransform(transform, {}))
-      .toThrow('--percy-sdk is required');
+  it('throws an error when --percy-sdk is missing', async () => {
+    await expectAsync(applyTransform(transform, {}))
+      .toBeRejectedWithError('--percy-sdk is required');
   });
 
-  it('does not error when encountering unexpected trees', () => {
-    expect(applyTransform(transform, {
+  it('does not error when encountering unexpected trees', async () => {
+    expect(await applyTransform(transform, {
       'percy-sdk': '@percy/sdk'
     }, dedent`
       let { percySnapshot } = require('@percy/sdk');

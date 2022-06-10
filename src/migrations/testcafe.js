@@ -1,5 +1,5 @@
-import { npm } from '../utils';
-import SDKMigration from './base';
+import { npm } from '../utils.js';
+import SDKMigration from './base.js';
 
 class TestcafeMigration extends SDKMigration {
   static name = '@percy/testcafe';
@@ -10,4 +10,4 @@ class TestcafeMigration extends SDKMigration {
   }
 }
 
-module.exports = TestcafeMigration;
+export default TestcafeMigration;

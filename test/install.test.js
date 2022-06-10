@@ -1,35 +1,39 @@
+import fs from 'fs';
 import expect from 'expect';
+import migrate from '../src/index.js';
+import { npm } from '../src/utils.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
-  mockRequire,
+  setupTest,
   mockPackageJSON,
   mockCommands,
   mockPrompts
-} from './helpers';
+} from './helpers/index.js';
+
+const CACHED_NPM_MANAGER = Object.getOwnPropertyDescriptor(npm, 'manager');
 
 describe('CLI installation', () => {
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    packageJSON = mockPackageJSON({});
+  beforeEach(async () => {
+    await setupTest();
 
+    mockPackageJSON({});
     prompts = mockPrompts({
       installCLI: true
     });
 
-    run = mockCommands({
+    run = await mockCommands({
       npm: () => ({ status: 0 }),
       yarn: () => ({ status: 0 })
     });
 
-    mockRequire('fs', {
-      existsSync: path => path.endsWith('package-lock.json')
-    });
+    // reset npm manager cached value
+    Object.defineProperty(npm, 'manager', CACHED_NPM_MANAGER);
   });
 
   it('confirms the CLI installation', async () => {
-    await Migrate('--only-cli');
+    await migrate(['--only-cli']);
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
@@ -53,7 +57,7 @@ describe('CLI installation', () => {
       skipCLI: false
     });
 
-    await Migrate('--only-cli');
+    await migrate(['--only-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -82,7 +86,7 @@ describe('CLI installation', () => {
       skipCLI: true
     });
 
-    await Migrate('--only-cli');
+    await migrate(['--only-cli']);
 
     expect(run.npm.calls).toBeUndefined();
 
@@ -93,8 +97,8 @@ describe('CLI installation', () => {
   });
 
   it('does not confirm when the CLI is already installed', async () => {
-    packageJSON.devDependencies = { '@percy/cli': '^1.0.0' };
-    await Migrate('--only-cli');
+    mockPackageJSON({ devDependencies: { '@percy/cli': '^1.0.0' } });
+    await migrate(['--only-cli']);
 
     expect(prompts).not.toHaveProperty('0.name', 'installCLI');
     expect(run.npm.calls).toBeUndefined();
@@ -106,8 +110,8 @@ describe('CLI installation', () => {
   });
 
   it('removes @percy/agent when necessary', async () => {
-    packageJSON.devDependencies = { '@percy/agent': '^0.1.0' };
-    await Migrate('--only-cli');
+    mockPackageJSON({ devDependencies: { '@percy/agent': '^0.1.0' } });
+    await migrate(['--only-cli']);
 
     expect(prompts[0]).toEqual({
       type: 'confirm',
@@ -128,9 +132,10 @@ describe('CLI installation', () => {
   });
 
   it('uses yarn when a yarn.lock exists', async () => {
-    packageJSON.devDependencies = { '@percy/agent': '^0.1.0' };
-    mockRequire('fs', { existsSync: path => path.endsWith('yarn.lock') });
-    await Migrate('--only-cli');
+    mockPackageJSON({ devDependencies: { '@percy/agent': '^0.1.0' } });
+    fs.writeFileSync('yarn.lock', '');
+
+    await migrate(['--only-cli']);
 
     expect(run.yarn.calls[0].args)
       .toEqual(['remove', '@percy/agent']);
@@ -144,9 +149,10 @@ describe('CLI installation', () => {
   });
 
   it('warns and uses npm when both a yarn.lock and package-lock.json exists', async () => {
-    let existsSync = path => path.endsWith('.lock') || path.endsWith('-lock.json');
-    mockRequire('fs', { existsSync });
-    await Migrate('--only-cli');
+    fs.writeFileSync('yarn.lock', '');
+    fs.writeFileSync('package-lock.json', '');
+
+    await migrate(['--only-cli']);
 
     expect(run.npm.calls[0].args)
       .toEqual(['install', '--save-dev', '@percy/cli']);
@@ -160,33 +166,50 @@ describe('CLI installation', () => {
   });
 
   it('runs with the appropriate stdio values', async () => {
-    await Migrate('--only-cli');
+    await migrate(['--only-cli']);
 
     expect(run.npm.calls[0].options)
       .toEqual({ stdio: ['inherit', 'inherit', 'inherit'] });
   });
 
   it('runs with the appropriate stdio values when quiet', async () => {
-    await Migrate('--only-cli', '--quiet');
+    await migrate(['--only-cli', '--quiet']);
 
     expect(run.npm.calls[0].options)
       .toEqual({ stdio: ['ignore', 'ignore', 'inherit'] });
   });
 
   it('runs with the appropriate stdio values when silent', async () => {
-    await Migrate('--only-cli', '--silent');
+    await migrate(['--only-cli', '--silent']);
 
     expect(run.npm.calls[0].options)
       .toEqual({ stdio: ['ignore', 'ignore', 'ignore'] });
   });
 
+  it('exits when the subcommand fails with stderr', async () => {
+    run = await mockCommands({
+      npm: () => ({ status: 3, stderr: 'some error' })
+    });
+
+    await expect(migrate(['--only-cli']))
+      .rejects.toThrow('npm failed with exit code 3:\n\nsome error');
+
+    expect(run.npm.calls[0].args)
+      .toEqual(['install', '--save-dev', '@percy/cli']);
+
+    expect(logger.stdout).toEqual([]);
+    expect(logger.stderr).toEqual([
+      '[percy] Error: npm failed with exit code 3:\n\nsome error'
+    ]);
+  });
+
   it('exits when the subcommand fails', async () => {
-    run = mockCommands({
+    run = await mockCommands({
       npm: () => ({ status: 3 })
     });
 
-    await expect(Migrate('--only-cli'))
-      .rejects.toThrow('EEXIT: 3');
+    await expect(migrate(['--only-cli']))
+      .rejects.toThrow('npm failed with exit code 3.');
 
     expect(run.npm.calls[0].args)
       .toEqual(['install', '--save-dev', '@percy/cli']);

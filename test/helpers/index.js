@@ -1,34 +1,22 @@
-import fs from 'fs';
-import logger from '@percy/logger/test/helpers';
-import mockRequire from 'mock-require';
-import { mockConfigSearch, mockGemfile } from './common';
-import mockCommands from './mock-commands';
+import mockCommands from './mock-commands.js';
+import { setupTest as commonTestSetup } from '@percy/cli-command/test/helpers';
+import { codeshift } from '../../src/utils.js';
 
-// common hooks
-beforeEach(() => {
-  logger.mock();
-  mockConfigSearch(() => ({
-    filepath: '.percy.yml'
-  }));
-  mockCommands({
+await codeshift.js?.install();
+await codeshift.ruby?.install();
+
+export async function setupTest() {
+  await commonTestSetup();
+  await mockCommands({
     npm: () => ({ status: 0 }),
-    yarn: () => ({ status: 0 })
+    yarn: () => ({ status: 0 }),
+    ruby: () => ({ status: 0 }),
+    gem: () => ({ status: 0 })
   });
-});
+}
 
-afterEach(() => {
-  if (mockGemfile.filepath) {
-    fs.unlinkSync(mockGemfile.filepath);
-    delete mockGemfile.filepath;
-  }
-
-  process.removeAllListeners();
-  mockRequire.stopAll();
-});
-
-export * from './common';
-export { logger, mockRequire, mockCommands };
-export { default as mockPrompts } from './mock-prompts';
-export { default as mockMigrations } from './mock-migrations';
-export { default as setupMigrationTest } from './setup-migration';
-export { default as setupCodeshift } from './setup-codeshift';
+export * from './common.js';
+export { mockCommands };
+export { default as mockPrompts } from './mock-prompts.js';
+export { default as mockMigrations } from './mock-migrations.js';
+export { default as setupMigrationTest } from './setup-migration.js';

@@ -1,19 +1,19 @@
 import expect from 'expect';
-import {
-  Migrate,
-  logger,
-  setupMigrationTest
-} from '../helpers';
+import migrate from '../../src/index.js';
+import { logger } from '@percy/cli-command/test/helpers';
+import { setupTest, setupMigrationTest } from '../helpers/index.js';
 
 describe('Migrations - @percy/nightwatch', () => {
   let prompts, run;
 
-  beforeEach(() => {
-    ({ prompts, run } = setupMigrationTest('nightwatch', {}));
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('nightwatch', {}));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/nightwatch', '--skip-cli');
+    await migrate(['@percy/nightwatch', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',

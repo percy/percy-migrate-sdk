@@ -1,26 +1,41 @@
+import path from 'path';
 import expect from 'expect';
-import { codeshift } from '../../src/utils';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
-  setupMigrationTest,
-  mockGemfile
-} from '../helpers';
+  setupTest,
+  mockGemfile,
+  mockCommands,
+  setupMigrationTest
+} from '../helpers/index.js';
 
 describe('Migrations - percy-capybara', () => {
   let rubycodeshiftbin = codeshift.ruby.bin;
   let prompts, run;
 
-  beforeEach(() => {
-    ({ prompts, run } = setupMigrationTest('capybara', {
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('capybara', {
       installed: { version: '4.3.3' },
-      mockCommands: { [rubycodeshiftbin]: () => ({ status: 0 }) },
+      mockCommands: {
+        [rubycodeshiftbin]: () => ({ status: 0 }),
+        ruby: () => ({
+          status: 0,
+          stdout: JSON.stringify([{
+            name: 'percy-capybara',
+            version: '4.3.3'
+          }])
+        }),
+        gem: () => ({ status: 0 })
+      },
       mockPrompts: { filePaths: ['specs/my_test.rb'] }
     }));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('percy-capybara', '--skip-cli');
+    await migrate(['percy-capybara', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -38,7 +53,7 @@ describe('Migrations - percy-capybara', () => {
   });
 
   it('runs the codemod to convert to the new API', async () => {
-    await Migrate('percy-capybara', '--skip-cli');
+    await migrate(['percy-capybara', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -48,7 +63,7 @@ describe('Migrations - percy-capybara', () => {
     });
 
     expect(run[rubycodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/capybara.rb')}`,
+      `--transform=${path.resolve(ROOT, '../transforms/capybara.rb')}`,
       'specs/my_test.rb'
     ]);
 
@@ -61,7 +76,20 @@ describe('Migrations - percy-capybara', () => {
   it('asks to transform files even when not installed', async () => {
     mockGemfile('gem "foobar", "1.0"');
 
-    await Migrate('percy-capybara', '--skip-cli');
+    run = await mockCommands({
+      bundle: () => ({ status: 0 }),
+      [rubycodeshiftbin]: () => ({ status: 0 }),
+      ruby: () => ({
+        status: 0,
+        stdout: JSON.stringify([{
+          name: 'foobar',
+          version: '1.0'
+        }])
+      }),
+      gem: () => ({ status: 0 })
+    });
+
+    await migrate(['percy-capybara', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -71,7 +99,7 @@ describe('Migrations - percy-capybara', () => {
     });
 
     expect(run[rubycodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/capybara.rb')}`,
+      `--transform=${path.resolve(ROOT, '../transforms/capybara.rb')}`,
       'specs/my_test.rb'
     ]);
 

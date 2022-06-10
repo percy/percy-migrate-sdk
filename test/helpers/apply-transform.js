@@ -26,8 +26,8 @@ export function dedent(raw, ...values) {
 }
 
 // Call the transform function with the appropriate arguments
-export default function applyTransform(module, options = {}, source, path = 'test.js') {
-  let jscodeshift = require('../../.codeshift/js/node_modules/jscodeshift');
+export default async function applyTransform(module, options = {}, source, path = 'test.js') {
+  let { default: jscodeshift } = await import('../../.codeshift/js/node_modules/jscodeshift/index.js');
   let transform = module.default ?? module;
   let api = { j: jscodeshift, jscodeshift };
   return transform({ path, source }, api, options);

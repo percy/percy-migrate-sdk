@@ -1,23 +1,29 @@
-import { codeshift } from '../../src/utils';
+/* eslint-env jasmine */
+import path from 'path';
 import expect from 'expect';
+import migrate from '../../src/index.js';
+import { ROOT, codeshift } from '../../src/utils.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  setupTest,
+  mockPackageJSON,
   setupMigrationTest
-} from '../helpers';
+} from '../helpers/index.js';
 
 describe('Migrations - @percy/webdriverio', () => {
   let jscodeshiftbin = codeshift.js.bin;
-  let packageJSON, prompts, run;
+  let prompts, run;
 
-  beforeEach(() => {
-    ({ packageJSON, prompts, run } = setupMigrationTest('webdriverio', {
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('webdriverio', {
       mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) }
     }));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/webdriverio', '--skip-cli');
+    await migrate(['@percy/webdriverio', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',
@@ -36,7 +42,7 @@ describe('Migrations - @percy/webdriverio', () => {
   });
 
   it('transforms sdk imports', async () => {
-    await Migrate('@percy/webdriverio', '--skip-cli');
+    await migrate(['@percy/webdriverio', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -46,7 +52,7 @@ describe('Migrations - @percy/webdriverio', () => {
     });
 
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-installed=@percy/webdriverio',
       '--percy-sdk=@percy/webdriverio',
       'test/foo.js',
@@ -61,9 +67,8 @@ describe('Migrations - @percy/webdriverio', () => {
   });
 
   it('asks to transform sdk imports even when not installed', async () => {
-    delete packageJSON.devDependencies;
-
-    await Migrate('@percy/webdriverio', '--skip-cli');
+    mockPackageJSON({});
+    await migrate(['@percy/webdriverio', '--skip-cli']);
 
     expect(prompts[2]).toEqual({
       type: 'confirm',
@@ -73,7 +78,7 @@ describe('Migrations - @percy/webdriverio', () => {
     });
 
     expect(run[jscodeshiftbin].calls[0].args).toEqual([
-      `--transform=${require.resolve('../../transforms/import-default')}`,
+      `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
       '--percy-sdk=@percy/webdriverio',
       'test/foo.js',
       'test/bar.js',
@@ -89,15 +94,15 @@ describe('Migrations - @percy/webdriverio', () => {
   });
 
   describe('with TypeScript files', () => {
-    beforeEach(() => {
-      ({ packageJSON, prompts, run } = setupMigrationTest('webdriverio', {
+    beforeEach(async () => {
+      ({ prompts, run } = await setupMigrationTest('webdriverio', {
         mockCommands: { [jscodeshiftbin]: () => ({ status: 0 }) },
         mockPrompts: { filePaths: ['test/bar.ts'] }
       }));
     });
 
     it('transforms sdk imports for TypeScript', async () => {
-      await Migrate('@percy/webdriverio', '--skip-cli');
+      await migrate(['@percy/webdriverio', '--skip-cli']);
 
       expect(prompts[2]).toEqual({
         type: 'confirm',
@@ -107,7 +112,7 @@ describe('Migrations - @percy/webdriverio', () => {
       });
 
       expect(run[jscodeshiftbin].calls[0].args).toEqual([
-        `--transform=${require.resolve('../../transforms/import-default')}`,
+        `--transform=${path.resolve(ROOT, '../transforms/import-default.cjs')}`,
         '--percy-installed=@percy/webdriverio',
         '--parser=ts',
         '--percy-sdk=@percy/webdriverio',

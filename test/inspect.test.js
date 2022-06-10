@@ -1,17 +1,29 @@
+import fs from 'fs';
+import semver from 'semver';
 import expect from 'expect';
+import migrate from '../src/index.js';
+import { logger } from '@percy/cli-command/test/helpers';
 import {
-  Migrate,
-  logger,
+  setupTest,
   mockPackageJSON,
   mockGemfile,
   mockPrompts,
+  mockCommands,
   mockMigrations
-} from './helpers';
+} from './helpers/index.js';
 
 describe('SDK inspection', () => {
   let prompts;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setupTest();
+
+    mockPackageJSON({
+      devDependencies: {
+        '@percy/sdk-test': '^1.0.0'
+      }
+    });
+
     mockMigrations([{
       name: '@percy/sdk-test',
       version: '^2.0.0'
@@ -20,12 +32,6 @@ describe('SDK inspection', () => {
       aliases: ['@percy/sdk-old'],
       version: '^2.0.0'
     }]);
-
-    mockPackageJSON({
-      devDependencies: {
-        '@percy/sdk-test': '^1.0.0'
-      }
-    });
 
     prompts = mockPrompts({
       isSDK: true
@@ -38,7 +44,7 @@ describe('SDK inspection', () => {
       fromChoice: q => q.choices[0].value
     });
 
-    await Migrate('--skip-cli');
+    await migrate(['--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'list',
@@ -59,7 +65,7 @@ describe('SDK inspection', () => {
   });
 
   it('allows specifying an SDK directly', async () => {
-    await Migrate('@percy/sdk-test', '--skip-cli');
+    await migrate(['@percy/sdk-test', '--skip-cli']);
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
@@ -74,7 +80,7 @@ describe('SDK inspection', () => {
       }
     });
 
-    await Migrate('@percy/sdk-old', '--skip-cli');
+    await migrate(['@percy/sdk-old', '--skip-cli']);
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
@@ -83,7 +89,7 @@ describe('SDK inspection', () => {
   });
 
   it('warns when a specific SDK is not supported', async () => {
-    await Migrate('@percy/sdk-test-3', '--skip-cli');
+    await migrate(['@percy/sdk-test-3', '--skip-cli']);
 
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK is not supported'
@@ -94,7 +100,7 @@ describe('SDK inspection', () => {
   });
 
   it('warns when a specific SDK is not installed', async () => {
-    await Migrate('@percy/sdk-test-2', '--skip-cli');
+    await migrate(['@percy/sdk-test-2', '--skip-cli']);
 
     expect(logger.stderr).toEqual([
       '[percy] The specified SDK was not found in your dependencies'
@@ -111,7 +117,7 @@ describe('SDK inspection', () => {
       version: '^1.0.0'
     }]);
 
-    await Migrate('some-ancient-sdk', '--skip-cli');
+    await migrate(['some-ancient-sdk', '--skip-cli']);
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual([
@@ -126,7 +132,7 @@ describe('SDK inspection', () => {
       upgrade: false
     }]);
 
-    await Migrate('@percy/sdk-test', '--skip-cli');
+    await migrate(['@percy/sdk-test', '--skip-cli']);
 
     expect(logger.stderr).toEqual([
       '[percy] Make sure your SDK is upgraded to the latest version (@percy/sdk-test ^2.0.0)!'
@@ -137,10 +143,8 @@ describe('SDK inspection', () => {
   });
 
   describe('JavaScript SDKs', () => {
-    let packageJSON;
-
     beforeEach(() => {
-      packageJSON = mockPackageJSON({
+      mockPackageJSON({
         devDependencies: {
           '@percy/agent': '^0.1.0',
           '@percy/sdk-test': '^1.0.0',
@@ -150,7 +154,7 @@ describe('SDK inspection', () => {
     });
 
     it('inspects package.json to guess the installed SDK', async () => {
-      await Migrate('--skip-cli');
+      await migrate(['--skip-cli']);
 
       expect(prompts[0]).toEqual({
         type: 'confirm',
@@ -166,10 +170,9 @@ describe('SDK inspection', () => {
     });
 
     it('includes aliases when guessing the installed SDK', async () => {
-      delete packageJSON.devDependencies['@percy/sdk-test'];
-      packageJSON.devDependencies['@percy/sdk-old'] = '1.0.0';
+      mockPackageJSON({ devDependencies: { '@percy/sdk-old': '1.0.0' } });
 
-      await Migrate('--skip-cli');
+      await migrate(['--skip-cli']);
 
       expect(prompts[0]).toEqual({
         type: 'confirm',
@@ -185,13 +188,8 @@ describe('SDK inspection', () => {
     });
 
     it('warns when missing a package.json file', async () => {
-      // since there is a package.json file in this repo, this is tested by throwing a fake error
-      // lazily from a mocked package.json property
-      Object.defineProperty(packageJSON, 'devDependencies', {
-        get() { throw Object.assign(new Error(), { code: 'MODULE_NOT_FOUND' }); }
-      });
-
-      await Migrate('--skip-cli');
+      fs.unlinkSync('package.json');
+      await migrate(['--skip-cli']);
 
       expect(logger.stderr).toEqual([
         '[percy] Could not find package.json in current directory'
@@ -203,12 +201,10 @@ describe('SDK inspection', () => {
     });
 
     it('logs any error encounted while parsing a package.json file', async () => {
-      Object.defineProperty(packageJSON, 'devDependencies', {
-        get() { throw new Error('some error'); }
-      });
+      mockPackageJSON('not valid');
+      spyOn(Object, 'entries').and.throwError('some error');
 
-      await Migrate('--skip-cli');
-
+      await migrate(['--skip-cli']);
       expect(logger.stderr).toEqual([
         '[percy] Encountered an error inspecting package.json',
         '[percy] Error: some error'
@@ -220,7 +216,17 @@ describe('SDK inspection', () => {
   });
 
   describe('Ruby SDKs', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
+      await mockCommands({
+        ruby: () => ({
+          status: 0,
+          stdout: JSON.stringify([{
+            name: 'percy-ruby-sdk',
+            version: '1.0.0'
+          }])
+        })
+      });
+
       mockMigrations([{
         name: 'percy-ruby-sdk',
         language: 'ruby',
@@ -236,7 +242,7 @@ describe('SDK inspection', () => {
     });
 
     it('inspects the gemfile to guess the installed SDK', async () => {
-      await Migrate('--skip-cli');
+      await migrate(['--skip-cli']);
 
       expect(prompts[0]).toEqual({
         type: 'confirm',
@@ -253,12 +259,12 @@ describe('SDK inspection', () => {
 
     it('logs any error encounted while parsing the gemfile', async () => {
       mockGemfile('this is invalid');
-
-      await Migrate('--skip-cli');
+      spyOn(semver, 'coerce').and.throwError('some error');
+      await migrate(['--skip-cli']);
 
       expect(logger.stderr).toEqual([
         '[percy] Encountered an error inspecting Gemfile',
-        expect.stringMatching(/\[percy] Error: ruby failed with exit code 1:/)
+        '[percy] Error: some error'
       ]);
       expect(logger.stdout).toEqual([
         expect.stringMatching('See further migration instructions here:')

@@ -1,6 +1,6 @@
 import path from 'path';
-import SDKMigration from './base';
-import { codeshift, run } from '../utils';
+import SDKMigration from './base.js';
+import { ROOT, codeshift, run } from '../utils.js';
 
 class CapybaraMigration extends SDKMigration {
   static language = 'ruby';
@@ -22,11 +22,11 @@ class CapybaraMigration extends SDKMigration {
     default: '{spec}?(s)/**/*.rb',
     async transform(paths) {
       await codeshift.run('ruby', [
-        `--transform=${path.resolve(__dirname, '../../transforms/capybara.rb')}`,
+        `--transform=${path.resolve(ROOT, '../transforms/capybara.rb')}`,
         ...paths
       ]);
     }
   }];
 }
 
-module.exports = CapybaraMigration;
+export default CapybaraMigration;

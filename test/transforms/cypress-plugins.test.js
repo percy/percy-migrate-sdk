@@ -1,10 +1,10 @@
 import expect from 'expect';
-import applyTransform, { dedent } from '../helpers/apply-transform';
-import transform from '../../transforms/cypress-plugins';
+import applyTransform, { dedent } from '../helpers/apply-transform.js';
+import transform from '../../transforms/cypress-plugins.cjs';
 
 describe('Transforms - cypress-plugins.js', () => {
-  it('removes common task usage', () => {
-    expect(applyTransform(transform, {}, dedent`
+  it('removes common task usage', async () => {
+    expect(await applyTransform(transform, {}, dedent`
       const someOtherTask = require('some-other-package');
       const percyHealthCheck = require('@percy/cypress/task');
 
@@ -26,8 +26,8 @@ describe('Transforms - cypress-plugins.js', () => {
     `);
   });
 
-  it('removes module task usage', () => {
-    expect(applyTransform(transform, {}, dedent`
+  it('removes module task usage', async () => {
+    expect(await applyTransform(transform, {}, dedent`
       import someOtherTask from 'some-other-package';
       import percyHealthCheck from '@percy/cypress/task';
 
@@ -46,8 +46,8 @@ describe('Transforms - cypress-plugins.js', () => {
     `);
   });
 
-  it('does not error when encountering unexpected trees', () => {
-    expect(applyTransform(transform, {}, dedent`
+  it('does not error when encountering unexpected trees', async () => {
+    expect(await applyTransform(transform, {}, dedent`
       let percyHealthCheck = require('@percy/cypress/task');
       let foo = on('task'); // callee one args
       let bar = on(); // callee with no args

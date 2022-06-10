@@ -1,19 +1,19 @@
 import expect from 'expect';
-import {
-  Migrate,
-  logger,
-  setupMigrationTest
-} from '../helpers';
+import migrate from '../../src/index.js';
+import { logger } from '@percy/cli-command/test/helpers';
+import { setupTest, setupMigrationTest } from '../helpers/index.js';
 
 describe('Migrations - @percy/testcafe', () => {
   let prompts, run;
 
-  beforeEach(() => {
-    ({ prompts, run } = setupMigrationTest('testcafe', {}));
+  beforeEach(async () => {
+    await setupTest();
+
+    ({ prompts, run } = await setupMigrationTest('testcafe', {}));
   });
 
   it('upgrades the sdk', async () => {
-    await Migrate('@percy/testcafe', '--skip-cli');
+    await migrate(['@percy/testcafe', '--skip-cli']);
 
     expect(prompts[1]).toEqual({
       type: 'confirm',

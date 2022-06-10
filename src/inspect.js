@@ -2,38 +2,37 @@ import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import logger from '@percy/logger';
-import migrations from './migrations';
-import { run } from './utils';
+import { ROOT, run, migrations } from './utils.js';
+import { getPackageJSON } from '@percy/cli-command/utils';
 
 // Tries to detect the installed SDK by checking the current project's CWD. Checks non-dev deps in
 // addition to dev deps even though SDKs should only be installed as dev deps.
-function inspectPackageJSON(info) {
+async function inspectPackageJSON(info) {
+  let log = logger('migrate:inspect:js');
+
   try {
-    let pkg = require(`${process.cwd()}/package.json`);
+    let pkg = getPackageJSON(process.cwd());
+    if (!pkg) return log.warn('Could not find package.json in current directory');
     let deps = { ...pkg.dependencies, ...pkg.devDependencies };
+    let sdkMigrations = await migrations.load();
 
     for (let [name, version] of Object.entries(deps)) {
       if (name === '@percy/cli') info.cli = version;
       if (name === '@percy/agent') info.agent = version;
-      let SDK = migrations.find(SDK => SDK.matches(name, 'js'));
+      let SDK = sdkMigrations.find(SDK => SDK.matches(name, 'js'));
       if (SDK) info.installed.push(new SDK({ name, version }));
     }
 
     info.inspected.push('js');
   } catch (error) {
-    let log = logger('migrate:inspect:js');
-
-    if (error.code === 'MODULE_NOT_FOUND') {
-      log.warn('Could not find package.json in current directory');
-    } else {
-      log.error('Encountered an error inspecting package.json');
-      log.error(error);
-    }
+    log.error('Encountered an error inspecting package.json');
+    log.error(error);
   }
 }
 
 async function inspectGemfile(info) {
   let log = logger('migrate:inspect:ruby');
+  let sdkMigrations = await migrations.load();
 
   try {
     if (!fs.existsSync(path.join(process.cwd(), 'Gemfile'))) {
@@ -42,11 +41,11 @@ async function inspectGemfile(info) {
     }
 
     let output = run('ruby', [
-      path.join(__dirname, 'inspect_gemfile.rb')
+      path.join(ROOT, 'inspect_gemfile.rb')
     ], true);
 
     for (let { name, version } of JSON.parse(output)) {
-      let SDK = migrations.find(SDK => SDK.matches(name, 'ruby'));
+      let SDK = sdkMigrations.find(SDK => SDK.matches(name, 'ruby'));
 
       if (SDK) {
         version = semver.coerce(version)?.version;
@@ -63,7 +62,7 @@ async function inspectGemfile(info) {
 
 // Returns an object containing installed SDK information including whether `@percy/agent` was found
 // within the project's direct dependencies.
-export default function inspectDeps() {
+export default async function inspectDeps() {
   let info = {
     agent: null,
     installed: [],
@@ -71,7 +70,7 @@ export default function inspectDeps() {
   };
 
   // JS projects
-  inspectPackageJSON(info);
+  await inspectPackageJSON(info);
 
   // Ruby projects
   inspectGemfile(info);

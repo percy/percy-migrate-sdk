@@ -1,22 +1,16 @@
-import mockRequire from 'mock-require';
-import spawn from 'cross-spawn';
-import which from 'which';
+export default async function mockCommands(cmds) {
+  let { default: which } = await import('which');
+  let { default: crossSpawn } = await import('cross-spawn');
 
-// Mock commands by mocking run util imports
-export default function mockCommands(cmds) {
-  mockRequire('which', {
-    sync: cmd => {
-      if (!cmds[cmd]) return which.sync(cmd);
-      return cmd;
-    }
+  spyOn(which, 'sync').and.callFake((cmd) => {
+    if (!cmds[cmd]) return which.sync.and.originalFn(cmd);
+    return cmd;
   });
 
-  mockRequire('cross-spawn', {
-    sync: (cmd, args, options) => {
-      if (!cmds[cmd]) return spawn.sync(cmd, args, options);
-      (cmds[cmd].calls ||= []).push({ args, options });
-      return cmds[cmd](args, options);
-    }
+  spyOn(crossSpawn, 'sync').and.callFake((cmd, args, options) => {
+    if (!cmds[cmd]) return crossSpawn.sync.and.originalFn(cmd, args, options);
+    (cmds[cmd].calls ||= []).push({ args, options });
+    return cmds[cmd](args, options);
   });
 
   return cmds;
