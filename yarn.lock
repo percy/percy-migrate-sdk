@@ -2807,10 +2807,10 @@ istanbul-reports@^3.0.2:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-jasmine-core@^4.1.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-4.1.1.tgz#1045091e16f4f19e1d72416eef5db01e64d5fbeb"
-  integrity sha512-lmUfT5XcK9KKvt3lLYzn93hc4MGzlUBowExFVgzbSW0ZCrdeyS574dfsyfRhxbg81Wj4gk+RxUiTnj7KBfDA1g==
+jasmine-core@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-4.2.0.tgz#0605bea284d6d78276f43c47de2532ecd4a73b00"
+  integrity sha512-OcFpBrIhnbmb9wfI8cqPSJ50pv3Wg4/NSgoZIqHzIwO/2a9qivJWzv8hUvaREIMYYJBas6AvfXATFdVuzzCqVw==
 
 jasmine-spec-reporter@^7.0.0:
   version "7.0.0"
@@ -2820,12 +2820,12 @@ jasmine-spec-reporter@^7.0.0:
     colors "1.4.0"
 
 jasmine@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-4.1.0.tgz#0de347ca8bb6cc764b0ed186ae4cfc45bd64bdc4"
-  integrity sha512-4VhjbUgwfNS9CBnUMoSWr9tdNgOoOhNIjAD8YRxTn+PmOf4qTSC0Uqhk66dWGnz2vJxtNIU0uBjiwnsp4Ud9VA==
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-4.2.0.tgz#a5e9e2af25813da3517f5dafa9e46b2d896d996a"
+  integrity sha512-6SQRXHs5O++mp52PkoJoi9zuLYqp1IaqepRNmAQn5rUBo9VUnckpkkXQQD5PAuCCVVB1ULDImvWYCPV/ZVnaGQ==
   dependencies:
     glob "^7.1.6"
-    jasmine-core "^4.1.0"
+    jasmine-core "^4.2.0"
 
 jest-diff@^27.5.1:
   version "27.5.1"
@@ -3024,9 +3024,9 @@ make-dir@^3.0.0, make-dir@^3.0.2:
     semver "^6.0.0"
 
 memfs@^3.4.3:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.4.3.tgz#fc08ac32363b6ea6c95381cabb4d67838180d4e1"
-  integrity sha512-eivjfi7Ahr6eQTn44nvTnR60e4a1Fs1Via2kCR5lHo/kyNoiMWaXCNJ/GpSd0ilXas2JSOl9B5FTIhflXu0hlg==
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.4.4.tgz#e8973cd8060548916adcca58a248e7805c715e89"
+  integrity sha512-W4gHNUE++1oSJVn8Y68jPXi+mkx3fXR5ITE/Ubz6EQ3xRpCN5k2CQ4AUR8094Z7211F876TyoBACGsIveqgiGA==
   dependencies:
     fs-monkey "1.0.3"
 
