@@ -1207,10 +1207,15 @@
   resolved "https://registry.yarnpkg.com/@percy/env/-/env-1.3.1.tgz#ee0f2c31939827695cf55a60d582a7533e038971"
   integrity sha512-rEzVDqvIrTr3Ye9/ng96gnA3uHU8qAiPQ4qTgOb+HtArsKVEyzxdS3ym8cXZ4kfOZfu6u9jVs98rc74PzJM8OA==
 
-"@percy/logger@1.3.1", "@percy/logger@^1.1.0":
+"@percy/logger@1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.3.1.tgz#325d8f1acafb959a92bc9ced5839ba92a3cef192"
   integrity sha512-vdRAK1jXu9mRew3dl9jJ1/iyD5VW8gVKeLQMwY27BrS3dW120NETr77sma25uyYK7LqVzq3P6g4sSIg2yZHMQQ==
+
+"@percy/logger@^1.1.0":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.5.1.tgz#401f567c8ac93b84e00cd61a38c96bbfba2afaf6"
+  integrity sha512-JZvrhowDe/zRULNztXbnlxB0usVKoFHqC8xrT1fE6QSu3oiHWj6AuNVV34VzRQeK32W/feXym5/p7I5dCHHakA==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
