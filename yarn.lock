@@ -1092,12 +1092,22 @@
     "@percy/env" "1.6.1"
     "@percy/logger" "1.6.1"
 
-"@percy/config@1.6.1", "@percy/config@^1.1.0":
+"@percy/config@1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.6.1.tgz#11fb960dca4ecc0575349382a973b6c5c941363a"
   integrity sha512-UiB4gpt01VgPUF4ObZBixR1Wwi/ZUaMXBUxmE3wOa3zZrtZXOzbZwQGcntw5ToEq6OQBP100q1vetnP8xhFQtQ==
   dependencies:
     "@percy/logger" "1.6.1"
+    ajv "^8.6.2"
+    cosmiconfig "^7.0.0"
+    yaml "^2.0.0"
+
+"@percy/config@^1.1.0":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.7.2.tgz#c087bd9dd35c81372b03b51360b91fd2cfd58428"
+  integrity sha512-omING0fj92NG6XVScclkg8l82QUdPw+4YKJjUOHQVqOqyq+7H9A45KtlOk9LVStbVenzRiqH7C+9NhYa+a+/Vg==
+  dependencies:
+    "@percy/logger" "1.7.2"
     ajv "^8.6.2"
     cosmiconfig "^7.0.0"
     yaml "^2.0.0"
@@ -1131,10 +1141,15 @@
   resolved "https://registry.yarnpkg.com/@percy/env/-/env-1.6.1.tgz#5119de7526e006242b76688c24e94822113af139"
   integrity sha512-AguYuqRcKHkCnWndvq1pTrxeUXT0mNULSi9p7D0nN1744036RcdVrE/EhZbgK2fshSHxIrnfPSj0Lnt4Of46lg==
 
-"@percy/logger@1.6.1", "@percy/logger@^1.1.0":
+"@percy/logger@1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.6.1.tgz#754e3bdaa4419aadc2d7fa95b63f4ef757483cd4"
   integrity sha512-cOMzDbg6Or1SnyzT9xCnwIiMDQ4sUR7Ha91CE6NWpV273Ef5PtvBA0joIB7wWSe7t2/a8hQrYJ6eGU4rUcsuTw==
+
+"@percy/logger@1.7.2", "@percy/logger@^1.1.0":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.7.2.tgz#38b008459f5598d3a8f8708dc68a246473aac8a8"
+  integrity sha512-GSbOqPpjM+UC/0pcm6oTi+KI4u/nbs8Awz0HtFcoxyaNRBptRFUh75zF7qI0zB/HRp8QlZ0z4DayCepfrqqO0A==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
@@ -2453,9 +2468,9 @@ inquirer-glob-prompt@^1.0.0:
     rxjs "^7.5.5"
 
 inquirer@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-9.0.1.tgz#72879aa2bffa0e6ce74a8d84a59950a1e19d3070"
-  integrity sha512-NO601wvGO4Zm25ctJUhuglRBShQKJSGKGQlgbeyjs3cvXqq4Ud1jhwR36zf3pTC9mmfH3uHJHb/sL3/YJPqMzw==
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-9.0.2.tgz#81d830044718528485d7b9f7d47c6d590ccd1a7f"
+  integrity sha512-AqmDHmz3bIe573OiM4svTZzajBzff1xpuzYAimW8gjzW5ncuPllWB8t/GKl+NSuKRJaKyIF2bU2RCx8H1dwqyQ==
   dependencies:
     ansi-escapes "^5.0.0"
     chalk "^5.0.1"
@@ -2720,10 +2735,10 @@ istanbul-reports@^3.0.2:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-jasmine-core@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-4.2.0.tgz#0605bea284d6d78276f43c47de2532ecd4a73b00"
-  integrity sha512-OcFpBrIhnbmb9wfI8cqPSJ50pv3Wg4/NSgoZIqHzIwO/2a9qivJWzv8hUvaREIMYYJBas6AvfXATFdVuzzCqVw==
+jasmine-core@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-4.3.0.tgz#aee841fbe7373c2586ed8d8d48f5cc4a88be8390"
+  integrity sha512-qybtBUesniQdW6n+QIHMng2vDOHscIC/dEXjW+JzO9+LoAZMb03RCUC5xFOv/btSKPm1xL42fn+RjlU4oB42Lg==
 
 jasmine-spec-reporter@^7.0.0:
   version "7.0.0"
@@ -2733,12 +2748,12 @@ jasmine-spec-reporter@^7.0.0:
     colors "1.4.0"
 
 jasmine@^4.1.0:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-4.2.1.tgz#55f81ab9d5d32f2645aa598d1356b6858407f4a9"
-  integrity sha512-LNZEKcScnjPRj5J92I1P515bxTvaHMRAERTyCoaGnWr87eOT6zv+b3M+kxKdH/06Gz4TnnXyHbXLiPtMHZ0ncw==
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-4.3.0.tgz#f99e9bc2a94e8281d2490482d53a3406760bd7f4"
+  integrity sha512-ieBmwkd8L1DXnvSnxx7tecXgA0JDgMXPAwBcqM4lLPedJeI9hTHuWifPynTC+dLe4Y+GkSPSlbqqrmYIgGzYUw==
   dependencies:
     glob "^7.1.6"
-    jasmine-core "^4.2.0"
+    jasmine-core "^4.3.0"
 
 jest-diff@^27.5.1:
   version "27.5.1"
