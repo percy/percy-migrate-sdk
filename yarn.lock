@@ -1179,10 +1179,15 @@
   resolved "https://registry.yarnpkg.com/@percy/env/-/env-1.8.0.tgz#a3c3fa9cb071df0f94b7c197b9235aaf4e62a747"
   integrity sha512-njfRWRrmyGVOWo1U+Zd8tyniOiNVYWvQvyodHWzqz7AoNz0Zr/+sCs8TsuMfF9QAb3MLcWn4LJoZE09mBIFBwg==
 
-"@percy/logger@1.8.0", "@percy/logger@^1.1.0":
+"@percy/logger@1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.8.0.tgz#e85f60dff1b118644f91f6d73c08a455169f57af"
   integrity sha512-z1PNQFXDr4+y+a6FPzsZBuMttr0VrRpYSpxRhvhTZTjnLsBvgQ6VP2GxyFlp7E3Y4aG9Lmzau71s2Nlb35Ylgg==
+
+"@percy/logger@^1.1.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.9.0.tgz#945239dbaaf543e460a81fe5ba4a91ab8c6bb92e"
+  integrity sha512-lnRE8PkvAjSriztJqUkVT+qNhGMjNK+UTL4aUYA/WVAYDLeQmhCRREHHc301X8sFyPIOyQ1KA1WzCEfFuHisaA==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
