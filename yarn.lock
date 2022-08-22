@@ -1140,12 +1140,22 @@
     "@percy/env" "1.9.0"
     "@percy/logger" "1.9.0"
 
-"@percy/config@1.9.0", "@percy/config@^1.1.0":
+"@percy/config@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.9.0.tgz#6811c9ef3e67bac9c344a87ea3efe5101d1cc17c"
   integrity sha512-g0HnUhk6nfTXp9rndBBWw3beXT8Vhfh2iQv8tJjgUY9I0catj2qkAhhSiWHY8qyBLe6ImXB7GYTGeIIyU7s1gw==
   dependencies:
     "@percy/logger" "1.9.0"
+    ajv "^8.6.2"
+    cosmiconfig "^7.0.0"
+    yaml "^2.0.0"
+
+"@percy/config@^1.1.0":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.9.1.tgz#382d0ff8d7b94da7cbe5ad823c5553b1c9af11a7"
+  integrity sha512-LY8SBM7ngoLOItr6HOqu0dludsw6G/8dk7U3aMivzUYMZuO05maD7XlTTqfYr8HKUvxG7F6ZXQrRSG0SvwOFVg==
+  dependencies:
+    "@percy/logger" "1.9.1"
     ajv "^8.6.2"
     cosmiconfig "^7.0.0"
     yaml "^2.0.0"
@@ -1179,10 +1189,15 @@
   resolved "https://registry.yarnpkg.com/@percy/env/-/env-1.9.0.tgz#cd599c604a0e764b5c1114cfab839aed766d1dd4"
   integrity sha512-xkg0oSX7FHXA9T9aLUhvl9YsG1arYFdt8BNTcrDW//kOt/oJX/9hsBXlVxpfhUcK21S7TPvv3UEVVkOW/ZCMlg==
 
-"@percy/logger@1.9.0", "@percy/logger@^1.1.0":
+"@percy/logger@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.9.0.tgz#945239dbaaf543e460a81fe5ba4a91ab8c6bb92e"
   integrity sha512-lnRE8PkvAjSriztJqUkVT+qNhGMjNK+UTL4aUYA/WVAYDLeQmhCRREHHc301X8sFyPIOyQ1KA1WzCEfFuHisaA==
+
+"@percy/logger@1.9.1", "@percy/logger@^1.1.0":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.9.1.tgz#d5a4f30ca60d56eb2b1700fb56fd8e4e55dfbbfa"
+  integrity sha512-WOtU8eX/fsgz49Hh6N8hSpy95WJV209G9yGFVaZXWIbKJ90FWrONksX/Kz8FxQ0q/7oIW36zXy0ibr2qRy095g==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
