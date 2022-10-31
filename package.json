@@ -51,7 +51,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "expect": "^27.0.2",
+    "expect": "^29.2.2",
     "jasmine": "^4.1.0",
     "jasmine-spec-reporter": "^7.0.0",
     "memfs": "^3.4.3",
