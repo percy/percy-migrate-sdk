@@ -1176,7 +1176,7 @@
     "@percy/env" "1.12.0"
     "@percy/logger" "1.12.0"
 
-"@percy/config@1.12.0", "@percy/config@^1.1.0":
+"@percy/config@1.12.0":
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.12.0.tgz#8655b3b9a36fa38c527515791d8817757a0fc07c"
   integrity sha512-4ECAofbnlyP10PxNeiE8hlEG+IvqCNQ/R8V9on2EGD68mo9E7gsD9zWfMpVHuFNxCQxC0FYinR7VWaQVBvIb6Q==
@@ -1184,6 +1184,16 @@
     "@percy/logger" "1.12.0"
     ajv "^8.6.2"
     cosmiconfig "^7.0.0"
+    yaml "^2.0.0"
+
+"@percy/config@^1.1.0":
+  version "1.26.3"
+  resolved "https://registry.yarnpkg.com/@percy/config/-/config-1.26.3.tgz#17d4c00368e7d4f8e95f05dfdf7b8580b9b6072c"
+  integrity sha512-f2echEEP4JDwX+PxDwmVLiuhp9mjkPTyLjkPltgAEllembqsB7NYgS6HXRT9h7welTPNEof2j5fQCk1nthvGfQ==
+  dependencies:
+    "@percy/logger" "1.26.3"
+    ajv "^8.6.2"
+    cosmiconfig "^8.0.0"
     yaml "^2.0.0"
 
 "@percy/core@1.12.0":
@@ -1215,10 +1225,15 @@
   resolved "https://registry.yarnpkg.com/@percy/env/-/env-1.12.0.tgz#dd35b9c82b059d3fbcb7c2c8f10f6272931f6cac"
   integrity sha512-baEMvDcVzbJcOL+rr4s98Jb7tKdUVWnNGdXZI26UxsaSwHtKJRceHe4Qzw79FPU1KtJnK34KEsCDj4S9eAtGEg==
 
-"@percy/logger@1.12.0", "@percy/logger@^1.1.0":
+"@percy/logger@1.12.0":
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.12.0.tgz#0799261eee677e67cafd6ab05dd5a6f1a8d18317"
   integrity sha512-GQ9XiwOK9sb+5luZH4899Wwt1RF6K5fkiyumjYrZk4MtkxOqVIUtU08rat0rZZUO0T+KkNHvjbZ487XvLQjN1g==
+
+"@percy/logger@1.26.3", "@percy/logger@^1.1.0":
+  version "1.26.3"
+  resolved "https://registry.yarnpkg.com/@percy/logger/-/logger-1.26.3.tgz#26cb2a12102e5827b12f01a77f71eb87fd4919de"
+  integrity sha512-a4GpCFnI0RrDwxLWYgJxIFFUUgrvu1EAWgP+147qsTZp9F7NTdkNUeVLZmtXXY8L0Znk7qyKJzX9McBJgl8kEA==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
@@ -1388,6 +1403,11 @@ argparse@^1.0.7:
   integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   dependencies:
     sprintf-js "~1.0.2"
+
+argparse@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
+  integrity sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==
 
 array-includes@^3.1.4:
   version "3.1.4"
@@ -1718,6 +1738,16 @@ cosmiconfig@^7.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.10.0"
+
+cosmiconfig@^8.0.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-8.2.0.tgz#f7d17c56a590856cd1e7cee98734dca272b0d8fd"
+  integrity sha512-3rTMnFJA1tCOPwRxtgF4wd7Ab2qvDbL8jX+3smjIbS4HlZBagTlpERbdN7iAbWlrfxE3M8c27kTwTawQ7st+OQ==
+  dependencies:
+    import-fresh "^3.2.1"
+    js-yaml "^4.1.0"
+    parse-json "^5.0.0"
+    path-type "^4.0.0"
 
 cross-env@^7.0.2:
   version "7.0.3"
@@ -2862,6 +2892,13 @@ js-yaml@^3.13.1:
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
+
+js-yaml@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
+  integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
+  dependencies:
+    argparse "^2.0.1"
 
 jsesc@^2.5.1:
   version "2.5.2"
