@@ -15,7 +15,7 @@ each step can be performed manually without this tool to achieve the same outcom
 4. Updates your SDK to the latest version.
 5. Maybe prompts to run code mods on specific files.
 
-[See the migration docs for more info](https://docs.percy.io/docs/migrating-to-percy-cli)
+[See the migration docs for more info](https://www.browserstack.com/docs/percy/migration/migrate-to-cli)
 
 ## Usage
 <!-- usage -->

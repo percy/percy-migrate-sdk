@@ -63,7 +63,7 @@ export const migrate = command('migrate', {
     }
 
     log.info('See further migration instructions here: ' + (
-      'https://docs.percy.io/docs/migrating-to-percy-cli'));
+      'https://www.browserstack.com/docs/percy/migration/migrate-to-cli'));
   }
 });
 
