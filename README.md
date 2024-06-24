@@ -43,4 +43,3 @@ EXAMPLES
   $ npx @percy/migrate @percy/puppeteer
   $ npx @percy/migrate --only-cli
 ```
-<!-- usagestop -->
