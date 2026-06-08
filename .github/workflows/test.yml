@@ -5,8 +5,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 14
       - name: Get yarn cache directory path
@@ -19,7 +19,7 @@ jobs:
           restore-keys: v1/${{ runner.os }}/node-14/
       - run: yarn
       - run: yarn build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
@@ -29,8 +29,8 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 14
       - uses: ruby/setup-ruby@v1
@@ -44,7 +44,7 @@ jobs:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: v1/${{ runner.os }}/node-14/${{ hashFiles('**/yarn.lock') }}
           restore-keys: v1/${{ runner.os }}/node-14/
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
